@@ -105,42 +105,46 @@ class Uri implements UriInterface
     }
 
     /**
-     * Creates a new URI from environment globals.
+     * Creates a new URI from an array.
+     *
+     * The input array is expected to match the format of $_SERVER.
+     *
+     * @param array $server
      *
      * @return static
      */
-    public static function createFromGlobals()
+    public static function createFromArray(array $server)
     {
         $scheme  = 'http';
-        $isHttps = empty($_SERVER['HTTPS']) ? null : $_SERVER['HTTPS'];
+        $isHttps = empty($server['HTTPS']) ? null : $server['HTTPS'];
         if (!empty($isHttps) && 'off' !== strtolower($isHttps)) {
             $scheme = 'https';
         }
 
-        $user = empty($_SERVER['PHP_AUTH_USER']) ? null : $_SERVER['PHP_AUTH_USER'];
-        $pass = empty($_SERVER['PHP_AUTH_PW']) ? null : $_SERVER['PHP_AUTH_PW'];
-        $port = empty($_SERVER['SERVER_PORT']) ? null : $_SERVER['SERVER_PORT'];
+        $user = empty($server['PHP_AUTH_USER']) ? null : $server['PHP_AUTH_USER'];
+        $pass = empty($server['PHP_AUTH_PW']) ? null : $server['PHP_AUTH_PW'];
+        $port = empty($server['SERVER_PORT']) ? null : $server['SERVER_PORT'];
 
-        if (!empty($_SERVER['HTTP_HOST'])) {
-            $host = $_SERVER['HTTP_HOST'];
+        if (!empty($server['HTTP_HOST'])) {
+            $host = $server['HTTP_HOST'];
             if (false !== ($pos = strrpos($host, ':'))) {
                 $port = substr($host, $pos + 1);
                 $host = substr($host, 0, $pos);
             }
         } else {
-            $host = empty($_SERVER['SERVER_NAME']) ? null : $_SERVER['SERVER_NAME'];
+            $host = empty($server['SERVER_NAME']) ? null : $server['SERVER_NAME'];
         }
 
-        $uri = empty($_SERVER['REQUEST_URI']) ? null : $_SERVER['REQUEST_URI'];
+        $uri = empty($server['REQUEST_URI']) ? null : $server['REQUEST_URI'];
 
         $path = parse_url($uri, PHP_URL_PATH);
         if (empty($path)) {
-            $path = empty($_SERVER['PATH_INFO']) ? null : $_SERVER['PATH_INFO'];
+            $path = empty($server['PATH_INFO']) ? null : $server['PATH_INFO'];
         }
 
         $query = parse_url($uri, PHP_URL_QUERY);
         if (empty($query)) {
-            $query = empty($_SERVER['QUERY_STRING']) ? null : $_SERVER['QUERY_STRING'];
+            $query = empty($server['QUERY_STRING']) ? null : $server['QUERY_STRING'];
         }
 
         $uri = new static();

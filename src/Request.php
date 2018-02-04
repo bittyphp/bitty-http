@@ -190,7 +190,7 @@ class Request extends AbstractMessage implements ServerRequestInterface
         $server  = new Headers();
         $headers = $server->getHeaders($_SERVER);
         $method  = empty($headers['REQUEST_METHOD']) ? 'GET' : $headers['REQUEST_METHOD'];
-        $uri     = Uri::createFromGlobals();
+        $uri     = Uri::createFromArray($_SERVER);
         $body    = new RequestBody();
         $files   = new UploadedFiles();
 

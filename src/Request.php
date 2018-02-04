@@ -545,7 +545,7 @@ class Request extends AbstractMessage implements ServerRequestInterface
     {
         foreach ($files as $file) {
             if (is_array($file)) {
-                $file = $this->filterFileParams($file);
+                $this->filterFileParams($file);
             } elseif (!$file instanceof UploadedFileInterface) {
                 throw new \InvalidArgumentException(
                     sprintf(

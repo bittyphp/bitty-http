@@ -183,6 +183,20 @@ class RequestTest extends TestCase
         $this->assertEquals($files, $new);
     }
 
+    public function testWithUploadedFilesThrowsException()
+    {
+        $files = [
+            uniqid() => [
+                uniqid() => rand(),
+            ],
+        ];
+
+        $message = 'Files can only contain instances of '.UploadedFileInterface::class;
+        $this->setExpectedException(\InvalidArgumentException::class, $message);
+
+        $this->fixture->withUploadedFiles($files);
+    }
+
     public function testGetServerParams()
     {
         $params  = [uniqid() => uniqid()];

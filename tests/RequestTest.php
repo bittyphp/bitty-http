@@ -183,6 +183,20 @@ class RequestTest extends TestCase
         $this->assertEquals($files, $new);
     }
 
+    public function testWithUploadedFilesThrowsException()
+    {
+        $files = [
+            uniqid() => [
+                uniqid() => rand(),
+            ],
+        ];
+
+        $message = 'Files can only contain instances of '.UploadedFileInterface::class;
+        $this->setExpectedException(\InvalidArgumentException::class, $message);
+
+        $this->fixture->withUploadedFiles($files);
+    }
+
     public function testGetServerParams()
     {
         $params  = [uniqid() => uniqid()];
@@ -350,15 +364,16 @@ class RequestTest extends TestCase
     public function testWithoutAttribute()
     {
         $name       = uniqid('name');
-        $attributes = [$name => uniqid()];
+        $value      = uniqid('value');
+        $attributes = [$name => $value];
         $fixture    = new Request('GET', '', [], [], [], [], [], [], $attributes);
 
-        $clone = $this->fixture->withoutAttribute($name);
-        $old   = $this->fixture->getAttribute($name);
+        $clone = $fixture->withoutAttribute($name);
+        $old   = $fixture->getAttribute($name);
         $new   = $clone->getAttribute($name);
 
-        $this->assertNotSame($this->fixture, $clone);
-        $this->assertEquals(null, $old);
+        $this->assertNotSame($fixture, $clone);
+        $this->assertEquals($value, $old);
         $this->assertEquals(null, $new);
     }
 

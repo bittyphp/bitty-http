@@ -411,10 +411,108 @@ class UriTest extends TestCase
         ];
     }
 
-    public function testCreateFromGlobals()
+    /**
+     * @dataProvider sampleEnvironmentData
+     */
+    public function testCreateFromArray($data, $expected)
     {
-        $actual = Uri::createFromGlobals();
+        $uri = Uri::createFromArray($data);
 
-        $this->assertInstanceOf(UriInterface::class, $actual);
+        $this->assertEquals($expected, (string) $uri);
+    }
+
+    public function sampleEnvironmentData()
+    {
+        $user  = uniqid('user');
+        $pass  = uniqid('pass');
+        $host  = uniqid('host');
+        $port  = rand(444, 65535);
+        $path  = uniqid('path');
+        $query = uniqid('query');
+
+        return [
+            'standard data' => [
+                'data' => [
+                    'PHP_AUTH_USER' => $user,
+                    'PHP_AUTH_PW' => $pass,
+                    'HTTP_HOST' => $host,
+                    'SERVER_PORT' => $port,
+                    'REQUEST_URI' => '/'.$path.'?'.$query,
+                ],
+                'expected' => 'http://'.$user.':'.$pass.'@'.$host.':'.$port.'/'.$path.'?'.$query,
+            ],
+            'https on' => [
+                'data' => [
+                    'HTTPS' => uniqid(),
+                    'PHP_AUTH_USER' => $user,
+                    'PHP_AUTH_PW' => $pass,
+                    'HTTP_HOST' => $host,
+                    'SERVER_PORT' => $port,
+                    'REQUEST_URI' => '/'.$path.'?'.$query,
+                ],
+                'expected' => 'https://'.$user.':'.$pass.'@'.$host.':'.$port.'/'.$path.'?'.$query,
+            ],
+            'https off' => [
+                'data' => [
+                    'HTTPS' => 'off',
+                    'PHP_AUTH_USER' => $user,
+                    'PHP_AUTH_PW' => $pass,
+                    'HTTP_HOST' => $host,
+                    'SERVER_PORT' => $port,
+                    'REQUEST_URI' => '/'.$path.'?'.$query,
+                ],
+                'expected' => 'http://'.$user.':'.$pass.'@'.$host.':'.$port.'/'.$path.'?'.$query,
+            ],
+            'no password' => [
+                'data' => [
+                    'PHP_AUTH_USER' => $user,
+                    'HTTP_HOST' => $host,
+                    'SERVER_PORT' => $port,
+                    'REQUEST_URI' => '/'.$path.'?'.$query,
+                ],
+                'expected' => 'http://'.$user.'@'.$host.':'.$port.'/'.$path.'?'.$query,
+            ],
+            'no user, with pass' => [
+                'data' => [
+                    'PHP_AUTH_PW' => $pass,
+                    'HTTP_HOST' => $host,
+                    'SERVER_PORT' => $port,
+                    'REQUEST_URI' => '/'.$path.'?'.$query,
+                ],
+                'expected' => 'http://'.$host.':'.$port.'/'.$path.'?'.$query,
+            ],
+            'port set from host header' => [
+                'data' => [
+                    'HTTP_HOST' => $host.':'.$port,
+                    'SERVER_PORT' => rand(),
+                    'REQUEST_URI' => '/'.$path.'?'.$query,
+                ],
+                'expected' => 'http://'.$host.':'.$port.'/'.$path.'?'.$query,
+            ],
+            'host set from server name' => [
+                'data' => [
+                    'SERVER_NAME' => $host,
+                    'SERVER_PORT' => $port,
+                    'REQUEST_URI' => '/'.$path.'?'.$query,
+                ],
+                'expected' => 'http://'.$host.':'.$port.'/'.$path.'?'.$query,
+            ],
+            'path set from path info' => [
+                'data' => [
+                    'HTTP_HOST' => $host,
+                    'SERVER_PORT' => $port,
+                    'PATH_INFO' => $path,
+                ],
+                'expected' => 'http://'.$host.':'.$port.'/'.$path,
+            ],
+            'query set from query string' => [
+                'data' => [
+                    'HTTP_HOST' => $host,
+                    'SERVER_PORT' => $port,
+                    'QUERY_STRING' => $query,
+                ],
+                'expected' => 'http://'.$host.':'.$port.'/?'.$query,
+            ],
+        ];
     }
 }

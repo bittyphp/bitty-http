@@ -2,6 +2,7 @@
 
 namespace Bitty\Http;
 
+use Bitty\Collection\ReadableArrayCollection;
 use Bitty\Http\AbstractMessage;
 use Bitty\Http\Headers;
 use Bitty\Http\RequestBody;
@@ -61,7 +62,7 @@ class Request extends AbstractMessage implements ServerRequestInterface
      *
      * @var string[]
      */
-    protected $query = null;
+    protected $queryParams = null;
 
     /**
      * Cookie parameters.
@@ -106,6 +107,16 @@ class Request extends AbstractMessage implements ServerRequestInterface
     protected $contentTypeParsers = [];
 
     /**
+     * @var ReadableArrayCollection
+     */
+    public $query = null;
+
+    /**
+     * @var ReadableArrayCollection
+     */
+    public $request = null;
+
+    /**
      * @param string $method
      * @param UriInterface|string $uri
      * @param array $headers
@@ -129,15 +140,15 @@ class Request extends AbstractMessage implements ServerRequestInterface
         array $attributes = [],
         $body = ''
     ) {
-        $this->method     = $this->filterMethod($method);
-        $this->uri        = new Uri((string) $uri);
-        $this->headers    = $this->filterHeaders($headers);
-        $this->query      = $this->filterQueryParams($query);
-        $this->cookies    = $this->filterCookieParams($cookies);
-        $this->files      = $this->filterFileParams($files);
-        $this->server     = $this->filterServerParams($server);
-        $this->attributes = $this->filterAttributes($attributes);
-        $this->body       = $this->filterBody($body);
+        $this->method      = $this->filterMethod($method);
+        $this->uri         = new Uri((string) $uri);
+        $this->headers     = $this->filterHeaders($headers);
+        $this->queryParams = $this->filterQueryParams($query);
+        $this->cookies     = $this->filterCookieParams($cookies);
+        $this->files       = $this->filterFileParams($files);
+        $this->server      = $this->filterServerParams($server);
+        $this->attributes  = $this->filterAttributes($attributes);
+        $this->body        = $this->filterBody($body);
 
         $protocol = empty($this->server['SERVER_PROTOCOL']) ?
             '1.1' :
@@ -155,7 +166,7 @@ class Request extends AbstractMessage implements ServerRequestInterface
                 || in_array('multipart/form-data', $contentTypes)
             )
         ) {
-            $this->parsedBody = $request;
+            $this->parsedBody = $this->filterParsedBody($request);
         }
 
         $this->registerContentTypeParser('application/json', function ($body) {
@@ -292,7 +303,7 @@ class Request extends AbstractMessage implements ServerRequestInterface
      */
     public function getQueryParams()
     {
-        return $this->query;
+        return $this->queryParams;
     }
 
     /**
@@ -302,7 +313,7 @@ class Request extends AbstractMessage implements ServerRequestInterface
     {
         $request = clone $this;
 
-        $request->query = $this->filterQueryParams($query);
+        $request->queryParams = $this->filterQueryParams($query);
 
         return $request;
     }
@@ -507,6 +518,8 @@ class Request extends AbstractMessage implements ServerRequestInterface
      */
     protected function filterQueryParams(array $query)
     {
+        $this->query = new ReadableArrayCollection($query);
+
         return $query;
     }
 
@@ -589,6 +602,12 @@ class Request extends AbstractMessage implements ServerRequestInterface
                     gettype($parsedBody)
                 )
             );
+        }
+
+        if (is_array($parsedBody)) {
+            $this->request = new ReadableArrayCollection($parsedBody);
+        } else {
+            $this->request = new ReadableArrayCollection([]);
         }
 
         return $parsedBody;

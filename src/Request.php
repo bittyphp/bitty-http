@@ -158,15 +158,12 @@ class Request extends AbstractMessage implements ServerRequestInterface
             str_replace('HTTP/', '', $protocol)
         );
 
-        $contentTypes = $this->getHeader('Content-Type');
-
         if ('POST' === $this->method
-            && (
-                in_array('application/x-www-form-urlencoded', $contentTypes)
-                || in_array('multipart/form-data', $contentTypes)
-            )
+            && in_array($this->getContentType(), ['application/x-www-form-urlencoded', 'multipart/form-data'])
         ) {
             $this->parsedBody = $this->filterParsedBody($request);
+        } else {
+            $this->request = new ReadableArrayCollection([]);
         }
 
         $this->registerContentTypeParser('application/json', function ($body) {
@@ -200,7 +197,7 @@ class Request extends AbstractMessage implements ServerRequestInterface
     {
         $server  = new Headers();
         $headers = $server->getHeaders($_SERVER);
-        $method  = empty($headers['REQUEST_METHOD']) ? 'GET' : $headers['REQUEST_METHOD'];
+        $method  = empty($_SERVER['REQUEST_METHOD']) ? 'GET' : $_SERVER['REQUEST_METHOD'];
         $uri     = Uri::createFromArray($_SERVER);
         $body    = new RequestBody();
         $files   = new UploadedFiles();
@@ -374,18 +371,16 @@ class Request extends AbstractMessage implements ServerRequestInterface
         if (null === $this->parsedBody) {
             $body = (string) $this->body;
 
-            $contentTypes = $this->getHeader('Content-Type');
-            foreach ($contentTypes as $contentType) {
-                if (!isset($this->contentTypeParsers[$contentType])) {
-                    continue;
-                }
-
-                $this->parsedBody = $this->filterParsedBody(
-                    $this->contentTypeParsers[$contentType]($body)
-                );
-
+            $contentType = $this->getContentType();
+            if (!isset($this->contentTypeParsers[$contentType])) {
                 return $this->parsedBody;
             }
+
+            $this->parsedBody = $this->filterParsedBody(
+                $this->contentTypeParsers[$contentType]($body)
+            );
+
+            return $this->parsedBody;
         }
 
         return $this->parsedBody;
@@ -611,5 +606,16 @@ class Request extends AbstractMessage implements ServerRequestInterface
         }
 
         return $parsedBody;
+    }
+
+    protected function getContentType()
+    {
+        $contentTypes = $this->getHeader('Content-Type');
+        $contentType  = reset($contentTypes);
+        if (!$contentType) {
+            return '';
+        }
+
+        return trim(explode(';', $contentType, 2)[0]);
     }
 }

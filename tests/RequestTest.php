@@ -228,21 +228,21 @@ class RequestTest extends TestCase
         return [
             'POST application/x-www-form-urlencoded' => [
                 'method' => 'POST',
-                'contentType' => 'application/x-www-form-urlencoded',
+                'contentType' => 'application/x-www-form-urlencoded; charset=UTF-8',
                 'request' => $params,
                 'body' => '',
                 'expected' => $params
             ],
             'multipart/form-data' => [
                 'method' => 'POST',
-                'contentType' => 'multipart/form-data',
+                'contentType' => 'multipart/form-data; charset=UTF-8',
                 'request' => $params,
                 'body' => '',
                 'expected' => $params
             ],
             'non-POST application/x-www-form-urlencoded' => [
                 'method' => 'PATCH',
-                'contentType' => 'application/x-www-form-urlencoded',
+                'contentType' => 'application/x-www-form-urlencoded; charset=UTF-8',
                 'request' => $params,
                 'body' => 'foo=bar&baz=bur',
                 'expected' => ['foo' => 'bar', 'baz' => 'bur']

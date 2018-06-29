@@ -7,7 +7,7 @@ use Bitty\Http\Stream;
 class RequestBody extends Stream
 {
     /**
-     * Create a wrapper around Stream that automatically graps the input stream.
+     * Create a wrapper around Stream that automatically grabs the input stream.
      */
     public function __construct()
     {

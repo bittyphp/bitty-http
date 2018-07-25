@@ -12,7 +12,7 @@ class UploadedFiles
      * A single file entry might be one file, an array of files, or an array
      * of infinite arrays of files.
      *
-     * That input here is expected to match that of $_FILES.
+     * The input here is expected to match that of $_FILES.
      *
      * @see http://www.php-fig.org/psr/psr-7/#16-uploaded-files
      *

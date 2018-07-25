@@ -206,7 +206,7 @@ abstract class AbstractMessage implements MessageInterface
      *
      * @param StreamInterface|resource|string $body
      *
-     * @return string
+     * @return StreamInterface
      */
     protected function filterBody($body)
     {

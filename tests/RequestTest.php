@@ -4,7 +4,7 @@ namespace Bitty\Tests\Http;
 
 use Bitty\Http\Request;
 use Bitty\Http\Uri;
-use Bitty\Tests\Http\TestCase;
+use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UploadedFileInterface;
 
@@ -78,7 +78,8 @@ class RequestTest extends TestCase
 
         $message = 'HTTP method "'.$method.'" is invalid. Valid methods are: '
             .'["OPTIONS", "HEAD", "GET", "POST", "PUT", "PATCH", "DELETE", "TRACE", "CONNECT"]';
-        $this->setExpectedException(\InvalidArgumentException::class, $message);
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage($message);
 
         $this->fixture->withMethod($method);
     }
@@ -192,7 +193,8 @@ class RequestTest extends TestCase
         ];
 
         $message = 'Files can only contain instances of '.UploadedFileInterface::class;
-        $this->setExpectedException(\InvalidArgumentException::class, $message);
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage($message);
 
         $this->fixture->withUploadedFiles($files);
     }
@@ -297,7 +299,8 @@ class RequestTest extends TestCase
     public function testWithParsedBodyInvalid()
     {
         $message = 'Parsed body must be an array, object, or null; integer given.';
-        $this->setExpectedException(\InvalidArgumentException::class, $message);
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage($message);
 
         $this->fixture->withParsedBody(rand());
     }
@@ -408,7 +411,8 @@ class RequestTest extends TestCase
         $contentType = uniqid('type');
 
         $message = 'Callback for "'.$contentType.'" must be a callable; string given.';
-        $this->setExpectedException(\InvalidArgumentException::class, $message);
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage($message);
 
         $this->fixture->registerContentTypeParser($contentType, uniqid());
     }

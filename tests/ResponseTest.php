@@ -3,7 +3,7 @@
 namespace Bitty\Tests\Http;
 
 use Bitty\Http\Response;
-use Bitty\Tests\Http\TestCase;
+use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 
 class ResponseTest extends TestCase
@@ -71,7 +71,8 @@ class ResponseTest extends TestCase
         $code = $this->getInvalidStatusCode();
 
         $message = 'Unknown HTTP status code "'.$code.'"';
-        $this->setExpectedException(\InvalidArgumentException::class, $message);
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage($message);
 
         $this->fixture->withStatus($code);
     }
@@ -102,7 +103,8 @@ class ResponseTest extends TestCase
         $code = $this->getInvalidStatusCode();
 
         $message = 'Unknown HTTP status code "'.$code.'"';
-        $this->setExpectedException(\InvalidArgumentException::class, $message);
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage($message);
 
         new Response('', $code);
     }

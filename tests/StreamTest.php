@@ -3,7 +3,7 @@
 namespace Bitty\Tests\Http;
 
 use Bitty\Http\Stream;
-use Bitty\Tests\Http\TestCase;
+use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\StreamInterface;
 
 class StreamTest extends TestCase
@@ -18,7 +18,8 @@ class StreamTest extends TestCase
     public function testExceptionThrown()
     {
         $message = Stream::class.' must be constructed with a resource or string; integer given.';
-        $this->setExpectedException(\InvalidArgumentException::class, $message);
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage($message);
 
         new Stream(rand());
     }
@@ -97,7 +98,8 @@ class StreamTest extends TestCase
         $fixture->close();
 
         $message = 'Unable to get position of stream.';
-        $this->setExpectedException(\RuntimeException::class, $message);
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage($message);
 
         $fixture->tell();
     }
@@ -151,7 +153,8 @@ class StreamTest extends TestCase
         $fixture = new Stream(uniqid());
 
         $message = 'Failed to seek to offset 1.';
-        $this->setExpectedException(\RuntimeException::class, $message);
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage($message);
 
         $fixture->seek(1, SEEK_END);
     }
@@ -162,7 +165,8 @@ class StreamTest extends TestCase
         $fixture->close();
 
         $message = 'Stream is not seekable.';
-        $this->setExpectedException(\RuntimeException::class, $message);
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage($message);
 
         $fixture->seek(rand());
     }
@@ -185,7 +189,8 @@ class StreamTest extends TestCase
         $fixture->close();
 
         $message = 'Failed to rewind stream.';
-        $this->setExpectedException(\RuntimeException::class, $message);
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage($message);
 
         $fixture->rewind();
     }
@@ -229,7 +234,8 @@ class StreamTest extends TestCase
         $fixture->close();
 
         $message = 'Failed to write to stream.';
-        $this->setExpectedException(\RuntimeException::class, $message);
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage($message);
 
         $fixture->write(uniqid());
     }
@@ -265,7 +271,8 @@ class StreamTest extends TestCase
         $fixture->close();
 
         $message = 'Failed to read from stream.';
-        $this->setExpectedException(\RuntimeException::class, $message);
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage($message);
 
         $fixture->read(rand());
     }
@@ -286,7 +293,8 @@ class StreamTest extends TestCase
         $fixture->close();
 
         $message = 'Failed to get contents of stream.';
-        $this->setExpectedException(\RuntimeException::class, $message);
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage($message);
 
         $fixture->getContents();
     }

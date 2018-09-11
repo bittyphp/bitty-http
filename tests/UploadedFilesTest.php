@@ -4,7 +4,7 @@ namespace Bitty\Tests\Http;
 
 use Bitty\Http\UploadedFile;
 use Bitty\Http\UploadedFiles;
-use Bitty\Tests\Http\TestCase;
+use PHPUnit\Framework\TestCase;
 
 class UploadedFilesTests extends TestCase
 {

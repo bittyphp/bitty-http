@@ -4,7 +4,7 @@ namespace Bitty\Tests\Http\Exception;
 
 use Bitty\Http\Exception\HttpExceptionInterface;
 use Bitty\Http\Exception\NotAcceptableException;
-use Bitty\Tests\Http\TestCase;
+use PHPUnit\Framework\TestCase;
 
 class NotAcceptableExceptionTest extends TestCase
 {

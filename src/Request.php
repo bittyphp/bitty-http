@@ -16,6 +16,16 @@ use Psr\Http\Message\UriInterface;
 class Request extends AbstractMessage implements ServerRequestInterface
 {
     /**
+     * @var ReadableArrayCollection
+     */
+    public $query = null;
+
+    /**
+     * @var ReadableArrayCollection
+     */
+    public $request = null;
+
+    /**
      * HTTP method being used, e.g. GET, POST, etc.
      *
      * @var string
@@ -105,16 +115,6 @@ class Request extends AbstractMessage implements ServerRequestInterface
      * @var callback[]
      */
     protected $contentTypeParsers = [];
-
-    /**
-     * @var ReadableArrayCollection
-     */
-    public $query = null;
-
-    /**
-     * @var ReadableArrayCollection
-     */
-    public $request = null;
 
     /**
      * @param string $method
@@ -608,6 +608,11 @@ class Request extends AbstractMessage implements ServerRequestInterface
         return $parsedBody;
     }
 
+    /**
+     * Gets the content type of the request, if set.
+     *
+     * @return string
+     */
     protected function getContentType()
     {
         $contentTypes = $this->getHeader('Content-Type');

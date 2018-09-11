@@ -137,7 +137,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      *
      * @return ServerRequestInterface
      */
-    public static function createFromGlobals(): ServerRequestInterface
+    public static function createFromGlobals()
     {
         $server  = new Headers();
         $headers = $server->getHeaders($_SERVER);
@@ -168,7 +168,7 @@ class ServerRequest extends Request implements ServerRequestInterface
     /**
      * {@inheritDoc}
      */
-    public function getQueryParams(): array
+    public function getQueryParams()
     {
         return $this->queryParams;
     }
@@ -176,7 +176,7 @@ class ServerRequest extends Request implements ServerRequestInterface
     /**
      * {@inheritDoc}
      */
-    public function withQueryParams(array $query): ServerRequestInterface
+    public function withQueryParams(array $query)
     {
         $request = clone $this;
 
@@ -188,7 +188,7 @@ class ServerRequest extends Request implements ServerRequestInterface
     /**
      * {@inheritDoc}
      */
-    public function getCookieParams(): array
+    public function getCookieParams()
     {
         return $this->cookies;
     }
@@ -196,7 +196,7 @@ class ServerRequest extends Request implements ServerRequestInterface
     /**
      * {@inheritDoc}
      */
-    public function withCookieParams(array $cookies): ServerRequestInterface
+    public function withCookieParams(array $cookies)
     {
         $request = clone $this;
 
@@ -208,7 +208,7 @@ class ServerRequest extends Request implements ServerRequestInterface
     /**
      * {@inheritDoc}
      */
-    public function getUploadedFiles(): array
+    public function getUploadedFiles()
     {
         return $this->files;
     }
@@ -216,7 +216,7 @@ class ServerRequest extends Request implements ServerRequestInterface
     /**
      * {@inheritDoc}
      */
-    public function withUploadedFiles(array $files): ServerRequestInterface
+    public function withUploadedFiles(array $files)
     {
         $request = clone $this;
 
@@ -228,7 +228,7 @@ class ServerRequest extends Request implements ServerRequestInterface
     /**
      * {@inheritDoc}
      */
-    public function getServerParams(): array
+    public function getServerParams()
     {
         return $this->server;
     }
@@ -259,7 +259,7 @@ class ServerRequest extends Request implements ServerRequestInterface
     /**
      * {@inheritDoc}
      */
-    public function withParsedBody($parsedBody): ServerRequestInterface
+    public function withParsedBody($parsedBody)
     {
         $request = clone $this;
 
@@ -284,7 +284,7 @@ class ServerRequest extends Request implements ServerRequestInterface
     /**
      * {@inheritDoc}
      */
-    public function getAttributes(): array
+    public function getAttributes()
     {
         return $this->attributes;
     }
@@ -304,7 +304,7 @@ class ServerRequest extends Request implements ServerRequestInterface
     /**
      * {@inheritDoc}
      */
-    public function withAttribute($name, $value): ServerRequestInterface
+    public function withAttribute($name, $value)
     {
         $request    = clone $this;
         $attributes = $this->attributes;
@@ -318,7 +318,7 @@ class ServerRequest extends Request implements ServerRequestInterface
     /**
      * {@inheritDoc}
      */
-    public function withoutAttribute($name): ServerRequestInterface
+    public function withoutAttribute($name)
     {
         $attributes = $this->attributes;
         unset($attributes[$name]);
@@ -337,7 +337,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      *
      * @return array
      */
-    protected function filterQueryParams(array $query): array
+    protected function filterQueryParams(array $query)
     {
         $this->query = new ReadableArrayCollection($query);
 
@@ -351,7 +351,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      *
      * @return array
      */
-    protected function filterAttributes(array $attributes): array
+    protected function filterAttributes(array $attributes)
     {
         return $attributes;
     }
@@ -363,7 +363,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      *
      * @return array
      */
-    protected function filterCookieParams(array $cookies): array
+    protected function filterCookieParams(array $cookies)
     {
         return $cookies;
     }
@@ -377,7 +377,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      *
      * @throws \InvalidArgumentException
      */
-    protected function filterFileParams(array $files): array
+    protected function filterFileParams(array $files)
     {
         foreach ($files as $file) {
             if (is_array($file)) {
@@ -402,7 +402,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      *
      * @return array
      */
-    protected function filterServerParams(array $server): array
+    protected function filterServerParams(array $server)
     {
         return $server;
     }
@@ -441,7 +441,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      *
      * @return string
      */
-    protected function getContentType(): string
+    protected function getContentType()
     {
         $contentTypes = $this->getHeader('Content-Type');
         $contentType  = reset($contentTypes);

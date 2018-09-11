@@ -96,7 +96,7 @@ class Uri implements UriInterface
 
         $this->scheme   = $this->filterScheme($data['scheme']);
         $this->host     = $this->filterHost($data['host']);
-        $this->port     = $this->filterPort((int) $data['port']);
+        $this->port     = $this->filterPort($data['port']);
         $this->path     = $this->filterPath($data['path']);
         $this->query    = $this->filterQuery($data['query']);
         $this->fragment = $this->filterFragment($data['fragment']);
@@ -111,9 +111,9 @@ class Uri implements UriInterface
      *
      * @param array $server
      *
-     * @return UriInterface
+     * @return static
      */
-    public static function createFromArray(array $server): UriInterface
+    public static function createFromArray(array $server)
     {
         $scheme  = 'http';
         $isHttps = empty($server['HTTPS']) ? null : $server['HTTPS'];
@@ -193,7 +193,7 @@ class Uri implements UriInterface
     /**
      * {@inheritDoc}
      */
-    public function getScheme(): string
+    public function getScheme()
     {
         if (empty($this->scheme)) {
             return '';
@@ -205,7 +205,7 @@ class Uri implements UriInterface
     /**
      * {@inheritDoc}
      */
-    public function getAuthority(): string
+    public function getAuthority()
     {
         $string = '';
 
@@ -231,7 +231,7 @@ class Uri implements UriInterface
     /**
      * {@inheritDoc}
      */
-    public function getUserInfo(): string
+    public function getUserInfo()
     {
         if (empty($this->user)) {
             return '';
@@ -248,7 +248,7 @@ class Uri implements UriInterface
     /**
      * {@inheritDoc}
      */
-    public function getHost(): string
+    public function getHost()
     {
         if (empty($this->host)) {
             return '';
@@ -260,7 +260,7 @@ class Uri implements UriInterface
     /**
      * {@inheritDoc}
      */
-    public function getPort(): ?int
+    public function getPort()
     {
         if (empty($this->port)) {
             return null;
@@ -278,7 +278,7 @@ class Uri implements UriInterface
     /**
      * {@inheritDoc}
      */
-    public function getPath(): string
+    public function getPath()
     {
         if (empty($this->path)) {
             return '';
@@ -290,7 +290,7 @@ class Uri implements UriInterface
     /**
      * {@inheritDoc}
      */
-    public function getQuery(): string
+    public function getQuery()
     {
         if (empty($this->query)) {
             return '';
@@ -302,7 +302,7 @@ class Uri implements UriInterface
     /**
      * {@inheritDoc}
      */
-    public function getFragment(): string
+    public function getFragment()
     {
         if (empty($this->fragment)) {
             return '';
@@ -314,7 +314,7 @@ class Uri implements UriInterface
     /**
      * {@inheritDoc}
      */
-    public function withScheme($scheme): UriInterface
+    public function withScheme($scheme)
     {
         $uri = clone $this;
 
@@ -326,7 +326,7 @@ class Uri implements UriInterface
     /**
      * {@inheritDoc}
      */
-    public function withUserInfo($user, $password = null): UriInterface
+    public function withUserInfo($user, $password = null)
     {
         $uri = clone $this;
 
@@ -339,7 +339,7 @@ class Uri implements UriInterface
     /**
      * {@inheritDoc}
      */
-    public function withHost($host): UriInterface
+    public function withHost($host)
     {
         $uri = clone $this;
 
@@ -351,7 +351,7 @@ class Uri implements UriInterface
     /**
      * {@inheritDoc}
      */
-    public function withPort($port): UriInterface
+    public function withPort($port)
     {
         $uri = clone $this;
 
@@ -363,7 +363,7 @@ class Uri implements UriInterface
     /**
      * {@inheritDoc}
      */
-    public function withPath($path): UriInterface
+    public function withPath($path)
     {
         $uri = clone $this;
 
@@ -375,7 +375,7 @@ class Uri implements UriInterface
     /**
      * {@inheritDoc}
      */
-    public function withQuery($query): UriInterface
+    public function withQuery($query)
     {
         $uri = clone $this;
 
@@ -387,7 +387,7 @@ class Uri implements UriInterface
     /**
      * {@inheritDoc}
      */
-    public function withFragment($fragment): UriInterface
+    public function withFragment($fragment)
     {
         $uri = clone $this;
 
@@ -405,7 +405,7 @@ class Uri implements UriInterface
      *
      * @throws \InvalidArgumentException
      */
-    protected function filterScheme(string $scheme): string
+    protected function filterScheme($scheme)
     {
         $scheme = rtrim(strtolower((string) $scheme), ':');
         if (!empty($scheme) && !preg_match('/^[a-z][a-z0-9\+\.-]*$/', $scheme)) {
@@ -424,9 +424,9 @@ class Uri implements UriInterface
      *
      * @return string
      */
-    protected function filterHost(string $host): string
+    protected function filterHost($host)
     {
-        return strtolower($host);
+        return strtolower((string) $host);
     }
 
     /**
@@ -438,8 +438,10 @@ class Uri implements UriInterface
      *
      * @throws \InvalidArgumentException
      */
-    protected function filterPort(int $port): int
+    protected function filterPort($port)
     {
+        $port = (int) $port;
+
         // allow zero as an empty check
         if (0 > $port || 65535 < $port) {
             throw new \InvalidArgumentException(
@@ -460,7 +462,7 @@ class Uri implements UriInterface
      *
      * @return string
      */
-    protected function filterPath(?string $path): string
+    protected function filterPath($path)
     {
         return implode(
             '/',
@@ -481,7 +483,7 @@ class Uri implements UriInterface
      *
      * @return string
      */
-    protected function filterQuery(?string $query): string
+    protected function filterQuery($query)
     {
         $params = explode('&', ltrim((string) $query, '?'));
 
@@ -513,7 +515,7 @@ class Uri implements UriInterface
      *
      * @return string
      */
-    protected function filterFragment(?string $fragment): string
+    protected function filterFragment($fragment)
     {
         return rawurlencode(
             rawurldecode(

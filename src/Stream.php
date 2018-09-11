@@ -53,7 +53,7 @@ class Stream implements StreamInterface
     /**
      * {@inheritDoc}
      */
-    public function close(): void
+    public function close()
     {
         if (!$this->isAttached()) {
             return;
@@ -78,7 +78,7 @@ class Stream implements StreamInterface
     /**
      * {@inheritDoc}
      */
-    public function getSize(): ?int
+    public function getSize()
     {
         if (!$this->isAttached()) {
             return null;
@@ -92,7 +92,7 @@ class Stream implements StreamInterface
     /**
      * {@inheritDoc}
      */
-    public function tell(): int
+    public function tell()
     {
         if (!$this->isAttached()
             || false === ($position = ftell($this->stream))
@@ -108,7 +108,7 @@ class Stream implements StreamInterface
     /**
      * {@inheritDoc}
      */
-    public function eof(): bool
+    public function eof()
     {
         return $this->isAttached() ? feof($this->stream) : true;
     }
@@ -116,7 +116,7 @@ class Stream implements StreamInterface
     /**
      * {@inheritDoc}
      */
-    public function isSeekable(): bool
+    public function isSeekable()
     {
         if (!$this->isAttached()
             || null === ($seekable = $this->getMetadata('seekable'))
@@ -130,7 +130,7 @@ class Stream implements StreamInterface
     /**
      * {@inheritDoc}
      */
-    public function seek($offset, $whence = SEEK_SET): void
+    public function seek($offset, $whence = SEEK_SET)
     {
         if (!$this->isSeekable()) {
             throw new \RuntimeException('Stream is not seekable.');
@@ -146,7 +146,7 @@ class Stream implements StreamInterface
     /**
      * {@inheritDoc}
      */
-    public function rewind(): void
+    public function rewind()
     {
         if (!$this->isAttached() || !rewind($this->stream)) {
             throw new \RuntimeException('Failed to rewind stream.');
@@ -156,7 +156,7 @@ class Stream implements StreamInterface
     /**
      * {@inheritDoc}
      */
-    public function isWritable(): bool
+    public function isWritable()
     {
         if (!$this->isAttached()
             || null === ($mode = $this->getMetadata('mode'))
@@ -172,7 +172,7 @@ class Stream implements StreamInterface
     /**
      * {@inheritDoc}
      */
-    public function write($string): int
+    public function write($string)
     {
         if (!$this->isWritable()
             || false === ($bytes = fwrite($this->stream, $string))
@@ -186,7 +186,7 @@ class Stream implements StreamInterface
     /**
      * {@inheritDoc}
      */
-    public function isReadable(): bool
+    public function isReadable()
     {
         if (!$this->isAttached()
             || null === ($mode = $this->getMetadata('mode'))
@@ -202,7 +202,7 @@ class Stream implements StreamInterface
     /**
      * {@inheritDoc}
      */
-    public function read($length): string
+    public function read($length)
     {
         if (!$this->isReadable()
             || false === ($string = fread($this->stream, $length))
@@ -216,7 +216,7 @@ class Stream implements StreamInterface
     /**
      * {@inheritDoc}
      */
-    public function getContents(): string
+    public function getContents()
     {
         if (!$this->isAttached()
             || false === ($string = stream_get_contents($this->stream))
@@ -253,7 +253,7 @@ class Stream implements StreamInterface
      *
      * @return bool
      */
-    protected function isAttached(): bool
+    protected function isAttached()
     {
         return null !== $this->stream;
     }

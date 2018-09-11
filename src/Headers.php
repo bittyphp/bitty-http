@@ -13,7 +13,7 @@ class Headers
      *
      * @return array[]
      */
-    public function getHeaders(array $server): array
+    public function getHeaders(array $server)
     {
         $contentHeaders = [
             'CONTENT_LENGTH' => 'Content-Length',
@@ -44,7 +44,7 @@ class Headers
      *
      * @return string
      */
-    protected function normalizeHeader($header): string
+    protected function normalizeHeader($header)
     {
         return implode(
             '-',

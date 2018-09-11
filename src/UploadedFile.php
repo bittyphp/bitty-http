@@ -58,7 +58,7 @@ class UploadedFile implements UploadedFileInterface
     protected $sapi = null;
 
     /**
-     * @param string $path
+     * @param StreamInterface|string $path
      * @param string|null $name
      * @param string|null $mediaType
      * @param int|null $size
@@ -73,7 +73,13 @@ class UploadedFile implements UploadedFileInterface
         $error = UPLOAD_ERR_OK,
         $sapi = false
     ) {
-        $this->path      = $path;
+        if ($path instanceof StreamInterface) {
+            $this->stream = $path;
+            $this->path   = '';
+        } else {
+            $this->path = $path;
+        }
+
         $this->name      = $name;
         $this->mediaType = $mediaType;
         $this->size      = $size;
@@ -114,9 +120,27 @@ class UploadedFile implements UploadedFileInterface
         if (is_resource($targetPath)) {
             // target is a stream
             $stream = $this->getStream();
+            $stream->rewind();
             if (false === stream_copy_to_stream($stream, $targetPath, -1, 0)) {
                 throw new \RuntimeException('Failed to move file to stream.');
             }
+        } elseif (empty($this->path)) {
+            if (false === ($fp = fopen($targetPath, 'wb'))) {
+                throw new \RuntimeException(
+                    sprintf('Unable to open "%s" for writing!', $targetPath)
+                );
+            }
+
+            $stream = $this->getStream();
+            $stream->rewind();
+
+            if (false === stream_copy_to_stream($stream, $fp, -1, 0)) {
+                throw new \RuntimeException(
+                    sprintf('Failed to move file to "%s"', $targetPath)
+                );
+            }
+
+            fclose($fp);
         } elseif (false !== strpos($targetPath, '://')) {
             // target appears to be a URL
             if (!copy($this->path, $targetPath)) {

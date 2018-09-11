@@ -102,7 +102,7 @@ class Response extends AbstractMessage implements ResponseInterface
      */
     public function __construct(
         $body = '',
-        $statusCode = 200,
+        int $statusCode = 200,
         array $headers = []
     ) {
         $this->body         = $this->filterBody($body);
@@ -114,7 +114,7 @@ class Response extends AbstractMessage implements ResponseInterface
     /**
      * {@inheritDoc}
      */
-    public function getStatusCode()
+    public function getStatusCode(): int
     {
         return $this->statusCode;
     }
@@ -122,7 +122,7 @@ class Response extends AbstractMessage implements ResponseInterface
     /**
      * {@inheritDoc}
      */
-    public function getReasonPhrase()
+    public function getReasonPhrase(): string
     {
         return $this->reasonPhrase;
     }
@@ -130,7 +130,7 @@ class Response extends AbstractMessage implements ResponseInterface
     /**
      * {@inheritDoc}
      */
-    public function withStatus($code, $reasonPhrase = '')
+    public function withStatus($code, $reasonPhrase = ''): ResponseInterface
     {
         $message = clone $this;
 
@@ -149,16 +149,18 @@ class Response extends AbstractMessage implements ResponseInterface
      * @param int $statusCode
      *
      * @return int
+     *
+     * @throws \InvalidArgumentException When invalid code given.
      */
-    protected function filterStatusCode($statusCode)
+    protected function filterStatusCode(int $statusCode): int
     {
-        if (!isset($this->validStatusCodes[(int) $statusCode])) {
+        if (!isset($this->validStatusCodes[$statusCode])) {
             throw new \InvalidArgumentException(
                 sprintf('Unknown HTTP status code "%s"', $statusCode)
             );
         }
 
-        return (int) $statusCode;
+        return $statusCode;
     }
 
     /**
@@ -169,7 +171,7 @@ class Response extends AbstractMessage implements ResponseInterface
      *
      * @return string
      */
-    protected function filterReasonPhrase($reasonPhrase, $statusCode = null)
+    protected function filterReasonPhrase(string $reasonPhrase, int $statusCode = null): string
     {
         if (null === $statusCode) {
             $statusCode = $this->statusCode;
@@ -179,6 +181,6 @@ class Response extends AbstractMessage implements ResponseInterface
             return $this->validStatusCodes[$statusCode];
         }
 
-        return (string) $reasonPhrase;
+        return $reasonPhrase;
     }
 }

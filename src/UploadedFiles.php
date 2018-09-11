@@ -20,7 +20,7 @@ class UploadedFiles
      *
      * @return array
      */
-    public function collapseFileTree(array $files)
+    public function collapseFileTree(array $files): array
     {
         $tree = [];
 

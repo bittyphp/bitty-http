@@ -99,7 +99,7 @@ class UploadedFile implements UploadedFileInterface
     /**
      * {@inheritDoc}
      */
-    public function moveTo(string $targetPath): void
+    public function moveTo($targetPath): void
     {
         $this->verifyMovable();
         $this->verifyTargetPath($targetPath);

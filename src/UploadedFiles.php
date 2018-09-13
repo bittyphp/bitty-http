@@ -41,8 +41,7 @@ class UploadedFiles
                     isset($file['name']) ? $file['name'] : null,
                     isset($file['type']) ? $file['type'] : null,
                     isset($file['size']) ? $file['size'] : null,
-                    isset($file['error']) ? $file['error'] : null,
-                    true
+                    isset($file['error']) ? $file['error'] : null
                 );
 
                 continue;

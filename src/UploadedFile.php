@@ -58,33 +58,30 @@ class UploadedFile implements UploadedFileInterface
     protected $sapi = null;
 
     /**
-     * @param StreamInterface|string $path
+     * @param StreamInterface|string $streamOrPath
      * @param string|null $name
      * @param string|null $mediaType
      * @param int|null $size
      * @param int $error
-     * @param bool $sapi
      */
     public function __construct(
-        $path,
+        $streamOrPath,
         $name = null,
         $mediaType = null,
         $size = null,
-        $error = UPLOAD_ERR_OK,
-        $sapi = false
+        $error = UPLOAD_ERR_OK
     ) {
-        if ($path instanceof StreamInterface) {
-            $this->stream = $path;
+        if ($streamOrPath instanceof StreamInterface) {
+            $this->stream = $streamOrPath;
             $this->path   = '';
         } else {
-            $this->path = $path;
+            $this->path = $streamOrPath;
         }
 
         $this->name      = $name;
         $this->mediaType = $mediaType;
         $this->size      = $size;
         $this->error     = $error;
-        $this->sapi      = $sapi;
     }
 
     /**
@@ -117,16 +114,15 @@ class UploadedFile implements UploadedFileInterface
             );
         }
 
-        if (is_resource($targetPath)) {
-            // target is a stream
-            $stream = $this->getStream();
-            $stream->rewind();
-            if (false === stream_copy_to_stream($stream, $targetPath, -1, 0)) {
-                throw new \RuntimeException('Failed to move file to stream.');
-            }
-        } elseif (empty($this->path)) {
+        if (!is_writable(dirname($targetPath))) {
+            throw new \InvalidArgumentException(
+                sprintf('Target path "%s" is not writable!', $targetPath)
+            );
+        }
+
+        if (empty($this->path)) {
             if (false === ($fp = fopen($targetPath, 'wb'))) {
-                throw new \RuntimeException(
+                throw new \InvalidArgumentException(
                     sprintf('Unable to open "%s" for writing!', $targetPath)
                 );
             }
@@ -141,39 +137,19 @@ class UploadedFile implements UploadedFileInterface
             }
 
             fclose($fp);
-        } elseif (false !== strpos($targetPath, '://')) {
-            // target appears to be a URL
-            if (!copy($this->path, $targetPath)) {
-                throw new \RuntimeException(
-                    sprintf('Failed to move file to "%s"', $targetPath)
-                );
-            }
-
-            if (!unlink($this->path)) {
-                throw new \RuntimeException('Failed to remove file after move.');
-            }
         } else {
-            // target is a local path
-            if (!is_writable(dirname($targetPath))) {
-                throw new \InvalidArgumentException(
-                    sprintf('Target path "%s" is not writable!', $targetPath)
-                );
-            }
-
-            if ($this->sapi) {
-                // SAPI environment
-                if (!is_uploaded_file($this->path)) {
-                    throw new \RuntimeException('File is not a valid uploaded file.');
-                }
-
-                if (!move_uploaded_file($this->path, $targetPath)) {
+            if ('cli' === PHP_SAPI) {
+                if (!rename($this->path, $targetPath)) {
                     throw new \RuntimeException(
                         sprintf('Failed to move file to "%s"', $targetPath)
                     );
                 }
             } else {
-                // Non-SAPI environment
-                if (!rename($this->path, $targetPath)) {
+                if (!is_uploaded_file($this->path)) {
+                    throw new \RuntimeException('File is not a valid uploaded file.');
+                }
+
+                if (!move_uploaded_file($this->path, $targetPath)) {
                     throw new \RuntimeException(
                         sprintf('Failed to move file to "%s"', $targetPath)
                     );

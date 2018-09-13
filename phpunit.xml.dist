@@ -33,10 +33,6 @@
     </groups>
 
     <filter>
-        <blacklist>
-            <directory>vendor/</directory>
-            <directory>tests/</directory>
-        </blacklist>
         <whitelist processUncoveredFilesFromWhitelist="true">
             <directory>src/</directory>
         </whitelist>

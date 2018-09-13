@@ -4,7 +4,7 @@ namespace Bitty\Tests\Http\Exception;
 
 use Bitty\Http\Exception\ForbiddenException;
 use Bitty\Http\Exception\HttpExceptionInterface;
-use Bitty\Tests\Http\TestCase;
+use PHPUnit\Framework\TestCase;
 
 class ForbiddenExceptionTest extends TestCase
 {

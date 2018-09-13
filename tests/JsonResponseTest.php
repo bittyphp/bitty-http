@@ -3,7 +3,7 @@
 namespace Bitty\Tests\Http;
 
 use Bitty\Http\JsonResponse;
-use Bitty\Tests\Http\TestCase;
+use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 
 class JsonResponseTest extends TestCase

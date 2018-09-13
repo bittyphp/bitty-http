@@ -3,7 +3,7 @@
 namespace Bitty\Tests\Http;
 
 use Bitty\Http\Uri;
-use Bitty\Tests\Http\TestCase;
+use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\UriInterface;
 
 class UriTest extends TestCase
@@ -202,7 +202,8 @@ class UriTest extends TestCase
         $scheme = rand();
 
         $message = 'Invalid scheme "'.$scheme.'".';
-        $this->setExpectedException(\InvalidArgumentException::class, $message);
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage($message);
 
         $this->fixture->withScheme($scheme);
     }
@@ -270,7 +271,8 @@ class UriTest extends TestCase
     public function testWithPortThrowsException($port)
     {
         $message = 'Invalid port '.$port.'. Must be between 1 and 65,535.';
-        $this->setExpectedException(\InvalidArgumentException::class, $message);
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage($message);
 
         $this->fixture->withPort($port);
     }

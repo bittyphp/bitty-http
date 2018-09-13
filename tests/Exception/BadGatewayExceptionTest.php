@@ -4,7 +4,7 @@ namespace Bitty\Tests\Http\Exception;
 
 use Bitty\Http\Exception\BadGatewayException;
 use Bitty\Http\Exception\HttpExceptionInterface;
-use Bitty\Tests\Http\TestCase;
+use PHPUnit\Framework\TestCase;
 
 class BadGatewayExceptionTest extends TestCase
 {

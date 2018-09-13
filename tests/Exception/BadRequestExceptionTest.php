@@ -4,7 +4,7 @@ namespace Bitty\Tests\Http\Exception;
 
 use Bitty\Http\Exception\BadRequestException;
 use Bitty\Http\Exception\HttpExceptionInterface;
-use Bitty\Tests\Http\TestCase;
+use PHPUnit\Framework\TestCase;
 
 class BadRequestExceptionTest extends TestCase
 {

@@ -2,14 +2,15 @@
 
 namespace Bitty\Tests\Http;
 
-use Bitty\Http\Response;
+use Bitty\Http\ResponseFactory;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 
-class ResponseTest extends TestCase
+class ResponseFactoryTest extends TestCase
 {
     /**
-     * @var Response
+     * @var ResponseFactory
      */
     protected $fixture = null;
 
@@ -17,31 +18,33 @@ class ResponseTest extends TestCase
     {
         parent::setUp();
 
-        $this->fixture = new Response();
+        $this->fixture = new ResponseFactory();
     }
 
     public function testInstanceOf()
     {
-        $this->assertInstanceOf(ResponseInterface::class, $this->fixture);
+        $this->assertInstanceOf(ResponseFactoryInterface::class, $this->fixture);
+    }
+
+    public function testCreateResponseDefault()
+    {
+        $actual = $this->fixture->createResponse();
+
+        $this->assertInstanceOf(ResponseInterface::class, $actual);
+        $this->assertEquals(200, $actual->getStatusCode());
+        $this->assertEquals('OK', $actual->getReasonPhrase());
     }
 
     /**
      * @dataProvider sampleStatus
      */
-    public function testWithStatusCodeOnly($code, $reason, $expected)
+    public function testCreateResponse($code, $reason, $expected)
     {
-        $clone = $this->fixture->withStatus($code, $reason);
+        $actual = $this->fixture->createResponse($code, $reason);
 
-        $oldCode   = $this->fixture->getStatusCode();
-        $oldReason = $this->fixture->getReasonPhrase();
-        $newCode   = $clone->getStatusCode();
-        $newReason = $clone->getReasonPhrase();
-
-        $this->assertNotSame($this->fixture, $clone);
-        $this->assertEquals(200, $oldCode);
-        $this->assertEquals('OK', $oldReason);
-        $this->assertEquals($code, $newCode);
-        $this->assertEquals($expected, $newReason);
+        $this->assertInstanceOf(ResponseInterface::class, $actual);
+        $this->assertEquals($code, $actual->getStatusCode());
+        $this->assertEquals($expected, $actual->getReasonPhrase());
     }
 
     public function sampleStatus()
@@ -64,64 +67,6 @@ class ResponseTest extends TestCase
         ];
 
         return $data;
-    }
-
-    public function testWithStatusThrowsException()
-    {
-        $code = $this->getInvalidStatusCode();
-
-        $message = 'Unknown HTTP status code "'.$code.'"';
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage($message);
-
-        $this->fixture->withStatus($code);
-    }
-
-    public function testBody()
-    {
-        $body = uniqid();
-
-        $fixture = new Response($body);
-
-        $this->assertEquals($body, (string) $fixture->getBody());
-    }
-
-    public function testStatus()
-    {
-        $codes  = $this->getValidStatusCodes();
-        $code   = array_rand($codes);
-        $reason = $codes[$code];
-
-        $fixture = new Response('', $code);
-
-        $this->assertEquals($code, $fixture->getStatusCode());
-        $this->assertEquals($reason, $fixture->getReasonPhrase());
-    }
-
-    public function testInvalidStatusCodeThrowsException()
-    {
-        $code = $this->getInvalidStatusCode();
-
-        $message = 'Unknown HTTP status code "'.$code.'"';
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage($message);
-
-        new Response('', $code);
-    }
-
-    public function testHeaders()
-    {
-        $headerA = uniqid('header');
-        $headerB = uniqid('header');
-        $valueA  = uniqid('value');
-        $valueB  = uniqid('value');
-
-        $fixture = new Response('', 200, [$headerA => $valueA, $headerB => [$valueB]]);
-
-        $actual   = $fixture->getHeaders();
-        $expected = [$headerA => [$valueA], $headerB => [$valueB]];
-
-        $this->assertEquals($expected, $actual);
     }
 
     /**
@@ -194,21 +139,5 @@ class ResponseTest extends TestCase
             510 => 'Not Extended',
             511 => 'Network Authentication Required',
         ];
-    }
-
-    /**
-     * Gets an invalid status code.
-     *
-     * @return int
-     */
-    protected function getInvalidStatusCode()
-    {
-        $validStatusCodes = $this->getValidStatusCodes();
-
-        do {
-            $code = rand(1, 999);
-        } while (isset($validStatusCodes[$code]));
-
-        return $code;
     }
 }

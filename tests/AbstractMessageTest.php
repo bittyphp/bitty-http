@@ -3,7 +3,7 @@
 namespace Bitty\Tests\Http;
 
 use Bitty\Http\AbstractMessage;
-use Bitty\Tests\Http\TestCase;
+use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\StreamInterface;
 
@@ -44,7 +44,8 @@ class AbstractMessageTest extends TestCase
 
         $message = 'Invalid protocol version "'.$invalidVersion.'". '
             .'Valid versions are: ["1.0", "1.1", "2.0", "2"]';
-        $this->setExpectedException(\InvalidArgumentException::class, $message);
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage($message);
 
         $this->fixture->withProtocolVersion($invalidVersion);
     }
@@ -89,7 +90,8 @@ class AbstractMessageTest extends TestCase
      */
     public function testWithHeaderThrowsException($header, $value, $expected)
     {
-        $this->setExpectedException(\InvalidArgumentException::class, $expected);
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage($expected);
 
         $this->fixture->withHeader($header, $value);
     }
@@ -134,7 +136,8 @@ class AbstractMessageTest extends TestCase
      */
     public function testWithAddedHeaderThrowsException($header, $value, $expected)
     {
-        $this->setExpectedException(\InvalidArgumentException::class, $expected);
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage($expected);
 
         $this->fixture->withAddedHeader($header, $value);
     }

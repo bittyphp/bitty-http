@@ -4,7 +4,7 @@ namespace Bitty\Tests\Http\Exception;
 
 use Bitty\Http\Exception\HttpExceptionInterface;
 use Bitty\Http\Exception\NotFoundException;
-use Bitty\Tests\Http\TestCase;
+use PHPUnit\Framework\TestCase;
 
 class NotFoundExceptionTest extends TestCase
 {

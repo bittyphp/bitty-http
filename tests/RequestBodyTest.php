@@ -3,7 +3,7 @@
 namespace Bitty\Tests\Http;
 
 use Bitty\Http\RequestBody;
-use Bitty\Tests\Http\TestCase;
+use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\StreamInterface;
 
 class RequestBodyTest extends TestCase

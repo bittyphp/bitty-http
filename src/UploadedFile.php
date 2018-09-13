@@ -51,13 +51,6 @@ class UploadedFile implements UploadedFileInterface
     protected $error = null;
 
     /**
-     * Whether it came from a SAPI environment or not.
-     *
-     * @var bool
-     */
-    protected $sapi = null;
-
-    /**
      * @param StreamInterface|string $streamOrPath
      * @param string|null $name
      * @param string|null $mediaType
@@ -106,63 +99,18 @@ class UploadedFile implements UploadedFileInterface
     /**
      * {@inheritDoc}
      */
-    public function moveTo($targetPath): void
+    public function moveTo(string $targetPath): void
     {
-        if (null === $this->path) {
-            throw new \RuntimeException(
-                'Unable to perform move; the file has already been moved.'
-            );
-        }
-
-        if (!is_writable(dirname($targetPath))) {
-            throw new \InvalidArgumentException(
-                sprintf('Target path "%s" is not writable!', $targetPath)
-            );
-        }
+        $this->verifyMovable();
+        $this->verifyTargetPath($targetPath);
 
         if (empty($this->path)) {
-            if (false === ($fp = fopen($targetPath, 'wb'))) {
-                throw new \InvalidArgumentException(
-                    sprintf('Unable to open "%s" for writing!', $targetPath)
-                );
-            }
-
-            $stream = $this->getStream();
-            $stream->rewind();
-
-            if (false === stream_copy_to_stream($stream, $fp, -1, 0)) {
-                throw new \RuntimeException(
-                    sprintf('Failed to move file to "%s"', $targetPath)
-                );
-            }
-
-            fclose($fp);
+            $this->moveStream($targetPath);
         } else {
-            if ('cli' === PHP_SAPI) {
-                if (!rename($this->path, $targetPath)) {
-                    throw new \RuntimeException(
-                        sprintf('Failed to move file to "%s"', $targetPath)
-                    );
-                }
-            } else {
-                if (!is_uploaded_file($this->path)) {
-                    throw new \RuntimeException('File is not a valid uploaded file.');
-                }
-
-                if (!move_uploaded_file($this->path, $targetPath)) {
-                    throw new \RuntimeException(
-                        sprintf('Failed to move file to "%s"', $targetPath)
-                    );
-                }
-            }
+            $this->movePath($targetPath);
         }
 
-        $this->path = null;
-
-        if (null !== $this->stream) {
-            $this->stream->close();
-            $this->stream = null;
-        }
+        $this->finalizeMove();
     }
 
     /**
@@ -195,5 +143,97 @@ class UploadedFile implements UploadedFileInterface
     public function getClientMediaType(): ?string
     {
         return $this->mediaType;
+    }
+
+    /**
+     * Verifies a move hasn't already happened.
+     */
+    protected function verifyMovable(): void
+    {
+        if (null === $this->path) {
+            throw new \RuntimeException(
+                'Unable to perform move; the file has already been moved.'
+            );
+        }
+    }
+
+    /**
+     * Verifies a target path is valid.
+     *
+     * @param string $targetPath
+     */
+    protected function verifyTargetPath(string $targetPath): void
+    {
+        if (!is_writable(dirname($targetPath))) {
+            throw new \InvalidArgumentException(
+                sprintf('Target path "%s" is not writable!', $targetPath)
+            );
+        }
+    }
+
+    /**
+     * Moves the stream to the target path.
+     *
+     * @param string $targetPath
+     */
+    protected function moveStream(string $targetPath): void
+    {
+        if (false === ($fp = fopen($targetPath, 'wb'))) {
+            throw new \InvalidArgumentException(
+                sprintf('Unable to open "%s" for writing!', $targetPath)
+            );
+        }
+
+        $stream = $this->getStream();
+        $stream->rewind();
+
+        if (false === stream_copy_to_stream($stream, $fp, -1, 0)) {
+            throw new \RuntimeException(
+                sprintf('Failed to move file to "%s"', $targetPath)
+            );
+        }
+
+        fclose($fp);
+    }
+
+    /**
+     * Moves the file to the target path.
+     *
+     * @param string $targetPath
+     */
+    protected function movePath(string $targetPath): void
+    {
+        if ('cli' === PHP_SAPI) {
+            if (!rename($this->path, $targetPath)) {
+                throw new \RuntimeException(
+                    sprintf('Failed to move file to "%s"', $targetPath)
+                );
+            }
+
+            return;
+        }
+
+        if (!is_uploaded_file($this->path)) {
+            throw new \RuntimeException('File is not a valid uploaded file.');
+        }
+
+        if (!move_uploaded_file($this->path, $targetPath)) {
+            throw new \RuntimeException(
+                sprintf('Failed to move file to "%s"', $targetPath)
+            );
+        }
+    }
+
+    /**
+     * Finalizes the move.
+     */
+    protected function finalizeMove(): void
+    {
+        $this->path = null;
+
+        if (null !== $this->stream) {
+            $this->stream->close();
+            $this->stream = null;
+        }
     }
 }

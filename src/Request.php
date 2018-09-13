@@ -82,7 +82,7 @@ class Request extends AbstractMessage implements RequestInterface
     /**
      * {@inheritDoc}
      */
-    public function getRequestTarget()
+    public function getRequestTarget(): string
     {
         if (null === $this->requestTarget) {
             $string = '/'.ltrim($this->uri->getPath(), '/');
@@ -101,7 +101,7 @@ class Request extends AbstractMessage implements RequestInterface
     /**
      * {@inheritDoc}
      */
-    public function withRequestTarget($requestTarget)
+    public function withRequestTarget($requestTarget): RequestInterface
     {
         $request = clone $this;
 
@@ -113,7 +113,7 @@ class Request extends AbstractMessage implements RequestInterface
     /**
      * {@inheritDoc}
      */
-    public function getMethod()
+    public function getMethod(): string
     {
         return $this->method;
     }
@@ -121,7 +121,7 @@ class Request extends AbstractMessage implements RequestInterface
     /**
      * {@inheritDoc}
      */
-    public function withMethod($method)
+    public function withMethod($method): RequestInterface
     {
         $request = clone $this;
 
@@ -133,7 +133,7 @@ class Request extends AbstractMessage implements RequestInterface
     /**
      * {@inheritDoc}
      */
-    public function getUri()
+    public function getUri(): UriInterface
     {
         return clone $this->uri;
     }
@@ -141,7 +141,7 @@ class Request extends AbstractMessage implements RequestInterface
     /**
      * {@inheritDoc}
      */
-    public function withUri(UriInterface $uri, $preserveHost = false)
+    public function withUri(UriInterface $uri, $preserveHost = false): RequestInterface
     {
         $request = clone $this;
 
@@ -167,7 +167,7 @@ class Request extends AbstractMessage implements RequestInterface
      *
      * @throws \InvalidArgumentException
      */
-    protected function filterMethod($method)
+    protected function filterMethod($method): string
     {
         if (!in_array($method, $this->validMethods)) {
             throw new \InvalidArgumentException(
@@ -189,7 +189,7 @@ class Request extends AbstractMessage implements RequestInterface
      *
      * @return string
      */
-    protected function filterRequestTarget($requestTarget)
+    protected function filterRequestTarget($requestTarget): string
     {
         return (string) $requestTarget;
     }

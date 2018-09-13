@@ -6,7 +6,6 @@ sudo: false
 # https://docs.travis-ci.com/user/languages/php/
 language: php
 php:
-  - '7.0'
   - '7.1'
   - '7.2'
 

@@ -46,7 +46,7 @@ abstract class AbstractMessage implements MessageInterface
     /**
      * {@inheritDoc}
      */
-    public function getProtocolVersion()
+    public function getProtocolVersion(): string
     {
         return $this->protocolVersion;
     }
@@ -54,7 +54,7 @@ abstract class AbstractMessage implements MessageInterface
     /**
      * {@inheritDoc}
      */
-    public function withProtocolVersion($version)
+    public function withProtocolVersion($version): MessageInterface
     {
         $message = clone $this;
 
@@ -66,7 +66,7 @@ abstract class AbstractMessage implements MessageInterface
     /**
      * {@inheritDoc}
      */
-    public function getHeaders()
+    public function getHeaders(): array
     {
         return $this->headers;
     }
@@ -74,7 +74,7 @@ abstract class AbstractMessage implements MessageInterface
     /**
      * {@inheritDoc}
      */
-    public function hasHeader($name)
+    public function hasHeader($name): bool
     {
         foreach ($this->headers as $header => $values) {
             if (0 === strcasecmp($name, $header)) {
@@ -88,7 +88,7 @@ abstract class AbstractMessage implements MessageInterface
     /**
      * {@inheritDoc}
      */
-    public function getHeader($name)
+    public function getHeader($name): array
     {
         foreach ($this->headers as $header => $values) {
             if (0 === strcasecmp($name, $header)) {
@@ -102,7 +102,7 @@ abstract class AbstractMessage implements MessageInterface
     /**
      * {@inheritDoc}
      */
-    public function getHeaderLine($name)
+    public function getHeaderLine($name): string
     {
         return implode(',', $this->getHeader($name));
     }
@@ -110,7 +110,7 @@ abstract class AbstractMessage implements MessageInterface
     /**
      * {@inheritDoc}
      */
-    public function withHeader($name, $value)
+    public function withHeader($name, $value): MessageInterface
     {
         $message = clone $this;
         $headers = [];
@@ -134,7 +134,7 @@ abstract class AbstractMessage implements MessageInterface
     /**
      * {@inheritDoc}
      */
-    public function withAddedHeader($name, $value)
+    public function withAddedHeader($name, $value): MessageInterface
     {
         $message = clone $this;
         $headers = [];
@@ -163,7 +163,7 @@ abstract class AbstractMessage implements MessageInterface
     /**
      * {@inheritDoc}
      */
-    public function withoutHeader($name)
+    public function withoutHeader($name): MessageInterface
     {
         $message = clone $this;
         $headers = [];
@@ -184,7 +184,7 @@ abstract class AbstractMessage implements MessageInterface
     /**
      * {@inheritDoc}
      */
-    public function getBody()
+    public function getBody(): ?StreamInterface
     {
         return $this->body;
     }
@@ -192,7 +192,7 @@ abstract class AbstractMessage implements MessageInterface
     /**
      * {@inheritDoc}
      */
-    public function withBody(StreamInterface $body)
+    public function withBody(StreamInterface $body): MessageInterface
     {
         $message = clone $this;
 
@@ -208,7 +208,7 @@ abstract class AbstractMessage implements MessageInterface
      *
      * @return StreamInterface
      */
-    protected function filterBody($body)
+    protected function filterBody($body): StreamInterface
     {
         if ($body instanceof StreamInterface) {
             return $body;
@@ -226,7 +226,7 @@ abstract class AbstractMessage implements MessageInterface
      *
      * @throws \InvalidArgumentException
      */
-    protected function filterHeaders(array $headers)
+    protected function filterHeaders(array $headers): array
     {
         foreach ($headers as $header => $values) {
             $this->validateHeader($header, $values);
@@ -245,7 +245,7 @@ abstract class AbstractMessage implements MessageInterface
      *
      * @throws \InvalidArgumentException
      */
-    protected function filterProtocolVersion($protocolVersion)
+    protected function filterProtocolVersion($protocolVersion): string
     {
         if (!in_array($protocolVersion, $this->validProtocolVersions)) {
             throw new \InvalidArgumentException(
@@ -268,7 +268,7 @@ abstract class AbstractMessage implements MessageInterface
      *
      * @throws \InvalidArgumentException
      */
-    protected function validateHeader($header, $values = [])
+    protected function validateHeader($header, $values = []): void
     {
         // TODO: validate $name
         // throw new \InvalidArgumentException()

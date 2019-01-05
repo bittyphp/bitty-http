@@ -13,7 +13,7 @@ class JsonResponse extends Response
      */
     public function __construct(
         $body = '',
-        $statusCode = 200,
+        int $statusCode = 200,
         array $headers = []
     ) {
         $json = json_encode($body);

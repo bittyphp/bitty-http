@@ -167,7 +167,7 @@ class Request extends AbstractMessage implements RequestInterface
      *
      * @throws \InvalidArgumentException
      */
-    protected function filterMethod($method): string
+    protected function filterMethod(string $method): string
     {
         if (!in_array($method, $this->validMethods, true)) {
             throw new \InvalidArgumentException(

@@ -13,15 +13,15 @@ class RequestBodyTest extends TestCase
      */
     protected $fixture = null;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
         $this->fixture = new RequestBody();
     }
 
-    public function testInstanceOf()
+    public function testInstanceOf(): void
     {
-        $this->assertInstanceOf(StreamInterface::class, $this->fixture);
+        self::assertInstanceOf(StreamInterface::class, $this->fixture);
     }
 }

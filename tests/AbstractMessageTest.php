@@ -14,31 +14,31 @@ class AbstractMessageTest extends TestCase
      */
     protected $fixture = null;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
         $this->fixture = $this->getMockForAbstractClass(AbstractMessage::class);
     }
 
-    public function testInstanceOf()
+    public function testInstanceOf(): void
     {
-        $this->assertInstanceOf(MessageInterface::class, $this->fixture);
+        self::assertInstanceOf(MessageInterface::class, $this->fixture);
     }
 
-    public function testWithProtocolVersion()
+    public function testWithProtocolVersion(): void
     {
         $clone = $this->fixture->withProtocolVersion('1.0');
 
         $new = $clone->getProtocolVersion();
         $old = $this->fixture->getProtocolVersion();
 
-        $this->assertNotSame($this->fixture, $clone);
-        $this->assertEquals('1.0', $new);
-        $this->assertEquals('1.1', $old);
+        self::assertNotSame($this->fixture, $clone);
+        self::assertEquals('1.0', $new);
+        self::assertEquals('1.1', $old);
     }
 
-    public function testWithProtocolVersionThrowsException()
+    public function testWithProtocolVersionThrowsException(): void
     {
         $invalidVersion = uniqid();
 
@@ -50,7 +50,7 @@ class AbstractMessageTest extends TestCase
         $this->fixture->withProtocolVersion($invalidVersion);
     }
 
-    public function testWithHeaderAddsNewHeader()
+    public function testWithHeaderAddsNewHeader(): void
     {
         $header = uniqid('header');
         $value  = uniqid('value');
@@ -60,12 +60,12 @@ class AbstractMessageTest extends TestCase
         $new = $clone->getHeaders();
         $old = $this->fixture->getHeaders();
 
-        $this->assertNotSame($this->fixture, $clone);
-        $this->assertEquals([$header => [$value]], $new);
-        $this->assertEquals([], $old);
+        self::assertNotSame($this->fixture, $clone);
+        self::assertEquals([$header => [$value]], $new);
+        self::assertEquals([], $old);
     }
 
-    public function testWithHeaderReplacesExistingHeader()
+    public function testWithHeaderReplacesExistingHeader(): void
     {
         $headerA = uniqid('header');
         $headerB = strtoupper($headerA);
@@ -80,23 +80,30 @@ class AbstractMessageTest extends TestCase
         $cloneB = $cloneA->withHeader($headerB, $valueB);
         $new    = $cloneB->getHeaders();
 
-        $this->assertNotSame($cloneA, $cloneB);
-        $this->assertEquals([$headerC => [$valueC], $headerA => [$valueA]], $old);
-        $this->assertEquals([$headerC => [$valueC], $headerB => [$valueB]], $new);
+        self::assertNotSame($cloneA, $cloneB);
+        self::assertEquals([$headerC => [$valueC], $headerA => [$valueA]], $old);
+        self::assertEquals([$headerC => [$valueC], $headerB => [$valueB]], $new);
     }
 
     /**
+     * @param string $header
+     * @param mixed $value
+     * @param string $expected
+     *
      * @dataProvider sampleHeaderExceptions
      */
-    public function testWithHeaderThrowsException($header, $value, $expected)
-    {
+    public function testWithHeaderThrowsException(
+        string $header,
+        $value,
+        string $expected
+    ): void {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage($expected);
 
         $this->fixture->withHeader($header, $value);
     }
 
-    public function testWithAddedHeaderAddsNewHeader()
+    public function testWithAddedHeaderAddsNewHeader(): void
     {
         $header = uniqid('header');
         $value  = uniqid('value');
@@ -106,12 +113,12 @@ class AbstractMessageTest extends TestCase
         $new = $clone->getHeaders();
         $old = $this->fixture->getHeaders();
 
-        $this->assertNotSame($this->fixture, $clone);
-        $this->assertEquals([$header => [$value]], $new);
-        $this->assertEquals([], $old);
+        self::assertNotSame($this->fixture, $clone);
+        self::assertEquals([$header => [$value]], $new);
+        self::assertEquals([], $old);
     }
 
-    public function testWithAddedHeaderAddsToExistingHeader()
+    public function testWithAddedHeaderAddsToExistingHeader(): void
     {
         $headerA = uniqid('header');
         $headerB = strtoupper($headerA);
@@ -126,23 +133,30 @@ class AbstractMessageTest extends TestCase
         $cloneB = $cloneA->withAddedHeader($headerB, $valueB);
         $new    = $cloneB->getHeaders();
 
-        $this->assertNotSame($cloneA, $cloneB);
-        $this->assertEquals([$headerA => [$valueA], $headerC => [$valueC]], $old);
-        $this->assertEquals([$headerA => [$valueA, $valueB], $headerC => [$valueC]], $new);
+        self::assertNotSame($cloneA, $cloneB);
+        self::assertEquals([$headerA => [$valueA], $headerC => [$valueC]], $old);
+        self::assertEquals([$headerA => [$valueA, $valueB], $headerC => [$valueC]], $new);
     }
 
     /**
+     * @param string $header
+     * @param mixed $value
+     * @param string $expected
+     *
      * @dataProvider sampleHeaderExceptions
      */
-    public function testWithAddedHeaderThrowsException($header, $value, $expected)
-    {
+    public function testWithAddedHeaderThrowsException(
+        string $header,
+        $value,
+        string $expected
+    ): void {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage($expected);
 
         $this->fixture->withAddedHeader($header, $value);
     }
 
-    public function sampleHeaderExceptions()
+    public function sampleHeaderExceptions(): array
     {
         $header = uniqid('header');
 
@@ -177,17 +191,17 @@ class AbstractMessageTest extends TestCase
                 [uniqid(), [], uniqid()],
                 'Values for header "'.$header.'" must contain only strings; array given.',
             ],
-            'null value type' => [
+            'null value type in array' => [
                 $header,
                 [uniqid(), null, uniqid()],
                 'Values for header "'.$header.'" must contain only strings; NULL given.',
             ],
-            'false value type' => [
+            'false value type in array' => [
                 $header,
                 [uniqid(), (bool) rand(0, 1), uniqid()],
                 'Values for header "'.$header.'" must contain only strings; boolean given.',
             ],
-            'int value type' => [
+            'int value type in array' => [
                 $header,
                 [uniqid(), rand(), uniqid()],
                 'Values for header "'.$header.'" must contain only strings; integer given.',
@@ -195,19 +209,19 @@ class AbstractMessageTest extends TestCase
         ];
     }
 
-    public function testWithoutHeaderWhenHeaderNotPresent()
+    public function testWithoutHeaderWhenHeaderNotPresent(): void
     {
         $clone = $this->fixture->withoutHeader(uniqid());
 
         $new = $clone->getHeaders();
         $old = $this->fixture->getHeaders();
 
-        $this->assertNotSame($this->fixture, $clone);
-        $this->assertEquals([], $new);
-        $this->assertEquals([], $old);
+        self::assertNotSame($this->fixture, $clone);
+        self::assertEquals([], $new);
+        self::assertEquals([], $old);
     }
 
-    public function testWithoutHeaderWhenHeaderIsPresent()
+    public function testWithoutHeaderWhenHeaderIsPresent(): void
     {
         $headerA = uniqid('header');
         $headerB = uniqid('header');
@@ -220,36 +234,36 @@ class AbstractMessageTest extends TestCase
         $cloneB = $cloneA->withoutHeader(strtoupper($headerA));
         $new    = $cloneB->getHeaders();
 
-        $this->assertNotSame($cloneA, $cloneB);
-        $this->assertEquals([$headerA => [$valueA], $headerB => [$valueB]], $old);
-        $this->assertEquals([$headerB => [$valueB]], $new);
+        self::assertNotSame($cloneA, $cloneB);
+        self::assertEquals([$headerA => [$valueA], $headerB => [$valueB]], $old);
+        self::assertEquals([$headerB => [$valueB]], $new);
     }
 
-    public function testHasHeaderWhenNotPresent()
+    public function testHasHeaderWhenNotPresent(): void
     {
         $actual = $this->fixture->hasHeader(uniqid());
 
-        $this->assertFalse($actual);
+        self::assertFalse($actual);
     }
 
-    public function testHasHeaderWhenPresent()
+    public function testHasHeaderWhenPresent(): void
     {
         $header = uniqid('header');
 
         $clone  = $this->fixture->withHeader($header, uniqid());
         $actual = $clone->hasHeader(strtoupper($header));
 
-        $this->assertTrue($actual);
+        self::assertTrue($actual);
     }
 
-    public function testGetHeaderWhenNotPresent()
+    public function testGetHeaderWhenNotPresent(): void
     {
         $actual = $this->fixture->getHeader(uniqid());
 
-        $this->assertEquals([], $actual);
+        self::assertEquals([], $actual);
     }
 
-    public function testGetHeaderWhenPresent()
+    public function testGetHeaderWhenPresent(): void
     {
         $header = uniqid('header');
         $valueA = uniqid('value');
@@ -258,17 +272,17 @@ class AbstractMessageTest extends TestCase
         $clone  = $this->fixture->withHeader($header, [$valueA, $valueB]);
         $actual = $clone->getHeader(strtoupper($header));
 
-        $this->assertEquals([$valueA, $valueB], $actual);
+        self::assertEquals([$valueA, $valueB], $actual);
     }
 
-    public function testGetHeaderLineWhenNotPresent()
+    public function testGetHeaderLineWhenNotPresent(): void
     {
         $actual = $this->fixture->getHeaderLine(uniqid());
 
-        $this->assertEquals('', $actual);
+        self::assertEquals('', $actual);
     }
 
-    public function testGetHeaderLineWhenPresent()
+    public function testGetHeaderLineWhenPresent(): void
     {
         $header = uniqid('header');
         $valueA = uniqid('value');
@@ -277,10 +291,10 @@ class AbstractMessageTest extends TestCase
         $clone  = $this->fixture->withHeader($header, [$valueA, $valueB]);
         $actual = $clone->getHeaderLine(strtoupper($header));
 
-        $this->assertEquals($valueA.','.$valueB, $actual);
+        self::assertEquals($valueA.','.$valueB, $actual);
     }
 
-    public function testWithBody()
+    public function testWithBody(): void
     {
         $body = $this->createMock(StreamInterface::class);
 
@@ -288,8 +302,8 @@ class AbstractMessageTest extends TestCase
         $old   = $this->fixture->getBody();
         $new   = $clone->getBody();
 
-        $this->assertNotSame($this->fixture, $clone);
-        $this->assertNull($old);
-        $this->assertSame($body, $new);
+        self::assertNotSame($this->fixture, $clone);
+        self::assertNull($old);
+        self::assertSame($body, $new);
     }
 }

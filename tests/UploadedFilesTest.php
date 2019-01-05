@@ -6,22 +6,25 @@ use Bitty\Http\UploadedFile;
 use Bitty\Http\UploadedFiles;
 use PHPUnit\Framework\TestCase;
 
-class UploadedFilesTests extends TestCase
+class UploadedFilesTest extends TestCase
 {
     /**
+     * @param array $files
+     * @param array $expectedData
+     *
      * @dataProvider sampleFileData
      */
-    public function testLoadingFiles($files, $expectedData)
+    public function testLoadingFiles(array $files, array $expectedData): void
     {
         $expected = $this->getExpectedData($expectedData);
 
         $fixture = new UploadedFiles();
         $actual  = $fixture->collapseFileTree($files);
 
-        $this->assertEquals($expected, $actual);
+        self::assertEquals($expected, $actual);
     }
 
-    public function sampleFileData()
+    public function sampleFileData(): array
     {
         $fieldA = uniqid('field');
         $fieldB = uniqid('field');
@@ -212,9 +215,9 @@ class UploadedFilesTests extends TestCase
      *
      * @param mixed[] $files
      *
-     * @return UploadedFile[]
+     * @return array Nested array of UploadedFile|UploadedFile[]
      */
-    protected function getExpectedData(array $files)
+    protected function getExpectedData(array $files): array
     {
         $expected = [];
 
@@ -227,8 +230,7 @@ class UploadedFilesTests extends TestCase
                     $file['name'],
                     $file['type'],
                     $file['size'],
-                    $file['error'],
-                    true
+                    $file['error']
                 );
             }
         }

@@ -98,7 +98,7 @@ class Response extends AbstractMessage implements ResponseInterface
     /**
      * @param StreamInterface|resource|string $body
      * @param int $statusCode
-     * @param string[] $headers
+     * @param array $headers Array of string|string[]
      */
     public function __construct(
         $body = '',

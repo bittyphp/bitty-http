@@ -14,19 +14,19 @@ class ServerRequestTest extends TestCase
      */
     protected $fixture = null;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
         $this->fixture = new ServerRequest();
     }
 
-    public function testInstanceOf()
+    public function testInstanceOf(): void
     {
-        $this->assertInstanceOf(ServerRequestInterface::class, $this->fixture);
+        self::assertInstanceOf(ServerRequestInterface::class, $this->fixture);
     }
 
-    public function testWithQueryParams()
+    public function testWithQueryParams(): void
     {
         $params = [uniqid() => uniqid()];
 
@@ -34,12 +34,12 @@ class ServerRequestTest extends TestCase
         $old   = $this->fixture->getQueryParams();
         $new   = $clone->getQueryParams();
 
-        $this->assertNotSame($this->fixture, $clone);
-        $this->assertEquals([], $old);
-        $this->assertEquals($params, $new);
+        self::assertNotSame($this->fixture, $clone);
+        self::assertEquals([], $old);
+        self::assertEquals($params, $new);
     }
 
-    public function testWithCookieParams()
+    public function testWithCookieParams(): void
     {
         $params = [uniqid() => uniqid()];
 
@@ -47,12 +47,12 @@ class ServerRequestTest extends TestCase
         $old   = $this->fixture->getCookieParams();
         $new   = $clone->getCookieParams();
 
-        $this->assertNotSame($this->fixture, $clone);
-        $this->assertEquals([], $old);
-        $this->assertEquals($params, $new);
+        self::assertNotSame($this->fixture, $clone);
+        self::assertEquals([], $old);
+        self::assertEquals($params, $new);
     }
 
-    public function testWithUploadedFiles()
+    public function testWithUploadedFiles(): void
     {
         $files = [uniqid() => $this->createMock(UploadedFileInterface::class)];
 
@@ -60,12 +60,12 @@ class ServerRequestTest extends TestCase
         $old   = $this->fixture->getUploadedFiles();
         $new   = $clone->getUploadedFiles();
 
-        $this->assertNotSame($this->fixture, $clone);
-        $this->assertEquals([], $old);
-        $this->assertEquals($files, $new);
+        self::assertNotSame($this->fixture, $clone);
+        self::assertEquals([], $old);
+        self::assertEquals($files, $new);
     }
 
-    public function testWithUploadedFilesThrowsException()
+    public function testWithUploadedFilesThrowsException(): void
     {
         $files = [
             uniqid() => [
@@ -80,30 +80,41 @@ class ServerRequestTest extends TestCase
         $this->fixture->withUploadedFiles($files);
     }
 
-    public function testGetServerParams()
+    public function testGetServerParams(): void
     {
         $params  = [uniqid() => uniqid()];
         $fixture = new ServerRequest('GET', '', [], '', '1.1', [], [], [], [], $params, []);
 
         $actual = $fixture->getServerParams();
 
-        $this->assertEquals($params, $actual);
+        self::assertEquals($params, $actual);
     }
 
     /**
+     * @param string $method
+     * @param string $contentType
+     * @param array $request
+     * @param string $body
+     * @param array|null $expected
+     *
      * @dataProvider samplePostContentTypes
      */
-    public function testGetParsedBody($method, $contentType, $request, $body, $expected)
-    {
+    public function testGetParsedBody(
+        string $method,
+        string $contentType,
+        array $request,
+        string $body,
+        ?array $expected
+    ): void {
         $headers = ['Content-Type' => $contentType];
         $fixture = new ServerRequest($method, '', $headers, $body, '1.1', [], $request, [], [], [], []);
 
         $actual = $fixture->getParsedBody();
 
-        $this->assertEquals($expected, $actual);
+        self::assertEquals($expected, $actual);
     }
 
-    public function samplePostContentTypes()
+    public function samplePostContentTypes(): array
     {
         $params = [uniqid('key') => uniqid('value')];
         $json   = [uniqid('json') => uniqid('value')];
@@ -155,20 +166,22 @@ class ServerRequestTest extends TestCase
     }
 
     /**
+     * @param mixed $parsedBody
+     *
      * @dataProvider sampleValidParsedBody
      */
-    public function testWithParsedBody($parsedBody)
+    public function testWithParsedBody($parsedBody): void
     {
         $clone = $this->fixture->withParsedBody($parsedBody);
         $old   = $this->fixture->getParsedBody();
         $new   = $clone->getParsedBody();
 
-        $this->assertNotSame($this->fixture, $clone);
-        $this->assertEquals(null, $old);
-        $this->assertEquals($parsedBody, $new);
+        self::assertNotSame($this->fixture, $clone);
+        self::assertEquals(null, $old);
+        self::assertEquals($parsedBody, $new);
     }
 
-    public function sampleValidParsedBody()
+    public function sampleValidParsedBody(): array
     {
         return [
             'object' => [new \stdClass()],
@@ -177,7 +190,7 @@ class ServerRequestTest extends TestCase
         ];
     }
 
-    public function testWithParsedBodyInvalid()
+    public function testWithParsedBodyInvalid(): void
     {
         $message = 'Parsed body must be an array, object, or null; integer given.';
         $this->expectException(\InvalidArgumentException::class);
@@ -186,29 +199,38 @@ class ServerRequestTest extends TestCase
         $this->fixture->withParsedBody(rand());
     }
 
-    public function testGetAttributes()
+    public function testGetAttributes(): void
     {
         $attributes = [uniqid() => uniqid()];
         $fixture    = new ServerRequest('GET', '', [], '', '1.1', [], [], [], [], [], $attributes);
 
         $actual = $fixture->getAttributes();
 
-        $this->assertEquals($attributes, $actual);
+        self::assertEquals($attributes, $actual);
     }
 
     /**
+     * @param array $attributes
+     * @param string $name
+     * @param string $default
+     * @param string $expected
+     *
      * @dataProvider sampleAttributes
      */
-    public function testGetAttribute($attributes, $name, $default, $expected)
-    {
+    public function testGetAttribute(
+        array $attributes,
+        string $name,
+        string $default,
+        string $expected
+    ): void {
         $fixture = new ServerRequest('GET', '', [], '', '1.1', [], [], [], [], [], $attributes);
 
         $actual = $fixture->getAttribute($name, $default);
 
-        $this->assertEquals($expected, $actual);
+        self::assertEquals($expected, $actual);
     }
 
-    public function sampleAttributes()
+    public function sampleAttributes(): array
     {
         $nameA  = uniqid('name');
         $nameB  = uniqid('name');
@@ -231,7 +253,7 @@ class ServerRequestTest extends TestCase
         ];
     }
 
-    public function testWithAttribute()
+    public function testWithAttribute(): void
     {
         $name  = uniqid('name');
         $value = uniqid('value');
@@ -240,12 +262,12 @@ class ServerRequestTest extends TestCase
         $old   = $this->fixture->getAttribute($name);
         $new   = $clone->getAttribute($name);
 
-        $this->assertNotSame($this->fixture, $clone);
-        $this->assertEquals(null, $old);
-        $this->assertEquals($value, $new);
+        self::assertNotSame($this->fixture, $clone);
+        self::assertEquals(null, $old);
+        self::assertEquals($value, $new);
     }
 
-    public function testWithoutAttribute()
+    public function testWithoutAttribute(): void
     {
         $name       = uniqid('name');
         $value      = uniqid('value');
@@ -256,22 +278,22 @@ class ServerRequestTest extends TestCase
         $old   = $fixture->getAttribute($name);
         $new   = $clone->getAttribute($name);
 
-        $this->assertNotSame($fixture, $clone);
-        $this->assertEquals($value, $old);
-        $this->assertEquals(null, $new);
+        self::assertNotSame($fixture, $clone);
+        self::assertEquals($value, $old);
+        self::assertEquals(null, $new);
     }
 
-    public function testWithoutNonExistentAttribute()
+    public function testWithoutNonExistentAttribute(): void
     {
         $name = uniqid('name');
 
         $clone  = $this->fixture->withoutAttribute($name);
         $actual = $clone->getAttribute($name);
 
-        $this->assertEquals(null, $actual);
+        self::assertEquals(null, $actual);
     }
 
-    public function testRegisterContentTypeParser()
+    public function testRegisterContentTypeParser(): void
     {
         $contentType = uniqid('type');
         $callback    = function () {
@@ -284,6 +306,6 @@ class ServerRequestTest extends TestCase
 
         $actual = $this->fixture->getParsedBody();
 
-        $this->assertEquals(['decoded'], $actual);
+        self::assertEquals(['decoded'], $actual);
     }
 }

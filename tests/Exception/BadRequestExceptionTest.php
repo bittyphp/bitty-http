@@ -8,41 +8,41 @@ use PHPUnit\Framework\TestCase;
 
 class BadRequestExceptionTest extends TestCase
 {
-    public function testInstanceOf()
+    public function testInstanceOf(): void
     {
         $fixture = new BadRequestException();
 
-        $this->assertInstanceOf(HttpExceptionInterface::class, $fixture);
+        self::assertInstanceOf(HttpExceptionInterface::class, $fixture);
     }
 
-    public function testMessage()
+    public function testMessage(): void
     {
         $fixture = new BadRequestException();
 
         $actual = $fixture->getMessage();
 
-        $this->assertEquals('Bad Request', $actual);
+        self::assertEquals('Bad Request', $actual);
     }
 
-    public function testCode()
+    public function testCode(): void
     {
         $fixture = new BadRequestException();
 
         $actual = $fixture->getCode();
 
-        $this->assertEquals(400, $actual);
+        self::assertEquals(400, $actual);
     }
 
-    public function testTitle()
+    public function testTitle(): void
     {
         $fixture = new BadRequestException();
 
         $actual = $fixture->getTitle();
 
-        $this->assertEquals('400 Bad Request', $actual);
+        self::assertEquals('400 Bad Request', $actual);
     }
 
-    public function testDescription()
+    public function testDescription(): void
     {
         $fixture = new BadRequestException();
 
@@ -50,6 +50,6 @@ class BadRequestExceptionTest extends TestCase
 
         $description = 'The request could not be understood by the server '
             .'due to malformed syntax.';
-        $this->assertEquals($description, $actual);
+        self::assertEquals($description, $actual);
     }
 }

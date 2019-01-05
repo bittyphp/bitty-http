@@ -14,28 +14,28 @@ class ServerRequestFactoryTest extends TestCase
      */
     protected $fixture = null;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
         $this->fixture = new ServerRequestFactory();
     }
 
-    public function testInstanceOf()
+    public function testInstanceOf(): void
     {
-        $this->assertInstanceOf(ServerRequestFactoryInterface::class, $this->fixture);
+        self::assertInstanceOf(ServerRequestFactoryInterface::class, $this->fixture);
     }
 
-    public function testCreateServerRequest()
+    public function testCreateServerRequest(): void
     {
         $method = 'GET';
         $uri    = uniqid('/');
         $params = [uniqid() => uniqid()];
         $actual = $this->fixture->createServerRequest($method, $uri, $params);
 
-        $this->assertInstanceOf(ServerRequestInterface::class, $actual);
-        $this->assertEquals($method, $actual->getMethod());
-        $this->assertEquals($uri, $actual->getUri()->getPath());
-        $this->assertEquals($params, $actual->getServerParams());
+        self::assertInstanceOf(ServerRequestInterface::class, $actual);
+        self::assertEquals($method, $actual->getMethod());
+        self::assertEquals($uri, $actual->getUri()->getPath());
+        self::assertEquals($params, $actual->getServerParams());
     }
 }

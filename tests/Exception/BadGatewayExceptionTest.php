@@ -8,47 +8,47 @@ use PHPUnit\Framework\TestCase;
 
 class BadGatewayExceptionTest extends TestCase
 {
-    public function testInstanceOf()
+    public function testInstanceOf(): void
     {
         $fixture = new BadGatewayException();
 
-        $this->assertInstanceOf(HttpExceptionInterface::class, $fixture);
+        self::assertInstanceOf(HttpExceptionInterface::class, $fixture);
     }
 
-    public function testMessage()
+    public function testMessage(): void
     {
         $fixture = new BadGatewayException();
 
         $actual = $fixture->getMessage();
 
-        $this->assertEquals('Bad Gateway', $actual);
+        self::assertEquals('Bad Gateway', $actual);
     }
 
-    public function testCode()
+    public function testCode(): void
     {
         $fixture = new BadGatewayException();
 
         $actual = $fixture->getCode();
 
-        $this->assertEquals(502, $actual);
+        self::assertEquals(502, $actual);
     }
 
-    public function testTitle()
+    public function testTitle(): void
     {
         $fixture = new BadGatewayException();
 
         $actual = $fixture->getTitle();
 
-        $this->assertEquals('502 Bad Gateway', $actual);
+        self::assertEquals('502 Bad Gateway', $actual);
     }
 
-    public function testDescription()
+    public function testDescription(): void
     {
         $fixture = new BadGatewayException();
 
         $actual = $fixture->getDescription();
 
         $description = 'The server received an invalid response from an upstream server.';
-        $this->assertEquals($description, $actual);
+        self::assertEquals($description, $actual);
     }
 }

@@ -14,43 +14,49 @@ class StreamFactoryTest extends TestCase
      */
     protected $fixture = null;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
         $this->fixture = new StreamFactory();
     }
 
-    public function testInstanceOf()
+    public function testInstanceOf(): void
     {
-        $this->assertInstanceOf(StreamFactoryInterface::class, $this->fixture);
+        self::assertInstanceOf(StreamFactoryInterface::class, $this->fixture);
     }
 
-    public function testCreateStream()
+    public function testCreateStream(): void
     {
         $message = uniqid();
         $actual  = $this->fixture->createStream($message);
 
-        $this->assertInstanceOf(StreamInterface::class, $actual);
-        $this->assertEquals($message, (string) $actual);
+        self::assertInstanceOf(StreamInterface::class, $actual);
+        self::assertEquals($message, (string) $actual);
     }
 
-    public function testCreateStreamFromFile()
+    public function testCreateStreamFromFile(): void
     {
         $filename = __DIR__.'/bootstrap.php';
         $actual   = $this->fixture->createStreamFromFile($filename, 'r');
 
-        $this->assertInstanceOf(StreamInterface::class, $actual);
-        $this->assertEquals(file_get_contents($filename), (string) $actual);
+        self::assertInstanceOf(StreamInterface::class, $actual);
+        self::assertEquals(file_get_contents($filename), (string) $actual);
     }
 
-    public function testCreateStreamFromResource()
+    public function testCreateStreamFromResource(): void
     {
         $filename = __DIR__.'/bootstrap.php';
         $resource = fopen($filename, 'r');
-        $actual   = $this->fixture->createStreamFromResource($resource);
+        if (false === $resource) {
+            self::fail();
 
-        $this->assertInstanceOf(StreamInterface::class, $actual);
-        $this->assertEquals(file_get_contents($filename), (string) $actual);
+            return;
+        }
+
+        $actual = $this->fixture->createStreamFromResource($resource);
+
+        self::assertInstanceOf(StreamInterface::class, $actual);
+        self::assertEquals(file_get_contents($filename), (string) $actual);
     }
 }

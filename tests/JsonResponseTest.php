@@ -8,14 +8,14 @@ use Psr\Http\Message\ResponseInterface;
 
 class JsonResponseTest extends TestCase
 {
-    public function testInstanceOf()
+    public function testInstanceOf(): void
     {
         $fixture = new JsonResponse();
 
-        $this->assertInstanceOf(ResponseInterface::class, $fixture);
+        self::assertInstanceOf(ResponseInterface::class, $fixture);
     }
 
-    public function testHeaders()
+    public function testHeaders(): void
     {
         $headerA = uniqid('header');
         $headerB = uniqid('header');
@@ -39,10 +39,10 @@ class JsonResponseTest extends TestCase
             $headerB => [$valueB],
         ];
 
-        $this->assertEquals($expected, $actual);
+        self::assertEquals($expected, $actual);
     }
 
-    public function testBodyIsJsonEncoded()
+    public function testBodyIsJsonEncoded(): void
     {
         $data = [uniqid('a') => uniqid('a'), uniqid('b') => uniqid('b')];
         $json = json_encode($data);
@@ -50,16 +50,16 @@ class JsonResponseTest extends TestCase
         $fixture = new JsonResponse($data);
         $actual  = $fixture->getBody();
 
-        $this->assertEquals($json, (string) $actual);
+        self::assertEquals($json, (string) $actual);
     }
 
-    public function testStatusCode()
+    public function testStatusCode(): void
     {
         $statusCode = rand(1, 5) * 100 + rand(0, 3);
 
         $fixture = new JsonResponse('', $statusCode);
         $actual  = $fixture->getStatusCode();
 
-        $this->assertEquals($statusCode, $actual);
+        self::assertEquals($statusCode, $actual);
     }
 }

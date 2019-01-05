@@ -14,26 +14,26 @@ class RequestTest extends TestCase
      */
     protected $fixture = null;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
         $this->fixture = new Request();
     }
 
-    public function testInstanceOf()
+    public function testInstanceOf(): void
     {
-        $this->assertInstanceOf(RequestInterface::class, $this->fixture);
+        self::assertInstanceOf(RequestInterface::class, $this->fixture);
     }
 
-    public function testGetRequestTarget()
+    public function testGetRequestTarget(): void
     {
         $actual = $this->fixture->getRequestTarget();
 
-        $this->assertEquals('/', $actual);
+        self::assertEquals('/', $actual);
     }
 
-    public function testGetRequestTargetWithQueryString()
+    public function testGetRequestTargetWithQueryString(): void
     {
         $path  = uniqid('path');
         $query = uniqid('query');
@@ -42,10 +42,10 @@ class RequestTest extends TestCase
 
         $actual = $this->fixture->getRequestTarget();
 
-        $this->assertEquals('/'.$path.'?'.$query, $actual);
+        self::assertEquals('/'.$path.'?'.$query, $actual);
     }
 
-    public function testWithRequestTarget()
+    public function testWithRequestTarget(): void
     {
         $uri = uniqid('path').'?'.uniqid('query');
 
@@ -53,12 +53,12 @@ class RequestTest extends TestCase
         $old   = $this->fixture->getRequestTarget();
         $new   = $clone->getRequestTarget();
 
-        $this->assertNotSame($this->fixture, $clone);
-        $this->assertEquals('/', $old);
-        $this->assertEquals($uri, $new);
+        self::assertNotSame($this->fixture, $clone);
+        self::assertEquals('/', $old);
+        self::assertEquals($uri, $new);
     }
 
-    public function testWithMethod()
+    public function testWithMethod(): void
     {
         $method = $this->getValidMethod();
 
@@ -66,12 +66,12 @@ class RequestTest extends TestCase
         $old   = $this->fixture->getMethod();
         $new   = $clone->getMethod();
 
-        $this->assertNotSame($this->fixture, $clone);
-        $this->assertEquals('GET', $old);
-        $this->assertEquals($method, $new);
+        self::assertNotSame($this->fixture, $clone);
+        self::assertEquals('GET', $old);
+        self::assertEquals($method, $new);
     }
 
-    public function testWithMethodThrowsException()
+    public function testWithMethodThrowsException(): void
     {
         $method = uniqid();
 
@@ -84,23 +84,32 @@ class RequestTest extends TestCase
     }
 
     /**
+     * @param array $headers
+     * @param string $uri
+     * @param bool $preserveHost
+     * @param string $expected
+     *
      * @dataProvider sampleUris
      */
-    public function testWithUri($headers, $uri, $preserveHost, $expected)
-    {
+    public function testWithUri(
+        array $headers,
+        string $uri,
+        bool $preserveHost,
+        string $expected
+    ): void {
         $this->fixture = new Request('GET', '', $headers);
 
         $clone = $this->fixture->withUri(new Uri($uri), $preserveHost);
         $old   = $this->fixture->getUri();
         $new   = $clone->getUri();
 
-        $this->assertNotSame($this->fixture, $clone);
-        $this->assertEquals('/', (string) $old);
-        $this->assertEquals($uri, (string) $new);
-        $this->assertEquals($expected, $clone->getHeaderLine('Host'));
+        self::assertNotSame($this->fixture, $clone);
+        self::assertEquals('/', (string) $old);
+        self::assertEquals($uri, (string) $new);
+        self::assertEquals($expected, $clone->getHeaderLine('Host'));
     }
 
-    public function sampleUris()
+    public function sampleUris(): array
     {
         $host = uniqid('host');
 

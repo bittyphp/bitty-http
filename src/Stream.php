@@ -9,19 +9,27 @@ class Stream implements StreamInterface
     /**
      * Stream of data.
      *
-     * @var resource
+     * @var resource|null
      */
     protected $stream = null;
 
     /**
-     * @param resource|string $stream
+     * @param resource|string|mixed $stream
+     *
+     * @throws \InvalidArgumentException If a resource or string isn't given.
      */
     public function __construct($stream)
     {
         if (is_resource($stream)) {
             $this->stream = $stream;
         } elseif (is_string($stream)) {
-            $this->stream = fopen('php://temp', 'w+');
+            $fp = fopen('php://temp', 'w+');
+            if (false === $fp) {
+                throw new \InvalidArgumentException(
+                    'Failed to create temporary stream.'
+                );
+            }
+            $this->stream = $fp;
             fwrite($this->stream, $stream);
         } else {
             throw new \InvalidArgumentException(
@@ -41,7 +49,7 @@ class Stream implements StreamInterface
      */
     public function __toString()
     {
-        if (!$this->isAttached()) {
+        if (null === $this->stream) {
             return '';
         }
 
@@ -55,7 +63,7 @@ class Stream implements StreamInterface
      */
     public function close(): void
     {
-        if (!$this->isAttached()) {
+        if (null === $this->stream) {
             return;
         }
 
@@ -80,7 +88,7 @@ class Stream implements StreamInterface
      */
     public function getSize(): ?int
     {
-        if (!$this->isAttached()) {
+        if (null === $this->stream) {
             return null;
         }
 
@@ -94,12 +102,13 @@ class Stream implements StreamInterface
      */
     public function tell(): int
     {
-        if (!$this->isAttached()
-            || false === ($position = ftell($this->stream))
-        ) {
-            throw new \RuntimeException(
-                sprintf('Unable to get position of stream.')
-            );
+        if (null === $this->stream) {
+            throw new \RuntimeException('Stream is not open.');
+        }
+
+        $position = ftell($this->stream);
+        if (false === $position) {
+            throw new \RuntimeException('Unable to get position of stream.');
         }
 
         return $position;
@@ -110,7 +119,7 @@ class Stream implements StreamInterface
      */
     public function eof(): bool
     {
-        return $this->isAttached() ? feof($this->stream) : true;
+        return null === $this->stream ? true : feof($this->stream);
     }
 
     /**
@@ -118,9 +127,12 @@ class Stream implements StreamInterface
      */
     public function isSeekable(): bool
     {
-        if (!$this->isAttached()
-            || null === ($seekable = $this->getMetadata('seekable'))
-        ) {
+        if (null === $this->stream) {
+            return false;
+        }
+
+        $seekable = $this->getMetadata('seekable');
+        if (null === $seekable) {
             return false;
         }
 
@@ -132,8 +144,8 @@ class Stream implements StreamInterface
      */
     public function seek($offset, $whence = SEEK_SET): void
     {
-        if (!$this->isSeekable()) {
-            throw new \RuntimeException('Stream is not seekable.');
+        if (null === $this->stream) {
+            throw new \RuntimeException('Stream is not open.');
         }
 
         if (0 > fseek($this->stream, $offset, $whence)) {
@@ -148,7 +160,11 @@ class Stream implements StreamInterface
      */
     public function rewind(): void
     {
-        if (!$this->isAttached() || !rewind($this->stream)) {
+        if (null === $this->stream) {
+            throw new \RuntimeException('Stream is not open.');
+        }
+
+        if (!rewind($this->stream)) {
             throw new \RuntimeException('Failed to rewind stream.');
         }
     }
@@ -158,15 +174,18 @@ class Stream implements StreamInterface
      */
     public function isWritable(): bool
     {
-        if (!$this->isAttached()
-            || null === ($mode = $this->getMetadata('mode'))
-        ) {
+        if (null === $this->stream) {
+            return false;
+        }
+
+        $mode = $this->getMetadata('mode');
+        if (null === $mode) {
             return false;
         }
 
         $mode = str_replace(['b', 'e'], '', $mode);
 
-        return in_array($mode, ['r+', 'w', 'w+', 'a', 'a+', 'x', 'x+', 'c', 'c+']);
+        return in_array($mode, ['r+', 'w', 'w+', 'a', 'a+', 'x', 'x+', 'c', 'c+'], true);
     }
 
     /**
@@ -174,9 +193,16 @@ class Stream implements StreamInterface
      */
     public function write($string): int
     {
-        if (!$this->isWritable()
-            || false === ($bytes = fwrite($this->stream, $string))
-        ) {
+        if (null === $this->stream) {
+            throw new \RuntimeException('Stream is not open.');
+        }
+
+        if (!$this->isWritable()) {
+            throw new \RuntimeException('Stream is not writable.');
+        }
+
+        $bytes = fwrite($this->stream, $string);
+        if (false === $bytes) {
             throw new \RuntimeException('Failed to write to stream.');
         }
 
@@ -188,15 +214,18 @@ class Stream implements StreamInterface
      */
     public function isReadable(): bool
     {
-        if (!$this->isAttached()
-            || null === ($mode = $this->getMetadata('mode'))
-        ) {
+        if (null === $this->stream) {
+            return false;
+        }
+
+        $mode = $this->getMetadata('mode');
+        if (null === $mode) {
             return false;
         }
 
         $mode = str_replace(['b', 'e'], '', $mode);
 
-        return in_array($mode, ['r', 'r+', 'w+', 'a+', 'x+', 'c+']);
+        return in_array($mode, ['r', 'r+', 'w+', 'a+', 'x+', 'c+'], true);
     }
 
     /**
@@ -204,9 +233,16 @@ class Stream implements StreamInterface
      */
     public function read($length): string
     {
-        if (!$this->isReadable()
-            || false === ($string = fread($this->stream, $length))
-        ) {
+        if (null === $this->stream) {
+            throw new \RuntimeException('Stream is not open.');
+        }
+
+        if (!$this->isReadable()) {
+            throw new \RuntimeException('Stream is not readable.');
+        }
+
+        $string = fread($this->stream, $length);
+        if (false === $string) {
             throw new \RuntimeException('Failed to read from stream.');
         }
 
@@ -218,9 +254,12 @@ class Stream implements StreamInterface
      */
     public function getContents(): string
     {
-        if (!$this->isAttached()
-            || false === ($string = stream_get_contents($this->stream))
-        ) {
+        if (null === $this->stream) {
+            throw new \RuntimeException('Stream is not open.');
+        }
+
+        $string = stream_get_contents($this->stream);
+        if (false === $string) {
             throw new \RuntimeException('Failed to get contents of stream.');
         }
 
@@ -232,7 +271,7 @@ class Stream implements StreamInterface
      */
     public function getMetadata($key = null)
     {
-        if (!$this->isAttached()) {
+        if (null === $this->stream) {
             return null;
         }
 
@@ -246,15 +285,5 @@ class Stream implements StreamInterface
         }
 
         return null;
-    }
-
-    /**
-     * Checks if the stream is attached.
-     *
-     * @return bool
-     */
-    protected function isAttached(): bool
-    {
-        return null !== $this->stream;
     }
 }

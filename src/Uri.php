@@ -27,14 +27,14 @@ class Uri implements UriInterface
     /**
      * Authority username.
      *
-     * @var string
+     * @var string|null
      */
     protected $user = null;
 
     /**
      * Authority password.
      *
-     * @var string
+     * @var string|null
      */
     protected $pass = null;
 
@@ -76,7 +76,7 @@ class Uri implements UriInterface
     /**
      * @param string $uri
      */
-    public function __construct($uri = '')
+    public function __construct(string $uri = '')
     {
         $data = parse_url($uri);
         if (false === $data) {
@@ -127,7 +127,8 @@ class Uri implements UriInterface
 
         if (!empty($server['HTTP_HOST'])) {
             $host = $server['HTTP_HOST'];
-            if (false !== ($pos = strrpos($host, ':'))) {
+            $pos  = strrpos($host, ':');
+            if (false !== $pos) {
                 $port = substr($host, $pos + 1);
                 $host = substr($host, 0, $pos);
             }
@@ -355,7 +356,7 @@ class Uri implements UriInterface
     {
         $uri = clone $this;
 
-        $uri->port = $this->filterPort($port);
+        $uri->port = $this->filterPort((int) $port);
 
         return $uri;
     }
@@ -407,7 +408,7 @@ class Uri implements UriInterface
      */
     protected function filterScheme(string $scheme): string
     {
-        $scheme = rtrim(strtolower((string) $scheme), ':');
+        $scheme = rtrim(strtolower($scheme), ':');
         if (!empty($scheme) && !preg_match('/^[a-z][a-z0-9\+\.-]*$/', $scheme)) {
             throw new \InvalidArgumentException(
                 sprintf('Invalid scheme "%s".', $scheme)
@@ -456,19 +457,23 @@ class Uri implements UriInterface
     /**
      * Filters a path to make sure it's valid.
      *
-     * @param string $path
+     * @param string|null $path
      *
      * @return string
      */
     protected function filterPath(?string $path): string
     {
+        if (!$path) {
+            return '';
+        }
+
         return implode(
             '/',
             array_map(
                 'rawurlencode',
                 array_map(
                     'rawurldecode',
-                    explode('/', (string) $path)
+                    explode('/', $path)
                 )
             )
         );
@@ -477,13 +482,17 @@ class Uri implements UriInterface
     /**
      * Filters a query string to make sure it's valid.
      *
-     * @param string $query
+     * @param string|null $query
      *
      * @return string
      */
     protected function filterQuery(?string $query): string
     {
-        $params = explode('&', ltrim((string) $query, '?'));
+        if (!$query) {
+            return '';
+        }
+
+        $params = explode('&', ltrim($query, '?'));
 
         $len = count($params);
         for ($i = 0; $i < $len; $i++) {
@@ -509,15 +518,19 @@ class Uri implements UriInterface
     /**
      * Filters a fragment to make sure it's valid.
      *
-     * @param string $fragment
+     * @param string|null $fragment
      *
      * @return string
      */
     protected function filterFragment(?string $fragment): string
     {
+        if (!$fragment) {
+            return '';
+        }
+
         return rawurlencode(
             rawurldecode(
-                ltrim((string) $fragment, '#')
+                ltrim($fragment, '#')
             )
         );
     }

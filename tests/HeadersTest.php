@@ -5,9 +5,9 @@ namespace Bitty\Tests\Http;
 use Bitty\Http\Headers;
 use PHPUnit\Framework\TestCase;
 
-class HeadersTests extends TestCase
+class HeadersTest extends TestCase
 {
-    public function testGetHeaders()
+    public function testGetHeaders(): void
     {
         $server   = [
             'HTTP_HOST' => uniqid(),
@@ -27,6 +27,6 @@ class HeadersTests extends TestCase
         $fixture = new Headers();
         $actual  = $fixture->getHeaders($server);
 
-        $this->assertEquals($expected, $actual);
+        self::assertEquals($expected, $actual);
     }
 }

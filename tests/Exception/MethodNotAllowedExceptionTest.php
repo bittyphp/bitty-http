@@ -8,47 +8,47 @@ use PHPUnit\Framework\TestCase;
 
 class MethodNotAllowedExceptionTest extends TestCase
 {
-    public function testInstanceOf()
+    public function testInstanceOf(): void
     {
         $fixture = new MethodNotAllowedException();
 
-        $this->assertInstanceOf(HttpExceptionInterface::class, $fixture);
+        self::assertInstanceOf(HttpExceptionInterface::class, $fixture);
     }
 
-    public function testMessage()
+    public function testMessage(): void
     {
         $fixture = new MethodNotAllowedException();
 
         $actual = $fixture->getMessage();
 
-        $this->assertEquals('Method Not Allowed', $actual);
+        self::assertEquals('Method Not Allowed', $actual);
     }
 
-    public function testCode()
+    public function testCode(): void
     {
         $fixture = new MethodNotAllowedException();
 
         $actual = $fixture->getCode();
 
-        $this->assertEquals(405, $actual);
+        self::assertEquals(405, $actual);
     }
 
-    public function testTitle()
+    public function testTitle(): void
     {
         $fixture = new MethodNotAllowedException();
 
         $actual = $fixture->getTitle();
 
-        $this->assertEquals('405 Method Not Allowed', $actual);
+        self::assertEquals('405 Method Not Allowed', $actual);
     }
 
-    public function testDescription()
+    public function testDescription(): void
     {
         $fixture = new MethodNotAllowedException();
 
         $actual = $fixture->getDescription();
 
         $description = 'The method specified is not allowed for the resource identified.';
-        $this->assertEquals($description, $actual);
+        self::assertEquals($description, $actual);
     }
 }

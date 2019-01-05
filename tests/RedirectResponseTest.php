@@ -8,14 +8,14 @@ use Psr\Http\Message\ResponseInterface;
 
 class RedirectResponseTest extends TestCase
 {
-    public function testInstanceOf()
+    public function testInstanceOf(): void
     {
         $fixture = new RedirectResponse(uniqid());
 
-        $this->assertInstanceOf(ResponseInterface::class, $fixture);
+        self::assertInstanceOf(ResponseInterface::class, $fixture);
     }
 
-    public function testHeaders()
+    public function testHeaders(): void
     {
         $headerA = uniqid('header');
         $headerB = uniqid('header');
@@ -40,16 +40,16 @@ class RedirectResponseTest extends TestCase
             $headerB => [$valueB],
         ];
 
-        $this->assertEquals($expected, $actual);
+        self::assertEquals($expected, $actual);
     }
 
-    public function testStatusCode()
+    public function testStatusCode(): void
     {
         $statusCode = rand(1, 5) * 100 + rand(0, 3);
 
         $fixture = new RedirectResponse(uniqid(), $statusCode);
         $actual  = $fixture->getStatusCode();
 
-        $this->assertEquals($statusCode, $actual);
+        self::assertEquals($statusCode, $actual);
     }
 }

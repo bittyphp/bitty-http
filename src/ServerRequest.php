@@ -109,7 +109,11 @@ class ServerRequest extends Request implements ServerRequestInterface
         $this->attributes  = $this->filterAttributes($attributes);
 
         if ('POST' === $this->method
-            && in_array($this->getContentType(), ['application/x-www-form-urlencoded', 'multipart/form-data'])
+            && in_array(
+                $this->getContentType(),
+                ['application/x-www-form-urlencoded', 'multipart/form-data'],
+                true
+            )
         ) {
             $this->parsedBody = $this->filterParsedBody($request);
         } else {
@@ -257,7 +261,9 @@ class ServerRequest extends Request implements ServerRequestInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @param null|array|object|mixed $parsedBody
+     *
+     * @return ServerRequestInterface
      */
     public function withParsedBody($parsedBody): ServerRequestInterface
     {
@@ -276,7 +282,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      *
      * @throws \InvalidArgumentException
      */
-    public function registerContentTypeParser(string $contentType, callable $callback)
+    public function registerContentTypeParser(string $contentType, callable $callback): void
     {
         $this->contentTypeParsers[$contentType] = $callback;
     }
@@ -371,7 +377,7 @@ class ServerRequest extends Request implements ServerRequestInterface
     /**
      * Filters file parameters to make sure they're valid.
      *
-     * @param UploadedFileInterface[] $files
+     * @param array $files Nested array of UploadedFileInterface|UploadedFileInterface[]
      *
      * @return UploadedFileInterface[]
      *

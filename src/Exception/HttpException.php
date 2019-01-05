@@ -11,14 +11,14 @@ class HttpException extends \Exception implements HttpExceptionInterface
     /**
      * The request object, if available.
      *
-     * @var ServerRequestInterface
+     * @var ServerRequestInterface|null
      */
     protected $request = null;
 
     /**
      * The response object, if available.
      *
-     * @var ResponseInterface
+     * @var ResponseInterface|null
      */
     protected $response = null;
 
@@ -37,11 +37,18 @@ class HttpException extends \Exception implements HttpExceptionInterface
     protected $description = '';
 
     /**
+     * Default message to use.
+     *
+     * @var string
+     */
+    protected $message = '';
+
+    /**
      * @param string|null $message
      * @param int $code
-     * @param ServerRequestInterface $request
-     * @param ResponseInterface $response
-     * @param \Exception $previous
+     * @param ServerRequestInterface|null $request
+     * @param ResponseInterface|null $response
+     * @param \Exception|null $previous
      */
     public function __construct(
         $message = null,
@@ -67,7 +74,7 @@ class HttpException extends \Exception implements HttpExceptionInterface
     /**
      * {@inheritDoc}
      */
-    public function getRequest()
+    public function getRequest(): ?ServerRequestInterface
     {
         return $this->request;
     }
@@ -75,7 +82,7 @@ class HttpException extends \Exception implements HttpExceptionInterface
     /**
      * {@inheritDoc}
      */
-    public function getResponse()
+    public function getResponse(): ?ResponseInterface
     {
         return $this->response;
     }
@@ -83,7 +90,7 @@ class HttpException extends \Exception implements HttpExceptionInterface
     /**
      * {@inheritDoc}
      */
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->title;
     }
@@ -91,7 +98,7 @@ class HttpException extends \Exception implements HttpExceptionInterface
     /**
      * {@inheritDoc}
      */
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->description;
     }

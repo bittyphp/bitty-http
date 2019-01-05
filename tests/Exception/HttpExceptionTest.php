@@ -10,68 +10,68 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class HttpExceptionTest extends TestCase
 {
-    public function testInstanceOf()
+    public function testInstanceOf(): void
     {
         $fixture = new HttpException();
 
-        $this->assertInstanceOf(HttpExceptionInterface::class, $fixture);
+        self::assertInstanceOf(HttpExceptionInterface::class, $fixture);
     }
 
-    public function testMessage()
+    public function testMessage(): void
     {
         $message = uniqid();
         $fixture = new HttpException($message);
 
         $actual = $fixture->getMessage();
 
-        $this->assertEquals($message, $actual);
+        self::assertEquals($message, $actual);
     }
 
-    public function testCode()
+    public function testCode(): void
     {
         $code    = rand();
         $fixture = new HttpException(null, $code);
 
         $actual = $fixture->getCode();
 
-        $this->assertEquals($code, $actual);
+        self::assertEquals($code, $actual);
     }
 
-    public function testRequest()
+    public function testRequest(): void
     {
         $request = $this->createMock(ServerRequestInterface::class);
-        $fixture = new HttpException(null, null, $request);
+        $fixture = new HttpException(null, rand(), $request);
 
         $actual = $fixture->getRequest();
 
-        $this->assertEquals($request, $actual);
+        self::assertEquals($request, $actual);
     }
 
-    public function testResponse()
+    public function testResponse(): void
     {
         $response = $this->createMock(ResponseInterface::class);
-        $fixture  = new HttpException(null, null, null, $response);
+        $fixture  = new HttpException(null, rand(), null, $response);
 
         $actual = $fixture->getResponse();
 
-        $this->assertEquals($response, $actual);
+        self::assertEquals($response, $actual);
     }
 
-    public function testTitle()
+    public function testTitle(): void
     {
         $fixture = new HttpException();
 
         $actual = $fixture->getTitle();
 
-        $this->assertEquals('', $actual);
+        self::assertEquals('', $actual);
     }
 
-    public function testDescription()
+    public function testDescription(): void
     {
         $fixture = new HttpException();
 
         $actual = $fixture->getDescription();
 
-        $this->assertEquals('', $actual);
+        self::assertEquals('', $actual);
     }
 }

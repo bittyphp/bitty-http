@@ -55,8 +55,7 @@ class UploadedFiles
                     isset($file['name'][$index]) ? $file['name'][$index] : null,
                     isset($file['type'][$index]) ? $file['type'][$index] : null,
                     isset($file['size'][$index]) ? $file['size'][$index] : null,
-                    isset($file['error'][$index]) ? $file['error'][$index] : null,
-                    true
+                    isset($file['error'][$index]) ? $file['error'][$index] : null
                 );
             }
 

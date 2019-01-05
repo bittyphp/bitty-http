@@ -8,47 +8,47 @@ use PHPUnit\Framework\TestCase;
 
 class UnauthorizedExceptionTest extends TestCase
 {
-    public function testInstanceOf()
+    public function testInstanceOf(): void
     {
         $fixture = new UnauthorizedException();
 
-        $this->assertInstanceOf(HttpExceptionInterface::class, $fixture);
+        self::assertInstanceOf(HttpExceptionInterface::class, $fixture);
     }
 
-    public function testMessage()
+    public function testMessage(): void
     {
         $fixture = new UnauthorizedException();
 
         $actual = $fixture->getMessage();
 
-        $this->assertEquals('Unauthorized', $actual);
+        self::assertEquals('Unauthorized', $actual);
     }
 
-    public function testCode()
+    public function testCode(): void
     {
         $fixture = new UnauthorizedException();
 
         $actual = $fixture->getCode();
 
-        $this->assertEquals(401, $actual);
+        self::assertEquals(401, $actual);
     }
 
-    public function testTitle()
+    public function testTitle(): void
     {
         $fixture = new UnauthorizedException();
 
         $actual = $fixture->getTitle();
 
-        $this->assertEquals('401 Unauthorized', $actual);
+        self::assertEquals('401 Unauthorized', $actual);
     }
 
-    public function testDescription()
+    public function testDescription(): void
     {
         $fixture = new UnauthorizedException();
 
         $actual = $fixture->getDescription();
 
         $description = 'The request requires user authentication.';
-        $this->assertEquals($description, $actual);
+        self::assertEquals($description, $actual);
     }
 }

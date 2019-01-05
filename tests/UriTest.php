@@ -13,22 +13,25 @@ class UriTest extends TestCase
      */
     protected $fixture = null;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
         $this->fixture = new Uri();
     }
 
-    public function testInstanceOf()
+    public function testInstanceOf(): void
     {
-        $this->assertInstanceOf(UriInterface::class, $this->fixture);
+        self::assertInstanceOf(UriInterface::class, $this->fixture);
     }
 
     /**
+     * @param string $uri
+     * @param array $expected
+     *
      * @dataProvider sampleUriData
      */
-    public function testUriData($uri, $expected)
+    public function testUriData(string $uri, array $expected): void
     {
         $fixture = new Uri($uri);
 
@@ -42,10 +45,10 @@ class UriTest extends TestCase
             'fragment' => $fixture->getFragment(),
         ];
 
-        $this->assertEquals($expected, $actual);
+        self::assertEquals($expected, $actual);
     }
 
-    public function sampleUriData()
+    public function sampleUriData(): array
     {
         return [
             'full uri' => [
@@ -124,16 +127,19 @@ class UriTest extends TestCase
     }
 
     /**
+     * @param string $uri
+     * @param string $expected
+     *
      * @dataProvider sampleUriStringData
      */
-    public function testToString($uri, $expected)
+    public function testToString(string $uri, string $expected): void
     {
         $fixture = new Uri($uri);
 
-        $this->assertEquals($expected, (string) $fixture);
+        self::assertEquals($expected, (string) $fixture);
     }
 
-    public function sampleUriStringData()
+    public function sampleUriStringData(): array
     {
         return [
             'blank' => [
@@ -183,7 +189,7 @@ class UriTest extends TestCase
         ];
     }
 
-    public function testWithScheme()
+    public function testWithScheme(): void
     {
         $scheme = uniqid('a+.-');
 
@@ -192,14 +198,14 @@ class UriTest extends TestCase
         $old = $this->fixture->getScheme();
         $new = $clone->getScheme();
 
-        $this->assertNotSame($this->fixture, $clone);
-        $this->assertEquals('', $old);
-        $this->assertEquals($scheme, $new);
+        self::assertNotSame($this->fixture, $clone);
+        self::assertEquals('', $old);
+        self::assertEquals($scheme, $new);
     }
 
-    public function testWithSchemeThrowsException()
+    public function testWithSchemeThrowsException(): void
     {
-        $scheme = rand();
+        $scheme = uniqid();
 
         $message = 'Invalid scheme "'.$scheme.'".';
         $this->expectException(\InvalidArgumentException::class);
@@ -208,7 +214,7 @@ class UriTest extends TestCase
         $this->fixture->withScheme($scheme);
     }
 
-    public function testWithUserInfoNoPass()
+    public function testWithUserInfoNoPass(): void
     {
         $user = uniqid('user');
 
@@ -217,12 +223,12 @@ class UriTest extends TestCase
         $old = $this->fixture->getUserInfo();
         $new = $clone->getUserInfo();
 
-        $this->assertNotSame($this->fixture, $clone);
-        $this->assertEquals('', $old);
-        $this->assertEquals($user, $new);
+        self::assertNotSame($this->fixture, $clone);
+        self::assertEquals('', $old);
+        self::assertEquals($user, $new);
     }
 
-    public function testWithUserInfo()
+    public function testWithUserInfo(): void
     {
         $user = uniqid('user');
         $pass = uniqid('pass');
@@ -232,12 +238,12 @@ class UriTest extends TestCase
         $old = $this->fixture->getUserInfo();
         $new = $clone->getUserInfo();
 
-        $this->assertNotSame($this->fixture, $clone);
-        $this->assertEquals('', $old);
-        $this->assertEquals($user.':'.$pass, $new);
+        self::assertNotSame($this->fixture, $clone);
+        self::assertEquals('', $old);
+        self::assertEquals($user.':'.$pass, $new);
     }
 
-    public function testWithHost()
+    public function testWithHost(): void
     {
         $host = uniqid('host');
 
@@ -246,12 +252,12 @@ class UriTest extends TestCase
         $old = $this->fixture->getHost();
         $new = $clone->getHost();
 
-        $this->assertNotSame($this->fixture, $clone);
-        $this->assertEquals('', $old);
-        $this->assertEquals($host, $new);
+        self::assertNotSame($this->fixture, $clone);
+        self::assertEquals('', $old);
+        self::assertEquals($host, $new);
     }
 
-    public function testWithPort()
+    public function testWithPort(): void
     {
         $port = rand(0, 65535);
 
@@ -260,15 +266,17 @@ class UriTest extends TestCase
         $old = $this->fixture->getPort();
         $new = $clone->getPort();
 
-        $this->assertNotSame($this->fixture, $clone);
-        $this->assertNull($old);
-        $this->assertEquals($port, $new);
+        self::assertNotSame($this->fixture, $clone);
+        self::assertNull($old);
+        self::assertEquals($port, $new);
     }
 
     /**
+     * @param int $port
+     *
      * @dataProvider sampleInvalidPorts
      */
-    public function testWithPortThrowsException($port)
+    public function testWithPortThrowsException(int $port): void
     {
         $message = 'Invalid port '.$port.'. Must be between 1 and 65,535.';
         $this->expectException(\InvalidArgumentException::class);
@@ -277,7 +285,7 @@ class UriTest extends TestCase
         $this->fixture->withPort($port);
     }
 
-    public function sampleInvalidPorts()
+    public function sampleInvalidPorts(): array
     {
         return [
             'too high' => [rand(65536, 99999)],
@@ -286,21 +294,24 @@ class UriTest extends TestCase
     }
 
     /**
+     * @param string $path
+     * @param string $expected
+     *
      * @dataProvider samplePaths
      */
-    public function testWithPath($path, $expected)
+    public function testWithPath(string $path, string $expected): void
     {
         $clone = $this->fixture->withPath($path);
 
         $old = $this->fixture->getPath();
         $new = $clone->getPath();
 
-        $this->assertNotSame($this->fixture, $clone);
-        $this->assertEquals('', $old);
-        $this->assertEquals($expected, $new);
+        self::assertNotSame($this->fixture, $clone);
+        self::assertEquals('', $old);
+        self::assertEquals($expected, $new);
     }
 
-    public function samplePaths()
+    public function samplePaths(): array
     {
         $path = uniqid('path');
 
@@ -325,21 +336,24 @@ class UriTest extends TestCase
     }
 
     /**
+     * @param string $query
+     * @param string $expected
+     *
      * @dataProvider sampleQueries
      */
-    public function testWithQuery($query, $expected)
+    public function testWithQuery(string $query, string $expected): void
     {
         $clone = $this->fixture->withQuery($query);
 
         $old = $this->fixture->getQuery();
         $new = $clone->getQuery();
 
-        $this->assertNotSame($this->fixture, $clone);
-        $this->assertEquals('', $old);
-        $this->assertEquals($expected, $new);
+        self::assertNotSame($this->fixture, $clone);
+        self::assertEquals('', $old);
+        self::assertEquals($expected, $new);
     }
 
-    public function sampleQueries()
+    public function sampleQueries(): array
     {
         $keyA   = uniqid('key');
         $keyB   = uniqid('key');
@@ -371,21 +385,24 @@ class UriTest extends TestCase
     }
 
     /**
+     * @param string $fragment
+     * @param string $expected
+     *
      * @dataProvider sampleFragments
      */
-    public function testWithFragment($fragment, $expected)
+    public function testWithFragment(string $fragment, string $expected): void
     {
         $clone = $this->fixture->withFragment($fragment);
 
         $old = $this->fixture->getFragment();
         $new = $clone->getFragment();
 
-        $this->assertNotSame($this->fixture, $clone);
-        $this->assertEquals('', $old);
-        $this->assertEquals($expected, $new);
+        self::assertNotSame($this->fixture, $clone);
+        self::assertEquals('', $old);
+        self::assertEquals($expected, $new);
     }
 
-    public function sampleFragments()
+    public function sampleFragments(): array
     {
         $value = uniqid('value');
 
@@ -414,16 +431,19 @@ class UriTest extends TestCase
     }
 
     /**
+     * @param mixed[] $data
+     * @param string $expected
+     *
      * @dataProvider sampleEnvironmentData
      */
-    public function testCreateFromArray($data, $expected)
+    public function testCreateFromArray(array $data, string $expected): void
     {
         $uri = Uri::createFromArray($data);
 
-        $this->assertEquals($expected, (string) $uri);
+        self::assertEquals($expected, (string) $uri);
     }
 
-    public function sampleEnvironmentData()
+    public function sampleEnvironmentData(): array
     {
         $user  = uniqid('user');
         $pass  = uniqid('pass');

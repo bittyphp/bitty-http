@@ -11,11 +11,14 @@ class RedirectResponse extends Response
      *
      * @param string $uri URI to redirect to.
      * @param int $statusCode HTTP status code.
-     * @param string[] $headers List of headers.
+     * @param array $headers Array of string|string[]
      */
-    public function __construct($uri, $statusCode = 302, array $headers = [])
+    public function __construct(string $uri, int $statusCode = 302, array $headers = [])
     {
-        parent::__construct('', $statusCode, $headers);
+        $body = '<html><body><p>This page has been moved <a href="'
+            .htmlentities($uri).'">here</a>.</p></body></html>';
+
+        parent::__construct($body, $statusCode, $headers);
 
         // forcibly override location
         $this->headers = $this->withHeader('Location', $uri)->getHeaders();

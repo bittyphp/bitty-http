@@ -167,9 +167,9 @@ class Request extends AbstractMessage implements RequestInterface
      *
      * @throws \InvalidArgumentException
      */
-    protected function filterMethod($method): string
+    protected function filterMethod(string $method): string
     {
-        if (!in_array($method, $this->validMethods)) {
+        if (!in_array($method, $this->validMethods, true)) {
             throw new \InvalidArgumentException(
                 sprintf(
                     'HTTP method "%s" is invalid. Valid methods are: ["%s"]',
@@ -189,8 +189,8 @@ class Request extends AbstractMessage implements RequestInterface
      *
      * @return string
      */
-    protected function filterRequestTarget($requestTarget): string
+    protected function filterRequestTarget(string $requestTarget): string
     {
-        return (string) $requestTarget;
+        return $requestTarget;
     }
 }

@@ -18,7 +18,7 @@ abstract class AbstractMessage implements MessageInterface
     /**
      * HTTP headers.
      *
-     * @var string[]
+     * @var array Array of string|string[]
      */
     protected $headers = [];
 
@@ -222,7 +222,7 @@ abstract class AbstractMessage implements MessageInterface
      *
      * @param string[] $headers
      *
-     * @return string[]
+     * @return array Array of string|string[]
      *
      * @throws \InvalidArgumentException
      */
@@ -247,7 +247,7 @@ abstract class AbstractMessage implements MessageInterface
      */
     protected function filterProtocolVersion($protocolVersion): string
     {
-        if (!in_array($protocolVersion, $this->validProtocolVersions)) {
+        if (!in_array($protocolVersion, $this->validProtocolVersions, true)) {
             throw new \InvalidArgumentException(
                 sprintf(
                     'Invalid protocol version "%s". Valid versions are: ["%s"]',

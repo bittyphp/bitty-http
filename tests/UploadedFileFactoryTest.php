@@ -15,19 +15,19 @@ class UploadedFileFactoryTest extends TestCase
      */
     protected $fixture = null;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
         $this->fixture = new UploadedFileFactory();
     }
 
-    public function testInstanceOf()
+    public function testInstanceOf(): void
     {
-        $this->assertInstanceOf(UploadedFileFactoryInterface::class, $this->fixture);
+        self::assertInstanceOf(UploadedFileFactoryInterface::class, $this->fixture);
     }
 
-    public function testCreateUploadedFile()
+    public function testCreateUploadedFile(): void
     {
         $stream          = $this->createMock(StreamInterface::class);
         $size            = rand();
@@ -37,11 +37,11 @@ class UploadedFileFactoryTest extends TestCase
 
         $actual = $this->fixture->createUploadedFile($stream, $size, $error, $clientFilename, $clientMediaType);
 
-        $this->assertInstanceOf(UploadedFileInterface::class, $actual);
-        $this->assertSame($stream, $actual->getStream());
-        $this->assertEquals($size, $actual->getSize());
-        $this->assertEquals($error, $actual->getError());
-        $this->assertEquals($clientFilename, $actual->getClientFilename());
-        $this->assertEquals($clientMediaType, $actual->getClientMediaType());
+        self::assertInstanceOf(UploadedFileInterface::class, $actual);
+        self::assertSame($stream, $actual->getStream());
+        self::assertEquals($size, $actual->getSize());
+        self::assertEquals($error, $actual->getError());
+        self::assertEquals($clientFilename, $actual->getClientFilename());
+        self::assertEquals($clientMediaType, $actual->getClientMediaType());
     }
 }

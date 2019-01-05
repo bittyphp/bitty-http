@@ -8,47 +8,47 @@ use PHPUnit\Framework\TestCase;
 
 class NotFoundExceptionTest extends TestCase
 {
-    public function testInstanceOf()
+    public function testInstanceOf(): void
     {
         $fixture = new NotFoundException();
 
-        $this->assertInstanceOf(HttpExceptionInterface::class, $fixture);
+        self::assertInstanceOf(HttpExceptionInterface::class, $fixture);
     }
 
-    public function testMessage()
+    public function testMessage(): void
     {
         $fixture = new NotFoundException();
 
         $actual = $fixture->getMessage();
 
-        $this->assertEquals('Not Found', $actual);
+        self::assertEquals('Not Found', $actual);
     }
 
-    public function testCode()
+    public function testCode(): void
     {
         $fixture = new NotFoundException();
 
         $actual = $fixture->getCode();
 
-        $this->assertEquals(404, $actual);
+        self::assertEquals(404, $actual);
     }
 
-    public function testTitle()
+    public function testTitle(): void
     {
         $fixture = new NotFoundException();
 
         $actual = $fixture->getTitle();
 
-        $this->assertEquals('404 Not Found', $actual);
+        self::assertEquals('404 Not Found', $actual);
     }
 
-    public function testDescription()
+    public function testDescription(): void
     {
         $fixture = new NotFoundException();
 
         $actual = $fixture->getDescription();
 
         $description = 'The server cannot find the requested resource.';
-        $this->assertEquals($description, $actual);
+        self::assertEquals($description, $actual);
     }
 }

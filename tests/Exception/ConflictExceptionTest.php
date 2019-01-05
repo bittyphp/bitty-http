@@ -8,41 +8,41 @@ use PHPUnit\Framework\TestCase;
 
 class ConflictExceptionTest extends TestCase
 {
-    public function testInstanceOf()
+    public function testInstanceOf(): void
     {
         $fixture = new ConflictException();
 
-        $this->assertInstanceOf(HttpExceptionInterface::class, $fixture);
+        self::assertInstanceOf(HttpExceptionInterface::class, $fixture);
     }
 
-    public function testMessage()
+    public function testMessage(): void
     {
         $fixture = new ConflictException();
 
         $actual = $fixture->getMessage();
 
-        $this->assertEquals('Conflict', $actual);
+        self::assertEquals('Conflict', $actual);
     }
 
-    public function testCode()
+    public function testCode(): void
     {
         $fixture = new ConflictException();
 
         $actual = $fixture->getCode();
 
-        $this->assertEquals(409, $actual);
+        self::assertEquals(409, $actual);
     }
 
-    public function testTitle()
+    public function testTitle(): void
     {
         $fixture = new ConflictException();
 
         $actual = $fixture->getTitle();
 
-        $this->assertEquals('409 Conflict', $actual);
+        self::assertEquals('409 Conflict', $actual);
     }
 
-    public function testDescription()
+    public function testDescription(): void
     {
         $fixture = new ConflictException();
 
@@ -50,6 +50,6 @@ class ConflictExceptionTest extends TestCase
 
         $description = 'The request could not be completed due to a '
             .'conflict with the current state of the resource.';
-        $this->assertEquals($description, $actual);
+        self::assertEquals($description, $actual);
     }
 }

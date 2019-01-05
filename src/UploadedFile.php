@@ -11,14 +11,14 @@ class UploadedFile implements UploadedFileInterface
     /**
      * File contents stream.
      *
-     * @var StreamInterface
+     * @var StreamInterface|null
      */
     protected $stream = null;
 
     /**
      * Full path to the file.
      *
-     * @var string
+     * @var string|null
      */
     protected $path = null;
 
@@ -178,7 +178,8 @@ class UploadedFile implements UploadedFileInterface
      */
     protected function moveStream(string $targetPath): void
     {
-        if (false === ($fp = fopen($targetPath, 'wb'))) {
+        $fp = fopen($targetPath, 'wb');
+        if (false === $fp) {
             throw new \InvalidArgumentException(
                 sprintf('Unable to open "%s" for writing!', $targetPath)
             );
@@ -186,8 +187,12 @@ class UploadedFile implements UploadedFileInterface
 
         $stream = $this->getStream();
         $stream->rewind();
+        $resource = $stream->detach();
+        if (!$resource) {
+            throw new \RuntimeException('Failed to access uploaded file.');
+        }
 
-        if (false === stream_copy_to_stream($stream, $fp, -1, 0)) {
+        if (false === stream_copy_to_stream($resource, $fp, -1, 0)) {
             throw new \RuntimeException(
                 sprintf('Failed to move file to "%s"', $targetPath)
             );
@@ -203,6 +208,10 @@ class UploadedFile implements UploadedFileInterface
      */
     protected function movePath(string $targetPath): void
     {
+        if (null === $this->path) {
+            throw new \RuntimeException('File has already been moved.');
+        }
+
         if ('cli' === PHP_SAPI) {
             if (!rename($this->path, $targetPath)) {
                 throw new \RuntimeException(

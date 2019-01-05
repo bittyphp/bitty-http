@@ -14,26 +14,26 @@ class RequestFactoryTest extends TestCase
      */
     protected $fixture = null;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
         $this->fixture = new RequestFactory();
     }
 
-    public function testInstanceOf()
+    public function testInstanceOf(): void
     {
-        $this->assertInstanceOf(RequestFactoryInterface::class, $this->fixture);
+        self::assertInstanceOf(RequestFactoryInterface::class, $this->fixture);
     }
 
-    public function testCreateRequest()
+    public function testCreateRequest(): void
     {
         $method = 'GET';
         $uri    = uniqid('/');
         $actual = $this->fixture->createRequest($method, $uri);
 
-        $this->assertInstanceOf(RequestInterface::class, $actual);
-        $this->assertEquals($method, $actual->getMethod());
-        $this->assertEquals($uri, $actual->getUri()->getPath());
+        self::assertInstanceOf(RequestInterface::class, $actual);
+        self::assertEquals($method, $actual->getMethod());
+        self::assertEquals($uri, $actual->getUri()->getPath());
     }
 }

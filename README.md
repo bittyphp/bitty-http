@@ -5,7 +5,7 @@
 [![Total Downloads](https://poser.pugx.org/bittyphp/bitty-http/downloads)](https://packagist.org/packages/bittyphp/bitty-http)
 [![License](https://poser.pugx.org/bittyphp/bitty-http/license)](https://packagist.org/packages/bittyphp/bitty-http)
 
-PSR-7 HTTP implementation.
+PSR-7 and PSR-17 HTTP implementation.
 
 ## Installation
 

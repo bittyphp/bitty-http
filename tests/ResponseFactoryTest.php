@@ -14,40 +14,44 @@ class ResponseFactoryTest extends TestCase
      */
     protected $fixture = null;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
         $this->fixture = new ResponseFactory();
     }
 
-    public function testInstanceOf()
+    public function testInstanceOf(): void
     {
-        $this->assertInstanceOf(ResponseFactoryInterface::class, $this->fixture);
+        self::assertInstanceOf(ResponseFactoryInterface::class, $this->fixture);
     }
 
-    public function testCreateResponseDefault()
+    public function testCreateResponseDefault(): void
     {
         $actual = $this->fixture->createResponse();
 
-        $this->assertInstanceOf(ResponseInterface::class, $actual);
-        $this->assertEquals(200, $actual->getStatusCode());
-        $this->assertEquals('OK', $actual->getReasonPhrase());
+        self::assertInstanceOf(ResponseInterface::class, $actual);
+        self::assertEquals(200, $actual->getStatusCode());
+        self::assertEquals('OK', $actual->getReasonPhrase());
     }
 
     /**
+     * @param int $code
+     * @param string $reason
+     * @param string $expected
+     *
      * @dataProvider sampleStatus
      */
-    public function testCreateResponse($code, $reason, $expected)
+    public function testCreateResponse(int $code, string $reason, string $expected): void
     {
         $actual = $this->fixture->createResponse($code, $reason);
 
-        $this->assertInstanceOf(ResponseInterface::class, $actual);
-        $this->assertEquals($code, $actual->getStatusCode());
-        $this->assertEquals($expected, $actual->getReasonPhrase());
+        self::assertInstanceOf(ResponseInterface::class, $actual);
+        self::assertEquals($code, $actual->getStatusCode());
+        self::assertEquals($expected, $actual->getReasonPhrase());
     }
 
-    public function sampleStatus()
+    public function sampleStatus(): array
     {
         $validStatusCodes = $this->getValidStatusCodes();
 

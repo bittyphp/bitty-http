@@ -13,6 +13,9 @@ class RequestBody extends Stream
     {
         $stream = fopen('php://temp', 'w+');
         $input  = fopen('php://input', 'r');
+        if (false === $stream || false === $input) {
+            throw new \RuntimeException('Failed to copy input to a stream.');
+        }
         stream_copy_to_stream($input, $stream);
 
         parent::__construct($stream);

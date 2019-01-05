@@ -13,22 +13,26 @@ class ResponseTest extends TestCase
      */
     protected $fixture = null;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
         $this->fixture = new Response();
     }
 
-    public function testInstanceOf()
+    public function testInstanceOf(): void
     {
-        $this->assertInstanceOf(ResponseInterface::class, $this->fixture);
+        self::assertInstanceOf(ResponseInterface::class, $this->fixture);
     }
 
     /**
+     * @param int $code
+     * @param string $reason
+     * @param string $expected
+     *
      * @dataProvider sampleStatus
      */
-    public function testWithStatusCodeOnly($code, $reason, $expected)
+    public function testWithStatusCodeOnly(int $code, string $reason, string $expected): void
     {
         $clone = $this->fixture->withStatus($code, $reason);
 
@@ -37,14 +41,14 @@ class ResponseTest extends TestCase
         $newCode   = $clone->getStatusCode();
         $newReason = $clone->getReasonPhrase();
 
-        $this->assertNotSame($this->fixture, $clone);
-        $this->assertEquals(200, $oldCode);
-        $this->assertEquals('OK', $oldReason);
-        $this->assertEquals($code, $newCode);
-        $this->assertEquals($expected, $newReason);
+        self::assertNotSame($this->fixture, $clone);
+        self::assertEquals(200, $oldCode);
+        self::assertEquals('OK', $oldReason);
+        self::assertEquals($code, $newCode);
+        self::assertEquals($expected, $newReason);
     }
 
-    public function sampleStatus()
+    public function sampleStatus(): array
     {
         $validStatusCodes = $this->getValidStatusCodes();
 
@@ -66,7 +70,7 @@ class ResponseTest extends TestCase
         return $data;
     }
 
-    public function testWithStatusThrowsException()
+    public function testWithStatusThrowsException(): void
     {
         $code = $this->getInvalidStatusCode();
 
@@ -77,28 +81,28 @@ class ResponseTest extends TestCase
         $this->fixture->withStatus($code);
     }
 
-    public function testBody()
+    public function testBody(): void
     {
         $body = uniqid();
 
         $fixture = new Response($body);
 
-        $this->assertEquals($body, (string) $fixture->getBody());
+        self::assertEquals($body, (string) $fixture->getBody());
     }
 
-    public function testStatus()
+    public function testStatus(): void
     {
         $codes  = $this->getValidStatusCodes();
-        $code   = array_rand($codes);
+        $code   = intval(array_rand($codes));
         $reason = $codes[$code];
 
         $fixture = new Response('', $code);
 
-        $this->assertEquals($code, $fixture->getStatusCode());
-        $this->assertEquals($reason, $fixture->getReasonPhrase());
+        self::assertEquals($code, $fixture->getStatusCode());
+        self::assertEquals($reason, $fixture->getReasonPhrase());
     }
 
-    public function testInvalidStatusCodeThrowsException()
+    public function testInvalidStatusCodeThrowsException(): void
     {
         $code = $this->getInvalidStatusCode();
 
@@ -109,7 +113,7 @@ class ResponseTest extends TestCase
         new Response('', $code);
     }
 
-    public function testHeaders()
+    public function testHeaders(): void
     {
         $headerA = uniqid('header');
         $headerB = uniqid('header');
@@ -121,7 +125,7 @@ class ResponseTest extends TestCase
         $actual   = $fixture->getHeaders();
         $expected = [$headerA => [$valueA], $headerB => [$valueB]];
 
-        $this->assertEquals($expected, $actual);
+        self::assertEquals($expected, $actual);
     }
 
     /**
@@ -129,7 +133,7 @@ class ResponseTest extends TestCase
      *
      * @return string[]
      */
-    protected function getValidStatusCodes()
+    protected function getValidStatusCodes(): array
     {
         return [
             100 => 'Continue',

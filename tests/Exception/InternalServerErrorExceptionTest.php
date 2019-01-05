@@ -8,41 +8,41 @@ use PHPUnit\Framework\TestCase;
 
 class InternalServerErrorExceptionTest extends TestCase
 {
-    public function testInstanceOf()
+    public function testInstanceOf(): void
     {
         $fixture = new InternalServerErrorException();
 
-        $this->assertInstanceOf(HttpExceptionInterface::class, $fixture);
+        self::assertInstanceOf(HttpExceptionInterface::class, $fixture);
     }
 
-    public function testMessage()
+    public function testMessage(): void
     {
         $fixture = new InternalServerErrorException();
 
         $actual = $fixture->getMessage();
 
-        $this->assertEquals('Internal Server Error', $actual);
+        self::assertEquals('Internal Server Error', $actual);
     }
 
-    public function testCode()
+    public function testCode(): void
     {
         $fixture = new InternalServerErrorException();
 
         $actual = $fixture->getCode();
 
-        $this->assertEquals(500, $actual);
+        self::assertEquals(500, $actual);
     }
 
-    public function testTitle()
+    public function testTitle(): void
     {
         $fixture = new InternalServerErrorException();
 
         $actual = $fixture->getTitle();
 
-        $this->assertEquals('500 Internal Server Error', $actual);
+        self::assertEquals('500 Internal Server Error', $actual);
     }
 
-    public function testDescription()
+    public function testDescription(): void
     {
         $fixture = new InternalServerErrorException();
 
@@ -50,6 +50,6 @@ class InternalServerErrorExceptionTest extends TestCase
 
         $description = 'The server encountered an unexpected condition '
             .'which prevented it from fulfilling the request.';
-        $this->assertEquals($description, $actual);
+        self::assertEquals($description, $actual);
     }
 }

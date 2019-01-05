@@ -14,24 +14,24 @@ class UriFactoryTest extends TestCase
      */
     protected $fixture = null;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
         $this->fixture = new UriFactory();
     }
 
-    public function testInstanceOf()
+    public function testInstanceOf(): void
     {
-        $this->assertInstanceOf(UriFactoryInterface::class, $this->fixture);
+        self::assertInstanceOf(UriFactoryInterface::class, $this->fixture);
     }
 
-    public function testCreateUri()
+    public function testCreateUri(): void
     {
         $uri    = uniqid('/');
         $actual = $this->fixture->createUri($uri);
 
-        $this->assertInstanceOf(UriInterface::class, $actual);
-        $this->assertEquals($uri, $actual->getPath());
+        self::assertInstanceOf(UriInterface::class, $actual);
+        self::assertEquals($uri, $actual->getPath());
     }
 }

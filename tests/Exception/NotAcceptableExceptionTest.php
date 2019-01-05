@@ -8,41 +8,41 @@ use PHPUnit\Framework\TestCase;
 
 class NotAcceptableExceptionTest extends TestCase
 {
-    public function testInstanceOf()
+    public function testInstanceOf(): void
     {
         $fixture = new NotAcceptableException();
 
-        $this->assertInstanceOf(HttpExceptionInterface::class, $fixture);
+        self::assertInstanceOf(HttpExceptionInterface::class, $fixture);
     }
 
-    public function testMessage()
+    public function testMessage(): void
     {
         $fixture = new NotAcceptableException();
 
         $actual = $fixture->getMessage();
 
-        $this->assertEquals('Not Acceptable', $actual);
+        self::assertEquals('Not Acceptable', $actual);
     }
 
-    public function testCode()
+    public function testCode(): void
     {
         $fixture = new NotAcceptableException();
 
         $actual = $fixture->getCode();
 
-        $this->assertEquals(406, $actual);
+        self::assertEquals(406, $actual);
     }
 
-    public function testTitle()
+    public function testTitle(): void
     {
         $fixture = new NotAcceptableException();
 
         $actual = $fixture->getTitle();
 
-        $this->assertEquals('406 Not Acceptable', $actual);
+        self::assertEquals('406 Not Acceptable', $actual);
     }
 
-    public function testDescription()
+    public function testDescription(): void
     {
         $fixture = new NotAcceptableException();
 
@@ -50,6 +50,6 @@ class NotAcceptableExceptionTest extends TestCase
 
         $description = 'The resource is not capable of generating '
             .'responses acceptable to the requested accept headers.';
-        $this->assertEquals($description, $actual);
+        self::assertEquals($description, $actual);
     }
 }

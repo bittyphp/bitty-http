@@ -8,41 +8,41 @@ use PHPUnit\Framework\TestCase;
 
 class ServiceUnavailableExceptionTest extends TestCase
 {
-    public function testInstanceOf()
+    public function testInstanceOf(): void
     {
         $fixture = new ServiceUnavailableException();
 
-        $this->assertInstanceOf(HttpExceptionInterface::class, $fixture);
+        self::assertInstanceOf(HttpExceptionInterface::class, $fixture);
     }
 
-    public function testMessage()
+    public function testMessage(): void
     {
         $fixture = new ServiceUnavailableException();
 
         $actual = $fixture->getMessage();
 
-        $this->assertEquals('Service Unavailable', $actual);
+        self::assertEquals('Service Unavailable', $actual);
     }
 
-    public function testCode()
+    public function testCode(): void
     {
         $fixture = new ServiceUnavailableException();
 
         $actual = $fixture->getCode();
 
-        $this->assertEquals(503, $actual);
+        self::assertEquals(503, $actual);
     }
 
-    public function testTitle()
+    public function testTitle(): void
     {
         $fixture = new ServiceUnavailableException();
 
         $actual = $fixture->getTitle();
 
-        $this->assertEquals('503 Service Unavailable', $actual);
+        self::assertEquals('503 Service Unavailable', $actual);
     }
 
-    public function testDescription()
+    public function testDescription(): void
     {
         $fixture = new ServiceUnavailableException();
 
@@ -50,6 +50,6 @@ class ServiceUnavailableExceptionTest extends TestCase
 
         $description = 'The server is currently unable to handle the request '
             .'due to a temporary overloading or maintenance of the server.';
-        $this->assertEquals($description, $actual);
+        self::assertEquals($description, $actual);
     }
 }

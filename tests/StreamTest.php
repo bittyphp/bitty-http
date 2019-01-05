@@ -8,14 +8,14 @@ use Psr\Http\Message\StreamInterface;
 
 class StreamTest extends TestCase
 {
-    public function testInstanceOf()
+    public function testInstanceOf(): void
     {
         $fixture = new Stream('');
 
-        $this->assertInstanceOf(StreamInterface::class, $fixture);
+        self::assertInstanceOf(StreamInterface::class, $fixture);
     }
 
-    public function testExceptionThrown()
+    public function testExceptionThrown(): void
     {
         $message = Stream::class.' must be constructed with a resource or string; integer given.';
         $this->expectException(\InvalidArgumentException::class);
@@ -24,131 +24,143 @@ class StreamTest extends TestCase
         new Stream(rand());
     }
 
-    public function testToString()
+    public function testToString(): void
     {
         $content = uniqid('content');
         $fixture = new Stream($content);
 
-        $this->assertEquals($content, (string) $fixture);
+        self::assertEquals($content, (string) $fixture);
     }
 
-    public function testToStringWhenNotAttached()
+    public function testToStringWhenNotAttached(): void
     {
         $fixture = new Stream(uniqid());
         $fixture->close();
 
-        $this->assertEquals('', (string) $fixture);
+        self::assertEquals('', (string) $fixture);
     }
 
-    public function testCloseWhenNotAttached()
+    public function testCloseWhenNotAttached(): void
     {
         $fixture = new Stream(uniqid());
 
         $fixture->detach();
-        $actual = $fixture->close();
 
-        $this->assertNull($actual);
+        try {
+            $fixture->close();
+        } catch (\Exception $e) {
+            self::fail();
+        }
+
+        self::assertTrue(true);
     }
 
-    public function testDetach()
+    public function testDetach(): void
     {
         $content = uniqid('content');
         $fixture = new Stream($content);
 
         $stream = $fixture->detach();
-        $actual = stream_get_contents($stream, -1, 0);
+        $actual = null;
+        if ($stream) {
+            $actual = stream_get_contents($stream, -1, 0);
+        }
 
-        $this->assertEquals('', (string) $fixture);
-        $this->assertEquals($content, $actual);
+        self::assertEquals('', (string) $fixture);
+        self::assertEquals($content, $actual);
     }
 
-    public function testGetSize()
+    public function testGetSize(): void
     {
         $content = uniqid('content');
         $fixture = new Stream($content);
 
         $actual = $fixture->getSize();
 
-        $this->assertEquals(strlen($content), $actual);
+        self::assertEquals(strlen($content), $actual);
     }
 
-    public function testGetSizeWhenNotAttached()
+    public function testGetSizeWhenNotAttached(): void
     {
         $fixture = new Stream(uniqid());
         $fixture->close();
 
         $actual = $fixture->getSize();
 
-        $this->assertNull($actual);
+        self::assertNull($actual);
     }
 
-    public function testTell()
+    public function testTell(): void
     {
         $content = uniqid('content');
         $fixture = new Stream($content);
 
-        $this->assertEquals(0, $fixture->tell());
+        self::assertEquals(0, $fixture->tell());
         $fixture->seek(2);
-        $this->assertEquals(2, $fixture->tell());
+        self::assertEquals(2, $fixture->tell());
     }
 
-    public function testTellWhenNotAttached()
+    public function testTellWhenNotAttached(): void
     {
         $fixture = new Stream(uniqid());
         $fixture->close();
 
-        $message = 'Unable to get position of stream.';
+        $message = 'Stream is not open.';
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage($message);
 
         $fixture->tell();
     }
 
-    public function testEof()
+    public function testEof(): void
     {
         $fixture = new Stream(uniqid());
 
-        $this->assertFalse($fixture->eof());
+        self::assertFalse($fixture->eof());
         $fixture->seek(0, SEEK_END);
         $fixture->read(1);
-        $this->assertTrue($fixture->eof());
+        self::assertTrue($fixture->eof());
     }
 
-    public function testEofWhenNotAttached()
+    public function testEofWhenNotAttached(): void
     {
         $fixture = new Stream(uniqid());
         $fixture->close();
 
-        $this->assertTrue($fixture->eof());
+        self::assertTrue($fixture->eof());
     }
 
-    public function testIsSeekable()
+    public function testIsSeekable(): void
     {
         $fixture = new Stream(uniqid());
 
-        $this->assertTrue($fixture->isSeekable());
+        self::assertTrue($fixture->isSeekable());
     }
 
-    public function testIsSeekableWhenNotAttached()
+    public function testIsSeekableWhenNotAttached(): void
     {
         $fixture = new Stream(uniqid());
         $fixture->close();
 
-        $this->assertFalse($fixture->isSeekable());
+        self::assertFalse($fixture->isSeekable());
     }
 
-    public function testSeek()
+    public function testSeek(): void
     {
         $content = uniqid('content');
         $fixture = new Stream($content);
 
-        $seek   = rand(0, strlen($content));
-        $actual = $fixture->seek($seek, SEEK_SET);
+        $seek = rand(0, strlen($content));
+        try {
+            $fixture->seek($seek, SEEK_SET);
+        } catch (\Exception $e) {
+            self::fail();
+        }
 
-        $this->assertNull($actual);
+        self::assertTrue(true);
     }
 
-    public function testSeekThrowsException()
+    public function testSeekThrowsException(): void
     {
         $fixture = new Stream(uniqid());
 
@@ -159,147 +171,147 @@ class StreamTest extends TestCase
         $fixture->seek(1, SEEK_END);
     }
 
-    public function testSeekWhenNotSeekable()
+    public function testSeekWhenNotSeekable(): void
     {
         $fixture = new Stream(uniqid());
         $fixture->close();
 
-        $message = 'Stream is not seekable.';
+        $message = 'Stream is not open.';
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage($message);
 
         $fixture->seek(rand());
     }
 
-    public function testRewind()
+    public function testRewind(): void
     {
         $content = uniqid('content');
         $fixture = new Stream($content);
 
         $fixture->seek(0, SEEK_END);
-        $this->assertEquals(strlen($content), $fixture->tell());
+        self::assertEquals(strlen($content), $fixture->tell());
 
         $fixture->rewind();
-        $this->assertEquals(0, $fixture->tell());
+        self::assertEquals(0, $fixture->tell());
     }
 
-    public function testRewindWhenNotAttached()
+    public function testRewindWhenNotAttached(): void
     {
         $fixture = new Stream(uniqid());
         $fixture->close();
 
-        $message = 'Failed to rewind stream.';
+        $message = 'Stream is not open.';
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage($message);
 
         $fixture->rewind();
     }
 
-    public function testIsWritable()
+    public function testIsWritable(): void
     {
         $fixture = new Stream(uniqid());
 
-        $this->assertTrue($fixture->isWritable());
+        self::assertTrue($fixture->isWritable());
     }
 
-    public function testIsWritableWhenReadOnly()
+    public function testIsWritableWhenReadOnly(): void
     {
         $stream  = fopen('php://temp', 'r');
         $fixture = new Stream($stream);
 
-        $this->assertFalse($fixture->isWritable());
+        self::assertFalse($fixture->isWritable());
     }
 
-    public function testIsWritableWhenNotAttached()
+    public function testIsWritableWhenNotAttached(): void
     {
         $fixture = new Stream(uniqid());
         $fixture->close();
 
-        $this->assertFalse($fixture->isWritable());
+        self::assertFalse($fixture->isWritable());
     }
 
-    public function testWrite()
+    public function testWrite(): void
     {
         $content = uniqid('content');
         $fixture = new Stream('');
 
         $fixture->write($content);
 
-        $this->assertEquals($content, (string) $fixture);
+        self::assertEquals($content, (string) $fixture);
     }
 
-    public function testWriteWhenNotAttached()
+    public function testWriteWhenNotAttached(): void
     {
         $fixture = new Stream('');
         $fixture->close();
 
-        $message = 'Failed to write to stream.';
+        $message = 'Stream is not open.';
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage($message);
 
         $fixture->write(uniqid());
     }
 
-    public function testIsReadable()
+    public function testIsReadable(): void
     {
         $fixture = new Stream(uniqid());
 
-        $this->assertTrue($fixture->isReadable());
+        self::assertTrue($fixture->isReadable());
     }
 
-    public function testIsReadableWhenNotAttached()
+    public function testIsReadableWhenNotAttached(): void
     {
         $fixture = new Stream(uniqid());
         $fixture->close();
 
-        $this->assertFalse($fixture->isReadable());
+        self::assertFalse($fixture->isReadable());
     }
 
-    public function testRead()
+    public function testRead(): void
     {
         $content = uniqid('content');
         $fixture = new Stream($content);
 
         $actual = $fixture->read(strlen($content));
 
-        $this->assertEquals($content, $actual);
+        self::assertEquals($content, $actual);
     }
 
-    public function testReadWhenNotAttached()
+    public function testReadWhenNotAttached(): void
     {
         $fixture = new Stream('');
         $fixture->close();
 
-        $message = 'Failed to read from stream.';
+        $message = 'Stream is not open.';
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage($message);
 
         $fixture->read(rand());
     }
 
-    public function testGetContents()
+    public function testGetContents(): void
     {
         $content = uniqid('content');
         $fixture = new Stream($content);
 
         $actual = $fixture->getContents();
 
-        $this->assertEquals($content, $actual);
+        self::assertEquals($content, $actual);
     }
 
-    public function testGetContentsWhenNotAttached()
+    public function testGetContentsWhenNotAttached(): void
     {
         $fixture = new Stream('');
         $fixture->close();
 
-        $message = 'Failed to get contents of stream.';
+        $message = 'Stream is not open.';
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage($message);
 
         $fixture->getContents();
     }
 
-    public function testGetMetadata()
+    public function testGetMetadata(): void
     {
         $fixture = new Stream(uniqid());
 
@@ -313,34 +325,34 @@ class StreamTest extends TestCase
             'seekable' => true,
             'uri' => 'php://temp',
         ];
-        $this->assertEquals($expected, $actual);
+        self::assertEquals($expected, $actual);
     }
 
-    public function testGetMetadataWithKey()
+    public function testGetMetadataWithKey(): void
     {
         $fixture = new Stream(uniqid());
 
         $actual = $fixture->getMetadata('uri');
 
-        $this->assertEquals('php://temp', $actual);
+        self::assertEquals('php://temp', $actual);
     }
 
-    public function testGetMetadataWithUnknownKey()
+    public function testGetMetadataWithUnknownKey(): void
     {
         $fixture = new Stream(uniqid());
 
         $actual = $fixture->getMetadata(uniqid());
 
-        $this->assertNull($actual);
+        self::assertNull($actual);
     }
 
-    public function testGetMetadataWhenNotAttached()
+    public function testGetMetadataWhenNotAttached(): void
     {
         $fixture = new Stream(uniqid());
         $fixture->close();
 
         $actual = $fixture->getMetadata();
 
-        $this->assertNull($actual);
+        self::assertNull($actual);
     }
 }

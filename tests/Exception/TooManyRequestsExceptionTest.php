@@ -8,47 +8,47 @@ use PHPUnit\Framework\TestCase;
 
 class TooManyRequestsExceptionTest extends TestCase
 {
-    public function testInstanceOf()
+    public function testInstanceOf(): void
     {
         $fixture = new TooManyRequestsException();
 
-        $this->assertInstanceOf(HttpExceptionInterface::class, $fixture);
+        self::assertInstanceOf(HttpExceptionInterface::class, $fixture);
     }
 
-    public function testMessage()
+    public function testMessage(): void
     {
         $fixture = new TooManyRequestsException();
 
         $actual = $fixture->getMessage();
 
-        $this->assertEquals('Too Many Requests', $actual);
+        self::assertEquals('Too Many Requests', $actual);
     }
 
-    public function testCode()
+    public function testCode(): void
     {
         $fixture = new TooManyRequestsException();
 
         $actual = $fixture->getCode();
 
-        $this->assertEquals(429, $actual);
+        self::assertEquals(429, $actual);
     }
 
-    public function testTitle()
+    public function testTitle(): void
     {
         $fixture = new TooManyRequestsException();
 
         $actual = $fixture->getTitle();
 
-        $this->assertEquals('429 Too Many Requests', $actual);
+        self::assertEquals('429 Too Many Requests', $actual);
     }
 
-    public function testDescription()
+    public function testDescription(): void
     {
         $fixture = new TooManyRequestsException();
 
         $actual = $fixture->getDescription();
 
         $description = 'Too many requests sent in a given amount of time.';
-        $this->assertEquals($description, $actual);
+        self::assertEquals($description, $actual);
     }
 }

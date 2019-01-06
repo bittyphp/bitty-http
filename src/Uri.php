@@ -121,9 +121,9 @@ class Uri implements UriInterface
             $scheme = 'https';
         }
 
-        $user = empty($server['PHP_AUTH_USER']) ? null : $server['PHP_AUTH_USER'];
+        $user = empty($server['PHP_AUTH_USER']) ? '' : $server['PHP_AUTH_USER'];
         $pass = empty($server['PHP_AUTH_PW']) ? null : $server['PHP_AUTH_PW'];
-        $port = empty($server['SERVER_PORT']) ? null : $server['SERVER_PORT'];
+        $port = empty($server['SERVER_PORT']) ? '' : $server['SERVER_PORT'];
 
         if (!empty($server['HTTP_HOST'])) {
             $host = $server['HTTP_HOST'];
@@ -133,19 +133,19 @@ class Uri implements UriInterface
                 $host = substr($host, 0, $pos);
             }
         } else {
-            $host = empty($server['SERVER_NAME']) ? null : $server['SERVER_NAME'];
+            $host = empty($server['SERVER_NAME']) ? '' : $server['SERVER_NAME'];
         }
 
-        $uri = empty($server['REQUEST_URI']) ? null : $server['REQUEST_URI'];
+        $uri = empty($server['REQUEST_URI']) ? '' : $server['REQUEST_URI'];
 
         $path = parse_url($uri, PHP_URL_PATH);
         if (empty($path)) {
-            $path = empty($server['PATH_INFO']) ? null : $server['PATH_INFO'];
+            $path = empty($server['PATH_INFO']) ? '' : $server['PATH_INFO'];
         }
 
         $query = parse_url($uri, PHP_URL_QUERY);
         if (empty($query)) {
-            $query = empty($server['QUERY_STRING']) ? null : $server['QUERY_STRING'];
+            $query = empty($server['QUERY_STRING']) ? '' : $server['QUERY_STRING'];
         }
 
         $uri = new static();

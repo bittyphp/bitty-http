@@ -453,6 +453,10 @@ class UriTest extends TestCase
         $query = uniqid('query');
 
         return [
+            'no data' => [
+                'data' => [],
+                'expected' => 'http://localhost/',
+            ],
             'standard data' => [
                 'data' => [
                     'PHP_AUTH_USER' => $user,

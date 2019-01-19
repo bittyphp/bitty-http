@@ -1,5 +1,5 @@
 {
-    "name": "bittyphp/bitty-http",
+    "name": "bittyphp/http",
     "type": "library",
     "description": "PSR-7 and PSR-17 HTTP implementation.",
     "license": "MIT",
@@ -11,7 +11,7 @@
     ],
     "require": {
         "php": ">=7.1.0",
-        "bittyphp/bitty-collection": "^1.0",
+        "bittyphp/collection": "^1.0",
         "psr/http-factory": "^1.0",
         "psr/http-message": "^1.0"
     },

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "f509a47235a71558152380cc1c18f31b",
+    "content-hash": "b14ebdc6d3004046f8a904cea19bf2e9",
     "packages": [
         {
             "name": "bittyphp/collection",

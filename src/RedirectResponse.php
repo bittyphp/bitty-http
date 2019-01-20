@@ -16,7 +16,8 @@ class RedirectResponse extends Response
     public function __construct(string $uri, int $statusCode = 302, array $headers = [])
     {
         $body = '<html><body><p>This page has been moved <a href="'
-            .htmlentities($uri).'">here</a>.</p></body></html>';
+            .htmlspecialchars($uri, ENT_QUOTES, 'UTF-8')
+            .'">here</a>.</p></body></html>';
 
         parent::__construct($body, $statusCode, $headers);
 

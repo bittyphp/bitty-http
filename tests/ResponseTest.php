@@ -74,7 +74,7 @@ class ResponseTest extends TestCase
     {
         $code = $this->getInvalidStatusCode();
 
-        $message = 'Unknown HTTP status code "'.$code.'"';
+        $message = 'HTTP status code "'.$code.'" is invalid.';
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage($message);
 
@@ -106,7 +106,7 @@ class ResponseTest extends TestCase
     {
         $code = $this->getInvalidStatusCode();
 
-        $message = 'Unknown HTTP status code "'.$code.'"';
+        $message = 'HTTP status code "'.$code.'" is invalid.';
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage($message);
 

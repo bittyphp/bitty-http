@@ -11,7 +11,7 @@ class Response extends AbstractMessage implements ResponseInterface
     /**
      * Valid HTTP status codes and reasons.
      *
-     * Updated 2017-12-22
+     * Verified 2009-02-20
      *
      * @see https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
      *
@@ -156,7 +156,7 @@ class Response extends AbstractMessage implements ResponseInterface
     {
         if (!isset($this->validStatusCodes[$statusCode])) {
             throw new \InvalidArgumentException(
-                sprintf('Unknown HTTP status code "%s"', $statusCode)
+                sprintf('HTTP status code "%s" is invalid.', $statusCode)
             );
         }
 
@@ -177,7 +177,9 @@ class Response extends AbstractMessage implements ResponseInterface
             $statusCode = $this->statusCode;
         }
 
-        if (empty($reasonPhrase) && !empty($statusCode)) {
+        if (empty($reasonPhrase)
+            && !empty($this->validStatusCodes[$statusCode])
+        ) {
             return $this->validStatusCodes[$statusCode];
         }
 

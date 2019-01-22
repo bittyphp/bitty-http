@@ -18,7 +18,7 @@ abstract class AbstractMessage implements MessageInterface
     /**
      * HTTP headers.
      *
-     * @var array Array of string|string[]
+     * @var array Array of string[]
      */
     protected $headers = [];
 
@@ -32,7 +32,7 @@ abstract class AbstractMessage implements MessageInterface
     /**
      * List of valid HTTP protocol versions.
      *
-     * Updated 2017-12-23
+     * Verified 2019-01-20
      *
      * @var string[]
      */
@@ -41,6 +41,7 @@ abstract class AbstractMessage implements MessageInterface
         '1.1',
         '2.0',
         '2',
+        '3',
     ];
 
     /**
@@ -222,7 +223,7 @@ abstract class AbstractMessage implements MessageInterface
      *
      * @param string[] $headers
      *
-     * @return array Array of string|string[]
+     * @return array Array of string[]
      *
      * @throws \InvalidArgumentException
      */
@@ -245,7 +246,7 @@ abstract class AbstractMessage implements MessageInterface
      *
      * @throws \InvalidArgumentException
      */
-    protected function filterProtocolVersion($protocolVersion): string
+    protected function filterProtocolVersion(string $protocolVersion): string
     {
         if (!in_array($protocolVersion, $this->validProtocolVersions, true)) {
             throw new \InvalidArgumentException(
@@ -268,11 +269,8 @@ abstract class AbstractMessage implements MessageInterface
      *
      * @throws \InvalidArgumentException
      */
-    protected function validateHeader($header, $values = []): void
+    protected function validateHeader(string $header, $values = []): void
     {
-        // TODO: validate $name
-        // throw new \InvalidArgumentException()
-
         if (!is_string($values) && !is_array($values)) {
             throw new \InvalidArgumentException(
                 sprintf(

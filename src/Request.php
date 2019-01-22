@@ -20,7 +20,7 @@ class Request extends AbstractMessage implements RequestInterface
     /**
      * Valid HTTP methods.
      *
-     * Updated 2017-12-22
+     * Verified 2019-01-20
      *
      * @see https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html
      *
@@ -145,7 +145,7 @@ class Request extends AbstractMessage implements RequestInterface
     {
         $request = clone $this;
 
-        $request->uri = $uri;
+        $request->uri = clone $uri;
 
         if ($preserveHost) {
             if ('' === $this->getHeaderLine('Host') && '' !== $uri->getHost()) {

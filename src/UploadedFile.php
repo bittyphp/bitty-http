@@ -194,7 +194,7 @@ class UploadedFile implements UploadedFileInterface
 
         if (false === stream_copy_to_stream($resource, $fp, -1, 0)) {
             throw new \RuntimeException(
-                sprintf('Failed to move file to "%s"', $targetPath)
+                sprintf('Failed to move file to "%s".', $targetPath)
             );
         }
 
@@ -215,7 +215,7 @@ class UploadedFile implements UploadedFileInterface
         if ('cli' === PHP_SAPI) {
             if (!rename($this->path, $targetPath)) {
                 throw new \RuntimeException(
-                    sprintf('Failed to move file to "%s"', $targetPath)
+                    sprintf('Failed to move file to "%s".', $targetPath)
                 );
             }
 
@@ -228,7 +228,7 @@ class UploadedFile implements UploadedFileInterface
 
         if (!move_uploaded_file($this->path, $targetPath)) {
             throw new \RuntimeException(
-                sprintf('Failed to move file to "%s"', $targetPath)
+                sprintf('Failed to move file to "%s".', $targetPath)
             );
         }
     }

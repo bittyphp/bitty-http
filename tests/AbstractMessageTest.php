@@ -43,7 +43,7 @@ class AbstractMessageTest extends TestCase
         $invalidVersion = uniqid();
 
         $message = 'Invalid protocol version "'.$invalidVersion.'". '
-            .'Valid versions are: ["1.0", "1.1", "2.0", "2"]';
+            .'Valid versions are: ["1.0", "1.1", "2.0", "2", "3"]';
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage($message);
 

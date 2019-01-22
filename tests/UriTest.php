@@ -373,6 +373,10 @@ class UriTest extends TestCase
                 'query' => $keyA.'='.$valueA.'&'.$keyB.'='.$valueB,
                 'expected' => $keyA.'='.$valueA.'&'.$keyB.'='.$valueB,
             ],
+            'extra & ignored' => [
+                'query' => $keyA.'='.$valueA.'&&'.$keyB.'='.$valueB,
+                'expected' => $keyA.'='.$valueA.'&&'.$keyB.'='.$valueB,
+            ],
             'invalid characters encoded' => [
                 'query' => $keyA.'^='.$valueA.'&'.$keyB.'=^'.$valueB,
                 'expected' => $keyA.'%5E='.$valueA.'&'.$keyB.'=%5E'.$valueB,

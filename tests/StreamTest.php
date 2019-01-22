@@ -112,6 +112,24 @@ class StreamTest extends TestCase
         $fixture->tell();
     }
 
+    public function testTellFailure(): void
+    {
+        $level = error_reporting();
+        error_reporting(0);
+
+        $resource = $this->createResource();
+        $fixture  = new Stream($resource);
+        fclose($resource);
+
+        $message = 'Unable to get position of stream.';
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage($message);
+
+        $fixture->tell();
+
+        error_reporting($level);
+    }
+
     public function testEof(): void
     {
         $fixture = new Stream(uniqid());
@@ -141,6 +159,15 @@ class StreamTest extends TestCase
     {
         $fixture = new Stream(uniqid());
         $fixture->close();
+
+        self::assertFalse($fixture->isSeekable());
+    }
+
+    public function testIsSeekableNullMetadata(): void
+    {
+        $resource = $this->createResource();
+        $fixture  = new Stream($resource);
+        fclose($resource);
 
         self::assertFalse($fixture->isSeekable());
     }
@@ -207,6 +234,24 @@ class StreamTest extends TestCase
         $fixture->rewind();
     }
 
+    public function testRewindFailure(): void
+    {
+        $level = error_reporting();
+        error_reporting(0);
+
+        $resource = $this->createResource();
+        $fixture  = new Stream($resource);
+        fclose($resource);
+
+        $message = 'Failed to rewind stream.';
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage($message);
+
+        $fixture->rewind();
+
+        error_reporting($level);
+    }
+
     public function testIsWritable(): void
     {
         $fixture = new Stream(uniqid());
@@ -226,6 +271,15 @@ class StreamTest extends TestCase
     {
         $fixture = new Stream(uniqid());
         $fixture->close();
+
+        self::assertFalse($fixture->isWritable());
+    }
+
+    public function testIsWritableNullMetadata(): void
+    {
+        $resource = $this->createResource();
+        $fixture  = new Stream($resource);
+        fclose($resource);
 
         self::assertFalse($fixture->isWritable());
     }
@@ -252,6 +306,19 @@ class StreamTest extends TestCase
         $fixture->write(uniqid());
     }
 
+    public function testWriteWhenNotWritable(): void
+    {
+        $resource = $this->createResource();
+        $fixture  = new Stream($resource);
+        fclose($resource);
+
+        $message = 'Stream is not writable.';
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage($message);
+
+        $fixture->write(uniqid());
+    }
+
     public function testIsReadable(): void
     {
         $fixture = new Stream(uniqid());
@@ -263,6 +330,15 @@ class StreamTest extends TestCase
     {
         $fixture = new Stream(uniqid());
         $fixture->close();
+
+        self::assertFalse($fixture->isReadable());
+    }
+
+    public function testIsReadableNullMetadata(): void
+    {
+        $resource = $this->createResource();
+        $fixture  = new Stream($resource);
+        fclose($resource);
 
         self::assertFalse($fixture->isReadable());
     }
@@ -289,6 +365,19 @@ class StreamTest extends TestCase
         $fixture->read(rand());
     }
 
+    public function testReadWhenNotReadable(): void
+    {
+        $resource = $this->createResource();
+        $fixture  = new Stream($resource);
+        fclose($resource);
+
+        $message = 'Stream is not readable.';
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage($message);
+
+        $fixture->read(rand());
+    }
+
     public function testGetContents(): void
     {
         $content = uniqid('content');
@@ -305,6 +394,19 @@ class StreamTest extends TestCase
         $fixture->close();
 
         $message = 'Stream is not open.';
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage($message);
+
+        $fixture->getContents();
+    }
+
+    public function testGetContentsFailure(): void
+    {
+        $resource = $this->createResource();
+        $fixture  = new Stream($resource);
+        fclose($resource);
+
+        $message = 'Failed to get contents of stream.';
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage($message);
 
@@ -354,5 +456,18 @@ class StreamTest extends TestCase
         $actual = $fixture->getMetadata();
 
         self::assertNull($actual);
+    }
+
+    /**
+     * @return resource
+     */
+    protected function createResource()
+    {
+        $resource = fopen('php://temp', 'w');
+        if (false === $resource) {
+            self::fail('Unable to open temporary resource.');
+        }
+
+        return $resource;
     }
 }

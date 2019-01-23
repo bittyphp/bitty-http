@@ -62,4 +62,12 @@ class JsonResponseTest extends TestCase
 
         self::assertEquals($statusCode, $actual);
     }
+
+    public function testThrowsException(): void
+    {
+        self::expectException(\RuntimeException::class);
+        self::expectExceptionMessage('Failed to encode data as JSON.');
+
+        new JsonResponse(NAN);
+    }
 }

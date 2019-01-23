@@ -2,6 +2,7 @@
 
 namespace Bitty\Http;
 
+use Bitty\Http\Util;
 use Psr\Http\Message\StreamInterface;
 
 class Stream implements StreamInterface
@@ -23,13 +24,7 @@ class Stream implements StreamInterface
         if (is_resource($stream)) {
             $this->stream = $stream;
         } elseif (is_string($stream)) {
-            $fp = fopen('php://temp', 'w+');
-            if (false === $fp) {
-                throw new \InvalidArgumentException(
-                    'Failed to create temporary stream.'
-                );
-            }
-            $this->stream = $fp;
+            $this->stream = Util::fopen('php://temp', 'w+');
             fwrite($this->stream, $stream);
         } else {
             throw new \InvalidArgumentException(
@@ -201,12 +196,7 @@ class Stream implements StreamInterface
             throw new \RuntimeException('Stream is not writable.');
         }
 
-        $bytes = fwrite($this->stream, $string);
-        if (false === $bytes) {
-            throw new \RuntimeException('Failed to write to stream.');
-        }
-
-        return $bytes;
+        return Util::fwrite($this->stream, $string);
     }
 
     /**
@@ -241,12 +231,7 @@ class Stream implements StreamInterface
             throw new \RuntimeException('Stream is not readable.');
         }
 
-        $string = fread($this->stream, $length);
-        if (false === $string) {
-            throw new \RuntimeException('Failed to read from stream.');
-        }
-
-        return $string;
+        return Util::fread($this->stream, $length);
     }
 
     /**

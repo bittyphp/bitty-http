@@ -308,4 +308,11 @@ class ServerRequestTest extends TestCase
 
         self::assertEquals(['decoded'], $actual);
     }
+
+    public function testCreateFromGlobals(): void
+    {
+        $actual = ServerRequest::createFromGlobals();
+
+        self::assertInstanceOf(ServerRequestInterface::class, $actual);
+    }
 }

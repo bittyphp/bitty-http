@@ -49,7 +49,7 @@ class StreamTest extends TestCase
         try {
             $fixture->close();
         } catch (\Exception $e) {
-            self::fail();
+            self::fail($e->getMessage());
         }
 
         self::assertTrue(true);
@@ -181,7 +181,7 @@ class StreamTest extends TestCase
         try {
             $fixture->seek($seek, SEEK_SET);
         } catch (\Exception $e) {
-            self::fail();
+            self::fail($e->getMessage());
         }
 
         self::assertTrue(true);

@@ -187,7 +187,11 @@ abstract class AbstractMessage implements MessageInterface
      */
     public function getBody(): ?StreamInterface
     {
-        return $this->body;
+        if (!$this->body) {
+            return null;
+        }
+
+        return clone $this->body;
     }
 
     /**
@@ -197,7 +201,7 @@ abstract class AbstractMessage implements MessageInterface
     {
         $message = clone $this;
 
-        $message->body = $this->filterBody($body);
+        $message->body = $this->filterBody(clone $body);
 
         return $message;
     }
@@ -271,6 +275,15 @@ abstract class AbstractMessage implements MessageInterface
      */
     protected function validateHeader(string $header, $values = []): void
     {
+        if (!preg_match('/^[A-Za-z0-9\x21\x23-\x27\x2a\x2b\x2d\x2e\x5e-\x60\x7c]+$/', $header)) {
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'Header "%s" contains invalid characters.',
+                    $header
+                )
+            );
+        }
+
         if (!is_string($values) && !is_array($values)) {
             throw new \InvalidArgumentException(
                 sprintf(
@@ -282,17 +295,25 @@ abstract class AbstractMessage implements MessageInterface
         }
 
         foreach ((array) $values as $value) {
-            if (is_string($value)) {
-                continue;
+            if (!is_string($value)) {
+                throw new \InvalidArgumentException(
+                    sprintf(
+                        'Values for header "%s" must contain only strings; %s given.',
+                        $header,
+                        gettype($value)
+                    )
+                );
             }
 
-            throw new \InvalidArgumentException(
-                sprintf(
-                    'Values for header "%s" must contain only strings; %s given.',
-                    $header,
-                    gettype($value)
-                )
-            );
+            if (!preg_match('/^[\x09\x20-\x7e\x80-\xff]+$/', $value)) {
+                throw new \InvalidArgumentException(
+                    sprintf(
+                        'Header "%s" contains invalid value "%s".',
+                        $header,
+                        $value
+                    )
+                );
+            }
         }
     }
 }

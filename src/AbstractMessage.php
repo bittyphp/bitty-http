@@ -185,10 +185,10 @@ abstract class AbstractMessage implements MessageInterface
     /**
      * {@inheritDoc}
      */
-    public function getBody(): ?StreamInterface
+    public function getBody(): StreamInterface
     {
-        if (!$this->body) {
-            return null;
+        if (null === $this->body) {
+            return new Stream('');
         }
 
         return clone $this->body;

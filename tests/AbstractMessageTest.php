@@ -336,7 +336,7 @@ class AbstractMessageTest extends TestCase
         $new   = $clone->getBody();
 
         self::assertNotSame($this->fixture, $clone);
-        self::assertNull($old);
+        self::assertEquals('', $old->getContents());
         self::assertNotSame($body, $new);
         self::assertSame($body->getContents(), $new->getContents());
     }

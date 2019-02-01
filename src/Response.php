@@ -11,7 +11,7 @@ class Response extends AbstractMessage implements ResponseInterface
     /**
      * Valid HTTP status codes and reasons.
      *
-     * Verified 2009-02-20
+     * Verified 2019-01-20
      *
      * @see https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
      *

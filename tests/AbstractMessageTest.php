@@ -209,6 +209,39 @@ class AbstractMessageTest extends TestCase
         ];
     }
 
+    public function testInvalidHeaderThrowsException(): void
+    {
+        $invalid = [rand(1, 32), 34, 40, 41, 44, 47, rand(58, 64), 91, 92, 93, 123, rand(125, 255)];
+        $header  = uniqid().chr($invalid[array_rand($invalid)]).uniqid();
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Header "'.$header.'" contains invalid characters.');
+
+        $this->fixture->withAddedHeader($header, uniqid());
+    }
+
+    /**
+     * @doesNotPerformAssertions
+     */
+    public function testValidHeaderDoesNotThrowException(): void
+    {
+        $header = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!#$%&\'*+-.^_`|';
+
+        $this->fixture->withAddedHeader($header, uniqid());
+    }
+
+    public function testInvalidHeaderValueThrowsException(): void
+    {
+        $invalid = [rand(1, 8), rand(10, 19), 127];
+        $value   = uniqid().chr($invalid[array_rand($invalid)]).uniqid();
+        $header  = uniqid('header');
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Header "'.$header.'" contains invalid value "'.$value.'".');
+
+        $this->fixture->withAddedHeader($header, $value);
+    }
+
     public function testWithoutHeaderWhenHeaderNotPresent(): void
     {
         $clone = $this->fixture->withoutHeader(uniqid());
@@ -296,14 +329,15 @@ class AbstractMessageTest extends TestCase
 
     public function testWithBody(): void
     {
-        $body = $this->createMock(StreamInterface::class);
+        $body = $this->createConfiguredMock(StreamInterface::class, ['getContents' => uniqid()]);
 
         $clone = $this->fixture->withBody($body);
         $old   = $this->fixture->getBody();
         $new   = $clone->getBody();
 
         self::assertNotSame($this->fixture, $clone);
-        self::assertNull($old);
-        self::assertSame($body, $new);
+        self::assertEquals('', $old->getContents());
+        self::assertNotSame($body, $new);
+        self::assertSame($body->getContents(), $new->getContents());
     }
 }

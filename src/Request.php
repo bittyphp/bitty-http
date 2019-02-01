@@ -147,12 +147,13 @@ class Request extends AbstractMessage implements RequestInterface
 
         $request->uri = clone $uri;
 
+        $newHost = $uri->getHost();
         if ($preserveHost) {
-            if ('' === $this->getHeaderLine('Host') && '' !== $uri->getHost()) {
-                return $request->withHeader('Host', $uri->getHost());
+            if ('' === $this->getHeaderLine('Host') && '' !== $newHost) {
+                return $request->withHeader('Host', $newHost);
             }
-        } elseif ('' !== $uri->getHost()) {
-            return $request->withHeader('Host', $uri->getHost());
+        } elseif ('' !== $newHost) {
+            return $request->withHeader('Host', $newHost);
         }
 
         return $request;
@@ -160,6 +161,8 @@ class Request extends AbstractMessage implements RequestInterface
 
     /**
      * Filters HTTP method to make sure it's valid.
+     *
+     * The given string should not be modified.
      *
      * @param string $method
      *
@@ -169,7 +172,7 @@ class Request extends AbstractMessage implements RequestInterface
      */
     protected function filterMethod(string $method): string
     {
-        if (!in_array($method, $this->validMethods, true)) {
+        if (!in_array(strtoupper($method), $this->validMethods, true)) {
             throw new \InvalidArgumentException(
                 sprintf(
                     'HTTP method "%s" is invalid. Valid methods are: ["%s"]',

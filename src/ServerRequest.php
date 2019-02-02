@@ -130,6 +130,8 @@ class ServerRequest extends Request implements ServerRequestInterface
         });
 
         $this->registerContentTypeParser('application/x-www-form-urlencoded', function ($body) {
+            $data = [];
+
             parse_str($body, $data);
 
             return $data;

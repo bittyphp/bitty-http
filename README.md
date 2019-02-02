@@ -205,55 +205,110 @@ In addition to all of the methods inherited from `Request`, the following method
 
 ##### `getServerParams()`
 
-Put words here.
+Gets the server parameters for the request. Typically this is the contents of the `$_SERVER` variable, but doesn't have to be.
 
 ##### `getCookieParams()`
 
-Put words here.
+Gets the cookie parameters for the request. The return structure matches the format of what `$_COOKIE` provides.
 
 ##### `withCookieParams($cookies)`
 
-Put words here.
+Returns a new instance of the request with the updated cookie parameters. The `$cookies` parameter must match the structure that `$_COOKIE` provides.
 
 ##### `getQueryParams()`
 
-Put words here.
+Gets the query string parameters for the request. Typically this is the contents of the `$_GET` variable, but doesn't have to be. It's also possible for the query parameters to be out of sync with the URI query parameters, as setting one does not automatically set the other.
 
 ##### `withQueryParams($query)`
 
-Put words here.
+Returns a new instance of the request with the updated query parameters. Updating the query parameters will not automatically update the URI of the request.
 
 ##### `getUploadedFiles()`
 
-Put words here. Link to [Uploaded Files](#uploaded-files).
+Gets an array of normalized file uploads where each node of the array is a [`Psr\Http\Message\UploadedFileInterface`](#uploaded-files).
 
 ##### `withUploadedFiles($uploadedFiles)`
 
-Put words here. Link to [Uploaded Files](#uploaded-files).
+Returns a new instance of the request with the given file tree. Each node of the array must be a [`Psr\Http\Message\UploadedFileInterface`](#uploaded-files).
+
+```php
+<?php
+
+use Bitty\Http\ServerRequest;
+
+$request = new ServerRequest(...);
+
+// A simple list.
+$newRequest = $request->withUploadedFiles(
+    [
+        'fileA' => $fileA,
+        'fileB' => $fileB,
+    ]
+);
+
+// A nested list.
+$newRequest = $request->withUploadedFiles(
+    [
+        'images' => [
+            'small' => $fileA,
+            'large' => $fileB,
+        ],
+        'foo' => [
+            'bar' => [
+                'baz' => $fileC,
+            ],
+        ],
+    ]
+);
+```
 
 ##### `getParsedBody()`
 
-Put words here.
+Gets the parameters of the request body. If the request Content-Type is either `application/x-www-form-urlencoded` or `multipart/form-data`, and the request method is `POST`, this method will return an array similar to `$_POST`. For other methods, such as `PUT` or `PATCH`, it will only parse the body if the Content-Type is `application/x-www-form-urlencoded` or `application/json` and then return the resulting array.
 
 ##### `withParsedBody($body)`
 
-Put words here.
+Returns a new instance of the request with the given parsed body. It only accepts `array`, `object`, or `null` values.
 
 ##### `getAttributes()`
 
-Put words here.
+Gets all custom attributes associated with the request. Attributes are application-specific data added to a request and can be anything, such as routing data or authentication flags.
 
 ##### `getAttribute($name, $default = null)`
 
-Put words here.
+Gets the given attribute for the request. If the attribute is not set, the default value will be returned.
 
 ##### `withAttribute($name, $value)`
 
-Put words here.
+Returns a new instance of the request with the given attribute set.
+
+```php
+<?php
+
+use Bitty\Http\ServerRequest;
+
+$request = new ServerRequest(...);
+
+// If you have a route such as /product/{id}
+// And a request for /product/123
+// You can set the 'id' attribute to the product ID
+$newRequest = $request->withAttribute('id', 123);
+
+// Some controller for the route
+$controller = function ($request) {
+    // Look up product data
+    $productId = $request->getAttribute('id');
+    $product = $someRepository->find($productId);
+
+    // Do something with $product
+};
+
+$controller($newRequest);
+```
 
 ##### `withoutAttribute($name)`
 
-Put words here.
+Returns a new instance of the request without the given attribute.
 
 ## Responses
 

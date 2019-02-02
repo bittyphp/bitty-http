@@ -443,7 +443,7 @@ $redirect = new RedirectResponse(
 
 ## File Uploads
 
-Put words here.
+The `UploadedFile` class attempts to fix issues with how PHP structures the `$_FILES` global.
 
 ### Building an `UploadedFile`
 
@@ -473,31 +473,31 @@ The following methods are available:
 
 #### `getStream()`
 
-Put words here. Link to [Streams](#streams).
+Gets a [`Psr\Http\Message\StreamInterface`](#streams) representing the file upload.
 
 #### `moveTo($targetPath)`
 
-Put words here.
+Moves the file to the target path. Internally, this uses `move_uploaded_file()` or `rename()`, depending on whether it's called in a SAPI or non-SAPI environment.
 
 #### `getSize()`
 
-Put words here.
+Gets the size of the file.
 
 #### `getError()`
 
-Put words here.
+Gets any error codes associated to the file. This will return one of the [`UPLOAD_ERR_*` constants](http://php.net/manual/en/features.file-upload.errors.php).
 
 #### `getClientFilename()`
 
-Put words here.
+Gets the filename sent by the client. The value of this should not be trusted, as it can easily be faked.
 
 #### `getClientMediaType()`
 
-Put words here.
+Gets the media type sent by the client. The value of this should not be trusted, as it can easily be faked.
 
 ## Streams
 
-Put words here.
+Streams provide a standardized way of accessing streamable data, such as request/response bodies and file uploads. However, the might be useful in any other part of your code.
 
 ### Building a `Stream`
 
@@ -536,63 +536,63 @@ The following methods are available:
 
 #### `close()`
 
-Put words here.
+Closes the stream and any underlying resources.
 
 #### `detach()`
 
-Put words here.
+Separates the underlying resource from the stream and returns it.
 
 #### `getSize()`
 
-Put words here.
+Get the size of the stream, if known.
 
 #### `tell()`
 
-Put words here.
+Returns the current position of the file pointer.
 
 #### `eof()`
 
-Put words here.
+Returns true if the stream is at the end of the stream.
 
 #### `isSeekable()`
 
-Put words here.
+Returns whether or not the stream is seekable.
 
 #### `seek($offset, $whence = SEEK_SET)`
 
-Put words here.
+Seek to a position in the stream. `$whence` should be one of PHP' [`SEEK_*` constants](http://www.php.net/manual/en/function.fseek.php).
 
 #### `rewind()`
 
-Put words here.
+Seek to the beginning of the stream.
 
 #### `isWritable()`
 
-Put words here.
+Returns whether or not the stream is writable.
 
 #### `write($string)`
 
-Put words here.
+Write data to the stream.
 
 #### `isReadable()`
 
-Put words here.
+Returns whether or not the stream is readable.
 
 #### `read($length)`
 
-Put words here.
+Read data from the stream.
 
 #### `getContents()`
 
-Put words here.
+Returns the remaining contents of the stream.
 
 #### `getMetadata($key = null)`
 
-Put words here.
+Get stream metadata as an associative array or retrieve a specific key. The keys returned are identical to the keys returned from PHP's [`stream_get_meta_data()`](http://php.net/manual/en/function.stream-get-meta-data.php) function.
 
 ## URIs
 
-Put words here.
+The `Uri` class makes working with URI values easier, as you can easily get or set only certain parts of the URI.
 
 ### Building a `Uri`
 
@@ -630,60 +630,60 @@ The following methods are available:
 
 #### `getScheme()`
 
-Put words here.
+Retrieve the scheme component of the URI.
 
 #### `getAuthority()`
 
-Put words here.
+Retrieve the authority component of the URI. The authority syntax of the URI is `[user-info@]host[:port]`.
 
 #### `getUserInfo()`
 
-Put words here.
+Retrieve the user information component of the URI. The syntax is `username[:password]`.
 
 #### `getHost()`
 
-Put words here.
+Retrieve the host component of the URI.
 
 #### `getPort()`
 
-Put words here.
+Retrieve the port component of the URI. If the port is a standard port (e.g., 80 for HTTP or 443 for HTTPS), this will return `null`.
 
 #### `getPath()`
 
-Put words here.
+Retrieve the path component of the URI.
 
 #### `getQuery()`
 
-Put words here.
+Retrieve the query string of the URI.
 
 #### `getFragment()`
 
-Put words here.
+Retrieve the fragment component of the URI.
 
 #### `withScheme($scheme)`
 
-Put words here.
+Returns a new instance with the specified scheme.
 
 #### `withUserInfo($user, $password = null)`
 
-Put words here.
+Returns a new instance with the specified user information.
 
 #### `withHost($host)`
 
-Put words here.
+Returns a new instance with the specified host.
 
 #### `withPort($port)`
 
-Put words here.
+Returns a new instance with the specified port.
 
 #### `withPath($path)`
 
-Put words here.
+Returns a new instance with the specified path.
 
 #### `withQuery($query)`
 
-Put words here.
+Returns a new instance with the specified query.
 
 #### `withFragment($fragment)`
 
-Put words here.
+Returns a new instance with the specified fragment.

@@ -205,55 +205,110 @@ In addition to all of the methods inherited from `Request`, the following method
 
 ##### `getServerParams()`
 
-Put words here.
+Gets the server parameters for the request. Typically this is the contents of the `$_SERVER` variable, but doesn't have to be.
 
 ##### `getCookieParams()`
 
-Put words here.
+Gets the cookie parameters for the request. The return structure matches the format of what `$_COOKIE` provides.
 
 ##### `withCookieParams($cookies)`
 
-Put words here.
+Returns a new instance of the request with the updated cookie parameters. The `$cookies` parameter must match the structure that `$_COOKIE` provides.
 
 ##### `getQueryParams()`
 
-Put words here.
+Gets the query string parameters for the request. Typically this is the contents of the `$_GET` variable, but doesn't have to be. It's also possible for the query parameters to be out of sync with the URI query parameters, as setting one does not automatically set the other.
 
 ##### `withQueryParams($query)`
 
-Put words here.
+Returns a new instance of the request with the updated query parameters. Updating the query parameters will not automatically update the URI of the request.
 
 ##### `getUploadedFiles()`
 
-Put words here. Link to [Uploaded Files](#uploaded-files).
+Gets an array of normalized file uploads where each node of the array is a [`Psr\Http\Message\UploadedFileInterface`](#uploaded-files).
 
 ##### `withUploadedFiles($uploadedFiles)`
 
-Put words here. Link to [Uploaded Files](#uploaded-files).
+Returns a new instance of the request with the given file tree. Each node of the array must be a [`Psr\Http\Message\UploadedFileInterface`](#uploaded-files).
+
+```php
+<?php
+
+use Bitty\Http\ServerRequest;
+
+$request = new ServerRequest(...);
+
+// A simple list.
+$newRequest = $request->withUploadedFiles(
+    [
+        'fileA' => $fileA,
+        'fileB' => $fileB,
+    ]
+);
+
+// A nested list.
+$newRequest = $request->withUploadedFiles(
+    [
+        'images' => [
+            'small' => $fileA,
+            'large' => $fileB,
+        ],
+        'foo' => [
+            'bar' => [
+                'baz' => $fileC,
+            ],
+        ],
+    ]
+);
+```
 
 ##### `getParsedBody()`
 
-Put words here.
+Gets the parameters of the request body. If the request Content-Type is either `application/x-www-form-urlencoded` or `multipart/form-data`, and the request method is `POST`, this method will return an array similar to `$_POST`. For other methods, such as `PUT` or `PATCH`, it will only parse the body if the Content-Type is `application/x-www-form-urlencoded` or `application/json` and then return the resulting array.
 
 ##### `withParsedBody($body)`
 
-Put words here.
+Returns a new instance of the request with the given parsed body. It only accepts `array`, `object`, or `null` values.
 
 ##### `getAttributes()`
 
-Put words here.
+Gets all custom attributes associated with the request. Attributes are application-specific data added to a request and can be anything, such as routing data or authentication flags.
 
 ##### `getAttribute($name, $default = null)`
 
-Put words here.
+Gets the given attribute for the request. If the attribute is not set, the default value will be returned.
 
 ##### `withAttribute($name, $value)`
 
-Put words here.
+Returns a new instance of the request with the given attribute set.
+
+```php
+<?php
+
+use Bitty\Http\ServerRequest;
+
+$request = new ServerRequest(...);
+
+// If you have a route such as /product/{id}
+// And a request for /product/123
+// You can set the 'id' attribute to the product ID
+$newRequest = $request->withAttribute('id', 123);
+
+// Some controller for the route
+$controller = function ($request) {
+    // Look up product data
+    $productId = $request->getAttribute('id');
+    $product = $someRepository->find($productId);
+
+    // Do something with $product
+};
+
+$controller($newRequest);
+```
 
 ##### `withoutAttribute($name)`
 
-Put words here.
+Returns a new instance of the request without the given attribute.
 
 ## Responses
 
@@ -388,7 +443,7 @@ $redirect = new RedirectResponse(
 
 ## File Uploads
 
-Put words here.
+The `UploadedFile` class attempts to fix issues with how PHP structures the `$_FILES` global.
 
 ### Building an `UploadedFile`
 
@@ -418,31 +473,31 @@ The following methods are available:
 
 #### `getStream()`
 
-Put words here. Link to [Streams](#streams).
+Gets a [`Psr\Http\Message\StreamInterface`](#streams) representing the file upload.
 
 #### `moveTo($targetPath)`
 
-Put words here.
+Moves the file to the target path. Internally, this uses `move_uploaded_file()` or `rename()`, depending on whether it's called in a SAPI or non-SAPI environment.
 
 #### `getSize()`
 
-Put words here.
+Gets the size of the file.
 
 #### `getError()`
 
-Put words here.
+Gets any error codes associated to the file. This will return one of the [`UPLOAD_ERR_*` constants](http://php.net/manual/en/features.file-upload.errors.php).
 
 #### `getClientFilename()`
 
-Put words here.
+Gets the filename sent by the client. The value of this should not be trusted, as it can easily be faked.
 
 #### `getClientMediaType()`
 
-Put words here.
+Gets the media type sent by the client. The value of this should not be trusted, as it can easily be faked.
 
 ## Streams
 
-Put words here.
+Streams provide a standardized way of accessing streamable data, such as request/response bodies and file uploads. However, the might be useful in any other part of your code.
 
 ### Building a `Stream`
 
@@ -481,63 +536,63 @@ The following methods are available:
 
 #### `close()`
 
-Put words here.
+Closes the stream and any underlying resources.
 
 #### `detach()`
 
-Put words here.
+Separates the underlying resource from the stream and returns it.
 
 #### `getSize()`
 
-Put words here.
+Get the size of the stream, if known.
 
 #### `tell()`
 
-Put words here.
+Returns the current position of the file pointer.
 
 #### `eof()`
 
-Put words here.
+Returns true if the stream is at the end of the stream.
 
 #### `isSeekable()`
 
-Put words here.
+Returns whether or not the stream is seekable.
 
 #### `seek($offset, $whence = SEEK_SET)`
 
-Put words here.
+Seek to a position in the stream. `$whence` should be one of PHP' [`SEEK_*` constants](http://www.php.net/manual/en/function.fseek.php).
 
 #### `rewind()`
 
-Put words here.
+Seek to the beginning of the stream.
 
 #### `isWritable()`
 
-Put words here.
+Returns whether or not the stream is writable.
 
 #### `write($string)`
 
-Put words here.
+Write data to the stream.
 
 #### `isReadable()`
 
-Put words here.
+Returns whether or not the stream is readable.
 
 #### `read($length)`
 
-Put words here.
+Read data from the stream.
 
 #### `getContents()`
 
-Put words here.
+Returns the remaining contents of the stream.
 
 #### `getMetadata($key = null)`
 
-Put words here.
+Get stream metadata as an associative array or retrieve a specific key. The keys returned are identical to the keys returned from PHP's [`stream_get_meta_data()`](http://php.net/manual/en/function.stream-get-meta-data.php) function.
 
 ## URIs
 
-Put words here.
+The `Uri` class makes working with URI values easier, as you can easily get or set only certain parts of the URI.
 
 ### Building a `Uri`
 
@@ -575,60 +630,60 @@ The following methods are available:
 
 #### `getScheme()`
 
-Put words here.
+Retrieve the scheme component of the URI.
 
 #### `getAuthority()`
 
-Put words here.
+Retrieve the authority component of the URI. The authority syntax of the URI is `[user-info@]host[:port]`.
 
 #### `getUserInfo()`
 
-Put words here.
+Retrieve the user information component of the URI. The syntax is `username[:password]`.
 
 #### `getHost()`
 
-Put words here.
+Retrieve the host component of the URI.
 
 #### `getPort()`
 
-Put words here.
+Retrieve the port component of the URI. If the port is a standard port (e.g., 80 for HTTP or 443 for HTTPS), this will return `null`.
 
 #### `getPath()`
 
-Put words here.
+Retrieve the path component of the URI.
 
 #### `getQuery()`
 
-Put words here.
+Retrieve the query string of the URI.
 
 #### `getFragment()`
 
-Put words here.
+Retrieve the fragment component of the URI.
 
 #### `withScheme($scheme)`
 
-Put words here.
+Returns a new instance with the specified scheme.
 
 #### `withUserInfo($user, $password = null)`
 
-Put words here.
+Returns a new instance with the specified user information.
 
 #### `withHost($host)`
 
-Put words here.
+Returns a new instance with the specified host.
 
 #### `withPort($port)`
 
-Put words here.
+Returns a new instance with the specified port.
 
 #### `withPath($path)`
 
-Put words here.
+Returns a new instance with the specified path.
 
 #### `withQuery($query)`
 
-Put words here.
+Returns a new instance with the specified query.
 
 #### `withFragment($fragment)`
 
-Put words here.
+Returns a new instance with the specified fragment.

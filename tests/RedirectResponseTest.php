@@ -15,6 +15,20 @@ class RedirectResponseTest extends TestCase
         self::assertInstanceOf(ResponseInterface::class, $fixture);
     }
 
+    public function testDefaults(): void
+    {
+        $uri = uniqid();
+
+        $fixture = new RedirectResponse($uri);
+
+        $expected = '<html><body><p>This page has been moved <a href="'
+            .htmlspecialchars($uri, ENT_QUOTES, 'UTF-8')
+            .'">here</a>.</p></body></html>';
+        self::assertEquals($expected, (string) $fixture->getBody());
+        self::assertEquals(302, $fixture->getStatusCode());
+        self::assertEquals(['Location' => [$uri]], $fixture->getHeaders());
+    }
+
     public function testHeaders(): void
     {
         $headerA = uniqid('header');

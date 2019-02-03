@@ -3,6 +3,7 @@
 namespace Bitty\Tests\Http;
 
 use Bitty\Http\Request;
+use Bitty\Http\Stream;
 use Bitty\Http\Uri;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
@@ -151,6 +152,24 @@ class RequestTest extends TestCase
                 'expected' => $host,
             ],
         ];
+    }
+
+    public function testWithUriPreservesHost(): void
+    {
+        $new = 'http://'.uniqid('new').'.com/'.uniqid();
+
+        $fixture = (new Request())->withHeader('Host', uniqid());
+        $clone   = $fixture->withUri(new Uri($new));
+
+        self::assertNotEquals($fixture->getHeaderLine('Host'), $clone->getHeaderLine('Host'));
+    }
+
+    public function testClone(): void
+    {
+        $fixture = new Request('GET', uniqid(), [], uniqid());
+        $clone   = clone $fixture;
+
+        self::assertEquals((string) $fixture->getBody(), (string) $clone->getBody());
     }
 
     /**

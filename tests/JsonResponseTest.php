@@ -15,6 +15,16 @@ class JsonResponseTest extends TestCase
         self::assertInstanceOf(ResponseInterface::class, $fixture);
     }
 
+    public function testDefaults(): void
+    {
+        $fixture = new JsonResponse();
+
+        $expected = ['Content-Type' => ['application/json']];
+        self::assertEquals('""', (string) $fixture->getBody());
+        self::assertEquals(200, $fixture->getStatusCode());
+        self::assertEquals($expected, $fixture->getHeaders());
+    }
+
     public function testHeaders(): void
     {
         $headerA = uniqid('header');

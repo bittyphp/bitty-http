@@ -43,6 +43,7 @@ class UriTest extends TestCase
             'path' => $fixture->getPath(),
             'query' => $fixture->getQuery(),
             'fragment' => $fixture->getFragment(),
+            'authority' => $fixture->getAuthority(),
         ];
 
         self::assertEquals($expected, $actual);
@@ -61,6 +62,7 @@ class UriTest extends TestCase
                     'path' => '/path/to/file',
                     'query' => 'foo=bar',
                     'fragment' => 'baz',
+                    'authority' => 'user:pass@example.com:1234',
                 ],
             ],
             'no scheme' => [
@@ -73,6 +75,7 @@ class UriTest extends TestCase
                     'path' => '/path/to/file',
                     'query' => 'foo=bar',
                     'fragment' => 'baz',
+                    'authority' => 'example.com',
                 ],
             ],
             'no host' => [
@@ -85,6 +88,7 @@ class UriTest extends TestCase
                     'path' => '/path/to/file',
                     'query' => 'foo=bar',
                     'fragment' => 'baz',
+                    'authority' => '',
                 ],
             ],
             'query string only' => [
@@ -97,6 +101,7 @@ class UriTest extends TestCase
                     'path' => '',
                     'query' => 'foo=bar',
                     'fragment' => '',
+                    'authority' => '',
                 ],
             ],
             'host only' => [
@@ -109,6 +114,33 @@ class UriTest extends TestCase
                     'path' => '',
                     'query' => '',
                     'fragment' => '',
+                    'authority' => 'example.com',
+                ],
+            ],
+            'high port' => [
+                'uri' => '//example.com:65535',
+                'expected' => [
+                    'scheme' => '',
+                    'userInfo' => '',
+                    'host' => 'example.com',
+                    'port' => 65535,
+                    'path' => '',
+                    'query' => '',
+                    'fragment' => '',
+                    'authority' => 'example.com:65535',
+                ],
+            ],
+            'low port' => [
+                'uri' => '//example.com:1',
+                'expected' => [
+                    'scheme' => '',
+                    'userInfo' => '',
+                    'host' => 'example.com',
+                    'port' => 1,
+                    'path' => '',
+                    'query' => '',
+                    'fragment' => '',
+                    'authority' => 'example.com:1',
                 ],
             ],
             'failure' => [
@@ -121,9 +153,27 @@ class UriTest extends TestCase
                     'path' => '',
                     'query' => '',
                     'fragment' => '',
+                    'authority' => '',
                 ],
             ],
         ];
+    }
+
+    public function testGetAuthorityUserInfoWithoutHost(): void
+    {
+        $user = uniqid();
+        $pass = uniqid();
+
+        $uri = Uri::createFromArray(
+            [
+                'PHP_AUTH_USER' => $user,
+                'PHP_AUTH_PW' => $pass,
+            ]
+        );
+
+        $actual = $uri->getAuthority();
+
+        self::assertEquals($user.':'.$pass.'@localhost', $actual);
     }
 
     /**
@@ -288,6 +338,8 @@ class UriTest extends TestCase
     public function sampleInvalidPorts(): array
     {
         return [
+            'low limit' => [-1],
+            'high limit' => [65536],
             'too high' => [rand(65536, 99999)],
             'too low' => [-rand(1, 99999)],
         ];
@@ -372,6 +424,10 @@ class UriTest extends TestCase
             'normal query' => [
                 'query' => $keyA.'='.$valueA.'&'.$keyB.'='.$valueB,
                 'expected' => $keyA.'='.$valueA.'&'.$keyB.'='.$valueB,
+            ],
+            'extra =' => [
+                'query' => $keyA.'=='.$valueA,
+                'expected' => $keyA.'=%3D'.$valueA,
             ],
             'extra & ignored' => [
                 'query' => $keyA.'='.$valueA.'&&'.$keyB.'='.$valueB,

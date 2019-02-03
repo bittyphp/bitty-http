@@ -55,6 +55,24 @@ class StreamTest extends TestCase
         self::assertTrue(true);
     }
 
+    public function testClose(): void
+    {
+        $level = error_reporting();
+        error_reporting(0);
+
+        $resource = $this->createResource();
+        $fixture  = new Stream($resource);
+
+        $fixture->close();
+
+        fwrite($resource, uniqid());
+        rewind($resource);
+
+        self::assertEquals('', stream_get_contents($resource));
+
+        error_reporting($level);
+    }
+
     public function testDetach(): void
     {
         $content = uniqid('content');

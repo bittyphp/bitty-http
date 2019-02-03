@@ -66,6 +66,40 @@ class UploadedFilesTest extends TestCase
                     ],
                 ],
             ],
+            'multiple single files, one field' => [
+                'files' => [
+                    $fieldA => [
+                        'tmp_name' => $pathA,
+                        'name' => $nameA,
+                        'type' => $typeA,
+                        'size' => $sizeA,
+                        'error' => $errorA,
+                    ],
+                    $fieldB => [
+                        'tmp_name' => $pathB,
+                        'name' => $nameB,
+                        'type' => $typeB,
+                        'size' => $sizeB,
+                        'error' => $errorB,
+                    ],
+                ],
+                'expected' => [
+                    $fieldA => [
+                        'tmp_name' => $pathA,
+                        'name' => $nameA,
+                        'type' => $typeA,
+                        'size' => $sizeA,
+                        'error' => $errorA,
+                    ],
+                    $fieldB => [
+                        'tmp_name' => $pathB,
+                        'name' => $nameB,
+                        'type' => $typeB,
+                        'size' => $sizeB,
+                        'error' => $errorB,
+                    ],
+                ],
+            ],
             'multiple files, one field' => [
                 'files' => [
                     $fieldA => [

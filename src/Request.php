@@ -67,7 +67,7 @@ class Request extends AbstractMessage implements RequestInterface
         string $protocolVersion = '1.1'
     ) {
         $this->method  = $this->filterMethod($method);
-        $this->uri     = new Uri((string) $uri);
+        $this->uri     = new Uri(strval($uri));
         $this->headers = $this->filterHeaders($headers);
         $this->body    = $this->filterBody($body);
         $this->protocolVersion = $this->filterProtocolVersion($protocolVersion);

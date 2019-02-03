@@ -61,7 +61,7 @@ class HttpException extends \Exception implements HttpExceptionInterface
             $message = $this->message;
         }
 
-        if (0 === $code) {
+        if (empty($code)) {
             $code = $this->code;
         }
 

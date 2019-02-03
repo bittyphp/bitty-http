@@ -100,8 +100,8 @@ class Uri implements UriInterface
         $this->path     = $this->filterPath($data['path']);
         $this->query    = $this->filterQuery($data['query']);
         $this->fragment = $this->filterFragment($data['fragment']);
-        $this->user     = (string) $data['user'];
-        $this->pass     = (string) $data['pass'];
+        $this->user     = $data['user'];
+        $this->pass     = $data['pass'];
     }
 
     /**
@@ -167,7 +167,7 @@ class Uri implements UriInterface
 
         $scheme = $this->getScheme();
         if ('' !== $scheme) {
-            $string .= $scheme.':';
+            $string = $scheme.':';
         }
 
         $authority = $this->getAuthority();
@@ -212,7 +212,7 @@ class Uri implements UriInterface
 
         $userInfo = $this->getUserInfo();
         if (!empty($userInfo)) {
-            $string .= $userInfo.'@';
+            $string = $userInfo.'@';
         }
 
         if (!empty($this->host)) {
@@ -496,10 +496,6 @@ class Uri implements UriInterface
 
         $len = count($params);
         for ($i = 0; $i < $len; $i++) {
-            if (empty($params[$i])) {
-                continue;
-            }
-
             $params[$i] = implode(
                 '=',
                 array_map(

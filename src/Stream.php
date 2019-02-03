@@ -49,8 +49,11 @@ class Stream implements StreamInterface
         }
 
         $string = stream_get_contents($this->stream, -1, 0);
+        if (!$string) {
+            return '';
+        }
 
-        return (string) $string;
+        return $string;
     }
 
     /**
@@ -265,7 +268,7 @@ class Stream implements StreamInterface
             return $metadata;
         }
 
-        if (isset($metadata[$key]) || array_key_exists($key, $metadata)) {
+        if (array_key_exists($key, $metadata)) {
             return $metadata[$key];
         }
 

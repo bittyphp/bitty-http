@@ -11,7 +11,7 @@ class ResponseTest extends TestCase
     /**
      * @var Response
      */
-    protected $fixture = null;
+    private $fixture = null;
 
     protected function setUp(): void
     {
@@ -133,7 +133,7 @@ class ResponseTest extends TestCase
      *
      * @return string[]
      */
-    protected function getValidStatusCodes(): array
+    private function getValidStatusCodes(): array
     {
         return [
             100 => 'Continue',
@@ -205,7 +205,7 @@ class ResponseTest extends TestCase
      *
      * @return int
      */
-    protected function getInvalidStatusCode()
+    private function getInvalidStatusCode()
     {
         $validStatusCodes = $this->getValidStatusCodes();
 

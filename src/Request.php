@@ -170,7 +170,7 @@ class Request extends AbstractMessage implements RequestInterface
      *
      * @throws \InvalidArgumentException
      */
-    protected function filterMethod(string $method): string
+    private function filterMethod(string $method): string
     {
         if (!in_array(strtoupper($method), $this->validMethods, true)) {
             throw new \InvalidArgumentException(
@@ -192,7 +192,7 @@ class Request extends AbstractMessage implements RequestInterface
      *
      * @return string
      */
-    protected function filterRequestTarget(string $requestTarget): string
+    private function filterRequestTarget(string $requestTarget): string
     {
         return $requestTarget;
     }

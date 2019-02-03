@@ -345,7 +345,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      *
      * @return array
      */
-    protected function filterQueryParams(array $query): array
+    private function filterQueryParams(array $query): array
     {
         $this->query = new ReadableArrayCollection($query);
 
@@ -359,7 +359,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      *
      * @return array
      */
-    protected function filterAttributes(array $attributes): array
+    private function filterAttributes(array $attributes): array
     {
         return $attributes;
     }
@@ -371,7 +371,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      *
      * @return array
      */
-    protected function filterCookieParams(array $cookies): array
+    private function filterCookieParams(array $cookies): array
     {
         return $cookies;
     }
@@ -385,7 +385,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      *
      * @throws \InvalidArgumentException
      */
-    protected function filterFileParams(array $files): array
+    private function filterFileParams(array $files): array
     {
         foreach ($files as $file) {
             if (is_array($file)) {
@@ -410,7 +410,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      *
      * @return array
      */
-    protected function filterServerParams(array $server): array
+    private function filterServerParams(array $server): array
     {
         return $server;
     }
@@ -424,7 +424,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      *
      * @throws \InvalidArgumentException
      */
-    protected function filterParsedBody($parsedBody)
+    private function filterParsedBody($parsedBody)
     {
         if (!is_null($parsedBody) && !is_array($parsedBody) && !is_object($parsedBody)) {
             throw new \InvalidArgumentException(
@@ -449,7 +449,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      *
      * @return string
      */
-    protected function getContentType(): string
+    private function getContentType(): string
     {
         $contentTypes = $this->getHeader('Content-Type');
         $contentType  = reset($contentTypes);

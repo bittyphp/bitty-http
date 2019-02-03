@@ -12,7 +12,7 @@ class ResponseFactoryTest extends TestCase
     /**
      * @var ResponseFactory
      */
-    protected $fixture = null;
+    private $fixture = null;
 
     protected function setUp(): void
     {
@@ -78,7 +78,7 @@ class ResponseFactoryTest extends TestCase
      *
      * @return string[]
      */
-    protected function getValidStatusCodes()
+    private function getValidStatusCodes()
     {
         return [
             100 => 'Continue',

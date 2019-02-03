@@ -12,7 +12,7 @@ class RequestTest extends TestCase
     /**
      * @var Request
      */
-    protected $fixture = null;
+    private $fixture = null;
 
     protected function setUp(): void
     {
@@ -158,7 +158,7 @@ class RequestTest extends TestCase
      *
      * @return string
      */
-    protected function getValidMethod()
+    private function getValidMethod()
     {
         $validMethods = [
             'OPTIONS',

@@ -12,7 +12,7 @@ class Stream implements StreamInterface
      *
      * @var resource|null
      */
-    protected $stream = null;
+    private $stream = null;
 
     /**
      * @param resource|string|mixed $stream

@@ -12,7 +12,7 @@ class ServerRequestFactoryTest extends TestCase
     /**
      * @var ServerRequestFactory
      */
-    protected $fixture = null;
+    private $fixture = null;
 
     protected function setUp(): void
     {

@@ -273,7 +273,7 @@ abstract class AbstractMessage implements MessageInterface
      *
      * @throws \InvalidArgumentException
      */
-    protected function validateHeader(string $header, $values = []): void
+    private function validateHeader(string $header, $values = []): void
     {
         if (!preg_match('/^[A-Za-z0-9\x21\x23-\x27\x2a\x2b\x2d\x2e\x5e-\x60\x7c]+$/', $header)) {
             throw new \InvalidArgumentException(

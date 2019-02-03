@@ -158,8 +158,8 @@
             <arg value="-qrr" />
             <arg value="vendor/bin/infection" />
             <arg value="--threads=4" />
-            <arg value="--min-msi=74" />
-            <arg value="--min-covered-msi=74" />
+            <arg value="--min-msi=79" />
+            <arg value="--min-covered-msi=79" />
         </exec>
     </target>
 </project>

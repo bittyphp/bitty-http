@@ -100,8 +100,8 @@ class Uri implements UriInterface
         $this->path     = $this->filterPath($data['path']);
         $this->query    = $this->filterQuery($data['query']);
         $this->fragment = $this->filterFragment($data['fragment']);
-        $this->user     = (string) $data['user'];
-        $this->pass     = (string) $data['pass'];
+        $this->user     = $data['user'];
+        $this->pass     = $data['pass'];
     }
 
     /**

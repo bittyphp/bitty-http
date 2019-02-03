@@ -11,7 +11,7 @@ class RequestBodyTest extends TestCase
     /**
      * @var RequestBody
      */
-    protected $fixture = null;
+    private $fixture = null;
 
     protected function setUp(): void
     {

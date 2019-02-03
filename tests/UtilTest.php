@@ -53,7 +53,7 @@ class UtilTest extends TestCase
     /**
      * @return resource
      */
-    protected function createInvalidResource()
+    private function createInvalidResource()
     {
         $resource = fopen('php://temp', 'w');
         if (false === $resource) {

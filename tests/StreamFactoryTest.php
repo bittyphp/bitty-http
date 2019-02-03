@@ -12,7 +12,7 @@ class StreamFactoryTest extends TestCase
     /**
      * @var StreamFactory
      */
-    protected $fixture = null;
+    private $fixture = null;
 
     protected function setUp(): void
     {

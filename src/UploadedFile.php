@@ -13,42 +13,42 @@ class UploadedFile implements UploadedFileInterface
      *
      * @var StreamInterface|null
      */
-    protected $stream = null;
+    private $stream = null;
 
     /**
      * Full path to the file.
      *
      * @var string|null
      */
-    protected $path = null;
+    private $path = null;
 
     /**
      * Name of the file.
      *
      * @var string|null
      */
-    protected $name = null;
+    private $name = null;
 
     /**
      * Media-type of the file.
      *
      * @var string|null
      */
-    protected $mediaType = null;
+    private $mediaType = null;
 
     /**
      * Size of the file.
      *
      * @var int|null
      */
-    protected $size = null;
+    private $size = null;
 
     /**
      * Error associated to the file.
      *
      * @var int
      */
-    protected $error = null;
+    private $error = null;
 
     /**
      * @param StreamInterface|string $streamOrPath
@@ -148,7 +148,7 @@ class UploadedFile implements UploadedFileInterface
     /**
      * Verifies a move hasn't already happened.
      */
-    protected function verifyMovable(): void
+    private function verifyMovable(): void
     {
         if (null === $this->path) {
             throw new \RuntimeException(
@@ -162,7 +162,7 @@ class UploadedFile implements UploadedFileInterface
      *
      * @param string $targetPath
      */
-    protected function verifyTargetPath(string $targetPath): void
+    private function verifyTargetPath(string $targetPath): void
     {
         if (!is_writable(dirname($targetPath))) {
             throw new \InvalidArgumentException(
@@ -176,7 +176,7 @@ class UploadedFile implements UploadedFileInterface
      *
      * @param string $targetPath
      */
-    protected function moveStream(string $targetPath): void
+    private function moveStream(string $targetPath): void
     {
         $fp = fopen($targetPath, 'wb');
         if (false === $fp) {
@@ -206,7 +206,7 @@ class UploadedFile implements UploadedFileInterface
      *
      * @param string $targetPath
      */
-    protected function movePath(string $targetPath): void
+    private function movePath(string $targetPath): void
     {
         if (null === $this->path) {
             throw new \RuntimeException('File has already been moved.');
@@ -236,7 +236,7 @@ class UploadedFile implements UploadedFileInterface
     /**
      * Finalizes the move.
      */
-    protected function finalizeMove(): void
+    private function finalizeMove(): void
     {
         $this->path = null;
 

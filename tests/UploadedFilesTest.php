@@ -217,7 +217,7 @@ class UploadedFilesTest extends TestCase
      *
      * @return array Nested array of UploadedFile|UploadedFile[]
      */
-    protected function getExpectedData(array $files): array
+    private function getExpectedData(array $files): array
     {
         $expected = [];
 

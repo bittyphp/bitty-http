@@ -44,7 +44,7 @@ class Headers
      *
      * @return string
      */
-    protected function normalizeHeader(string $header): string
+    private function normalizeHeader(string $header): string
     {
         return implode(
             '-',

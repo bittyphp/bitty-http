@@ -406,7 +406,7 @@ class Uri implements UriInterface
      *
      * @throws \InvalidArgumentException
      */
-    protected function filterScheme(string $scheme): string
+    private function filterScheme(string $scheme): string
     {
         $scheme = rtrim(strtolower($scheme), ':');
         if (!empty($scheme) && !preg_match('/^[a-z][a-z0-9\+\.-]*$/', $scheme)) {
@@ -425,7 +425,7 @@ class Uri implements UriInterface
      *
      * @return string
      */
-    protected function filterHost(string $host): string
+    private function filterHost(string $host): string
     {
         return strtolower($host);
     }
@@ -439,7 +439,7 @@ class Uri implements UriInterface
      *
      * @throws \InvalidArgumentException
      */
-    protected function filterPort(int $port): int
+    private function filterPort(int $port): int
     {
         // allow zero as an empty check
         if (0 > $port || 65535 < $port) {
@@ -461,7 +461,7 @@ class Uri implements UriInterface
      *
      * @return string
      */
-    protected function filterPath(?string $path): string
+    private function filterPath(?string $path): string
     {
         if (!$path) {
             return '';
@@ -486,7 +486,7 @@ class Uri implements UriInterface
      *
      * @return string
      */
-    protected function filterQuery(?string $query): string
+    private function filterQuery(?string $query): string
     {
         if (!$query) {
             return '';
@@ -522,7 +522,7 @@ class Uri implements UriInterface
      *
      * @return string
      */
-    protected function filterFragment(?string $fragment): string
+    private function filterFragment(?string $fragment): string
     {
         if (!$fragment) {
             return '';

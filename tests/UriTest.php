@@ -11,7 +11,7 @@ class UriTest extends TestCase
     /**
      * @var Uri
      */
-    protected $fixture = null;
+    private $fixture = null;
 
     protected function setUp(): void
     {

@@ -152,7 +152,7 @@ class Response extends AbstractMessage implements ResponseInterface
      *
      * @throws \InvalidArgumentException When invalid code given.
      */
-    protected function filterStatusCode(int $statusCode): int
+    private function filterStatusCode(int $statusCode): int
     {
         if (!isset($this->validStatusCodes[$statusCode])) {
             throw new \InvalidArgumentException(
@@ -171,7 +171,7 @@ class Response extends AbstractMessage implements ResponseInterface
      *
      * @return string
      */
-    protected function filterReasonPhrase(string $reasonPhrase, int $statusCode = null): string
+    private function filterReasonPhrase(string $reasonPhrase, int $statusCode = null): string
     {
         if (null === $statusCode) {
             $statusCode = $this->statusCode;

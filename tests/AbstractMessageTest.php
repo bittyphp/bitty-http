@@ -12,7 +12,7 @@ class AbstractMessageTest extends TestCase
     /**
      * @var AbstractMessage
      */
-    protected $fixture = null;
+    private $fixture = null;
 
     protected function setUp(): void
     {

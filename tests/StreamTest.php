@@ -165,11 +165,16 @@ class StreamTest extends TestCase
 
     public function testIsSeekableNullMetadata(): void
     {
+        $level = error_reporting();
+        error_reporting(0);
+
         $resource = $this->createResource();
         $fixture  = new Stream($resource);
         fclose($resource);
 
         self::assertFalse($fixture->isSeekable());
+
+        error_reporting($level);
     }
 
     public function testSeek(): void
@@ -277,11 +282,16 @@ class StreamTest extends TestCase
 
     public function testIsWritableNullMetadata(): void
     {
+        $level = error_reporting();
+        error_reporting(0);
+
         $resource = $this->createResource();
         $fixture  = new Stream($resource);
         fclose($resource);
 
         self::assertFalse($fixture->isWritable());
+
+        error_reporting($level);
     }
 
     public function testWrite(): void
@@ -308,6 +318,9 @@ class StreamTest extends TestCase
 
     public function testWriteWhenNotWritable(): void
     {
+        $level = error_reporting();
+        error_reporting(0);
+
         $resource = $this->createResource();
         $fixture  = new Stream($resource);
         fclose($resource);
@@ -317,6 +330,8 @@ class StreamTest extends TestCase
         $this->expectExceptionMessage($message);
 
         $fixture->write(uniqid());
+
+        error_reporting($level);
     }
 
     public function testIsReadable(): void
@@ -336,11 +351,16 @@ class StreamTest extends TestCase
 
     public function testIsReadableNullMetadata(): void
     {
+        $level = error_reporting();
+        error_reporting(0);
+
         $resource = $this->createResource();
         $fixture  = new Stream($resource);
         fclose($resource);
 
         self::assertFalse($fixture->isReadable());
+
+        error_reporting($level);
     }
 
     public function testRead(): void
@@ -367,6 +387,9 @@ class StreamTest extends TestCase
 
     public function testReadWhenNotReadable(): void
     {
+        $level = error_reporting();
+        error_reporting(0);
+
         $resource = $this->createResource();
         $fixture  = new Stream($resource);
         fclose($resource);
@@ -376,6 +399,8 @@ class StreamTest extends TestCase
         $this->expectExceptionMessage($message);
 
         $fixture->read(rand());
+
+        error_reporting($level);
     }
 
     public function testGetContents(): void
@@ -402,6 +427,9 @@ class StreamTest extends TestCase
 
     public function testGetContentsFailure(): void
     {
+        $level = error_reporting();
+        error_reporting(0);
+
         $resource = $this->createResource();
         $fixture  = new Stream($resource);
         fclose($resource);
@@ -411,6 +439,8 @@ class StreamTest extends TestCase
         $this->expectExceptionMessage($message);
 
         $fixture->getContents();
+
+        error_reporting($level);
     }
 
     public function testGetMetadata(): void
@@ -461,7 +491,7 @@ class StreamTest extends TestCase
     /**
      * @return resource
      */
-    protected function createResource()
+    private function createResource()
     {
         $resource = fopen('php://temp', 'w');
         if (false === $resource) {

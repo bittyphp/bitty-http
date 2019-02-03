@@ -49,8 +49,11 @@ class Stream implements StreamInterface
         }
 
         $string = stream_get_contents($this->stream, -1, 0);
+        if (!$string) {
+            return '';
+        }
 
-        return (string) $string;
+        return $string;
     }
 
     /**

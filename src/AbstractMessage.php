@@ -201,7 +201,7 @@ abstract class AbstractMessage implements MessageInterface
     {
         $message = clone $this;
 
-        $message->body = $this->filterBody(clone $body);
+        $message->body = $this->filterBody($body);
 
         return $message;
     }
@@ -216,7 +216,7 @@ abstract class AbstractMessage implements MessageInterface
     protected function filterBody($body): StreamInterface
     {
         if ($body instanceof StreamInterface) {
-            return $body;
+            return clone $body;
         }
 
         return new Stream($body);

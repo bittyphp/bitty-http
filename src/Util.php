@@ -20,7 +20,7 @@ class Util
     {
         $fh = fopen($path, $mode);
 
-        if (false === $fh) {
+        if ($fh === false) {
             throw new \RuntimeException(sprintf('Unable to open "%s".', $path));
         }
 
@@ -41,7 +41,7 @@ class Util
     {
         $bytes = fwrite($resource, $string);
 
-        if (false === $bytes) {
+        if ($bytes === false) {
             throw new \RuntimeException('Failed to write to stream.');
         }
 
@@ -62,7 +62,7 @@ class Util
     {
         $string = fread($resource, $length);
 
-        if (false === $string) {
+        if ($string === false) {
             throw new \RuntimeException('Failed to read from stream.');
         }
 

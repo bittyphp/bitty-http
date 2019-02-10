@@ -63,7 +63,7 @@ class ServerRequest extends Request implements ServerRequestInterface
     /**
      * Parsed request body.
      *
-     * @var null|array|object
+     * @var array|object|null
      */
     protected $parsedBody = null;
 
@@ -108,7 +108,7 @@ class ServerRequest extends Request implements ServerRequestInterface
         $this->server      = $this->filterServerParams($server);
         $this->attributes  = $this->filterAttributes($attributes);
 
-        if ('POST' === $this->method
+        if ($this->method === 'POST'
             && in_array(
                 $this->getContentType(),
                 ['application/x-www-form-urlencoded', 'multipart/form-data'],
@@ -244,7 +244,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      */
     public function getParsedBody()
     {
-        if (null === $this->parsedBody) {
+        if ($this->parsedBody === null) {
             $body = strval($this->body);
 
             $contentType = $this->getContentType();
@@ -263,7 +263,7 @@ class ServerRequest extends Request implements ServerRequestInterface
     }
 
     /**
-     * @param null|array|object|mixed $parsedBody
+     * @param array|object|mixed|null $parsedBody
      *
      * @return ServerRequestInterface
      */
@@ -418,9 +418,9 @@ class ServerRequest extends Request implements ServerRequestInterface
     /**
      * Filters parsed body to make sure it's valid.
      *
-     * @param null|array|object $parsedBody
+     * @param array|object|null $parsedBody
      *
-     * @return null|array|object
+     * @return array|object|null
      *
      * @throws \InvalidArgumentException
      */

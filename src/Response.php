@@ -171,9 +171,9 @@ class Response extends AbstractMessage implements ResponseInterface
      *
      * @return string
      */
-    private function filterReasonPhrase(string $reasonPhrase, int $statusCode = null): string
+    private function filterReasonPhrase(string $reasonPhrase, ?int $statusCode = null): string
     {
-        if (null === $statusCode) {
+        if ($statusCode === null) {
             $statusCode = $this->statusCode;
         }
 

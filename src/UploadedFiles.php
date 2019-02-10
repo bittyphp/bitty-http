@@ -37,11 +37,11 @@ class UploadedFiles
             // single file
             if (!is_array($file['error'])) {
                 $tree[$field] = new UploadedFile(
-                    isset($file['tmp_name']) ? $file['tmp_name'] : null,
-                    isset($file['name']) ? $file['name'] : null,
-                    isset($file['type']) ? $file['type'] : null,
-                    isset($file['size']) ? $file['size'] : null,
-                    isset($file['error']) ? $file['error'] : null
+                    $file['tmp_name'] ?? null,
+                    $file['name'] ?? null,
+                    $file['type'] ?? null,
+                    $file['size'] ?? null,
+                    $file['error'] ?? null
                 );
 
                 continue;
@@ -51,11 +51,11 @@ class UploadedFiles
             $list = [];
             foreach ($file['error'] as $index => $junk) {
                 $list[] = new UploadedFile(
-                    isset($file['tmp_name'][$index]) ? $file['tmp_name'][$index] : null,
-                    isset($file['name'][$index]) ? $file['name'][$index] : null,
-                    isset($file['type'][$index]) ? $file['type'][$index] : null,
-                    isset($file['size'][$index]) ? $file['size'][$index] : null,
-                    isset($file['error'][$index]) ? $file['error'][$index] : null
+                    $file['tmp_name'][$index] ?? null,
+                    $file['name'][$index] ?? null,
+                    $file['type'][$index] ?? null,
+                    $file['size'][$index] ?? null,
+                    $file['error'][$index] ?? null
                 );
             }
 

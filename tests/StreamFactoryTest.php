@@ -48,7 +48,7 @@ class StreamFactoryTest extends TestCase
     {
         $filename = __DIR__.'/bootstrap.php';
         $resource = fopen($filename, 'r');
-        if (false === $resource) {
+        if ($resource === false) {
             self::fail('Unable to open resource.');
 
             return;

@@ -84,11 +84,11 @@ class Request extends AbstractMessage implements RequestInterface
      */
     public function getRequestTarget(): string
     {
-        if (null === $this->requestTarget) {
+        if ($this->requestTarget === null) {
             $string = '/'.ltrim($this->uri->getPath(), '/');
 
             $query = $this->uri->getQuery();
-            if ('' !== $query) {
+            if ($query !== '') {
                 $string .= '?'.$query;
             }
 
@@ -149,10 +149,10 @@ class Request extends AbstractMessage implements RequestInterface
 
         $newHost = $uri->getHost();
         if ($preserveHost) {
-            if ('' === $this->getHeaderLine('Host') && '' !== $newHost) {
+            if ($this->getHeaderLine('Host') === '' && $newHost !== '') {
                 return $request->withHeader('Host', $newHost);
             }
-        } elseif ('' !== $newHost) {
+        } elseif ($newHost !== '') {
             return $request->withHeader('Host', $newHost);
         }
 

@@ -56,7 +56,7 @@ class UtilTest extends TestCase
     private function createInvalidResource()
     {
         $resource = fopen('php://temp', 'w');
-        if (false === $resource) {
+        if ($resource === false) {
             self::fail('Unable to open temporary resource.');
         }
 

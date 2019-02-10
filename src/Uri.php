@@ -79,7 +79,7 @@ class Uri implements UriInterface
     public function __construct(string $uri = '')
     {
         $data = parse_url($uri);
-        if (false === $data) {
+        if ($data === false) {
             return;
         }
 
@@ -117,7 +117,7 @@ class Uri implements UriInterface
     {
         $scheme  = 'http';
         $isHttps = empty($server['HTTPS']) ? null : $server['HTTPS'];
-        if (!empty($isHttps) && 'off' !== strtolower($isHttps)) {
+        if (!empty($isHttps) && strtolower($isHttps) !== 'off') {
             $scheme = 'https';
         }
 
@@ -128,7 +128,7 @@ class Uri implements UriInterface
         if (!empty($server['HTTP_HOST'])) {
             $host = $server['HTTP_HOST'];
             $pos  = strrpos($host, ':');
-            if (false !== $pos) {
+            if ($pos !== false) {
                 $port = substr($host, $pos + 1);
                 $host = substr($host, 0, $pos);
             }
@@ -166,12 +166,12 @@ class Uri implements UriInterface
         $string = '';
 
         $scheme = $this->getScheme();
-        if ('' !== $scheme) {
+        if ($scheme !== '') {
             $string = $scheme.':';
         }
 
         $authority = $this->getAuthority();
-        if (!empty($authority) || 'file' === $this->scheme) {
+        if (!empty($authority) || $this->scheme === 'file') {
             // 'file' is special and doesn't need a host
             $string .= '//'.$authority;
         }
@@ -179,12 +179,12 @@ class Uri implements UriInterface
         $string .= '/'.ltrim($this->getPath(), '/');
 
         $query = $this->getQuery();
-        if ('' !== $query) {
+        if ($query !== '') {
             $string .= '?'.$query;
         }
 
         $fragment = $this->getFragment();
-        if ('' !== $fragment) {
+        if ($fragment !== '') {
             $string .= '#'.$fragment;
         }
 
@@ -217,12 +217,12 @@ class Uri implements UriInterface
 
         if (!empty($this->host)) {
             $string .= $this->host;
-        } elseif ('http' === $this->scheme || 'https' === $this->scheme) {
+        } elseif ($this->scheme === 'http' || $this->scheme === 'https') {
             $string .= 'localhost';
         }
 
         $port = $this->getPort();
-        if (null !== $port) {
+        if ($port !== null) {
             $string .= ':'.$port;
         }
 

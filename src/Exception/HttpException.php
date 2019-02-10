@@ -53,11 +53,11 @@ class HttpException extends \Exception implements HttpExceptionInterface
     public function __construct(
         $message = null,
         $code = 0,
-        ServerRequestInterface $request = null,
-        ResponseInterface $response = null,
-        \Exception $previous = null
+        ?ServerRequestInterface $request = null,
+        ?ResponseInterface $response = null,
+        ?\Throwable $previous = null
     ) {
-        if (null === $message) {
+        if ($message === null) {
             $message = $this->message;
         }
 

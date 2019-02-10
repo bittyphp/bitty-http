@@ -82,13 +82,13 @@ class UploadedFile implements UploadedFileInterface
      */
     public function getStream(): StreamInterface
     {
-        if (null === $this->path) {
+        if ($this->path === null) {
             throw new \RuntimeException(
                 'Stream not available; the file appears to have been moved.'
             );
         }
 
-        if (null === $this->stream) {
+        if ($this->stream === null) {
             // lazy load, since we don't always need it
             $this->stream = new Stream(fopen($this->path, 'r'));
         }
@@ -150,7 +150,7 @@ class UploadedFile implements UploadedFileInterface
      */
     private function verifyMovable(): void
     {
-        if (null === $this->path) {
+        if ($this->path === null) {
             throw new \RuntimeException(
                 'Unable to perform move; the file has already been moved.'
             );
@@ -179,7 +179,7 @@ class UploadedFile implements UploadedFileInterface
     private function moveStream(string $targetPath): void
     {
         $fp = fopen($targetPath, 'wb');
-        if (false === $fp) {
+        if ($fp === false) {
             throw new \InvalidArgumentException(
                 sprintf('Unable to open "%s" for writing!', $targetPath)
             );
@@ -192,7 +192,7 @@ class UploadedFile implements UploadedFileInterface
             throw new \RuntimeException('Failed to access uploaded file.');
         }
 
-        if (false === stream_copy_to_stream($resource, $fp, -1, 0)) {
+        if (stream_copy_to_stream($resource, $fp, -1, 0) === false) {
             throw new \RuntimeException(
                 sprintf('Failed to move file to "%s".', $targetPath)
             );
@@ -208,11 +208,11 @@ class UploadedFile implements UploadedFileInterface
      */
     private function movePath(string $targetPath): void
     {
-        if (null === $this->path) {
+        if ($this->path === null) {
             throw new \RuntimeException('File has already been moved.');
         }
 
-        if ('cli' === PHP_SAPI) {
+        if (PHP_SAPI === 'cli') {
             if (!rename($this->path, $targetPath)) {
                 throw new \RuntimeException(
                     sprintf('Failed to move file to "%s".', $targetPath)
@@ -240,9 +240,11 @@ class UploadedFile implements UploadedFileInterface
     {
         $this->path = null;
 
-        if (null !== $this->stream) {
-            $this->stream->close();
-            $this->stream = null;
+        if ($this->stream === null) {
+            return;
         }
+
+        $this->stream->close();
+        $this->stream = null;
     }
 }

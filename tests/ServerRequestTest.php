@@ -125,42 +125,42 @@ class ServerRequestTest extends TestCase
                 'contentType' => 'application/x-www-form-urlencoded; charset=UTF-8',
                 'request' => $params,
                 'body' => '',
-                'expected' => $params
+                'expected' => $params,
             ],
             'multipart/form-data' => [
                 'method' => 'POST',
                 'contentType' => 'multipart/form-data; charset=UTF-8',
                 'request' => $params,
                 'body' => '',
-                'expected' => $params
+                'expected' => $params,
             ],
             'non-POST application/x-www-form-urlencoded' => [
                 'method' => 'PATCH',
                 'contentType' => 'application/x-www-form-urlencoded; charset=UTF-8',
                 'request' => $params,
                 'body' => 'foo=bar&baz=bur',
-                'expected' => ['foo' => 'bar', 'baz' => 'bur']
+                'expected' => ['foo' => 'bar', 'baz' => 'bur'],
             ],
             'valid application/json' => [
                 'method' => 'POST',
                 'contentType' => 'application/json',
                 'request' => $params,
                 'body' => json_encode($json),
-                'expected' => $json
+                'expected' => $json,
             ],
             'invalid application/json' => [
                 'method' => 'POST',
                 'contentType' => 'application/json',
                 'request' => $params,
                 'body' => '[}',
-                'expected' => null
+                'expected' => null,
             ],
             'unknown' => [
                 'method' => 'POST',
                 'contentType' => uniqid(),
                 'request' => $params,
                 'body' => json_encode($json),
-                'expected' => null
+                'expected' => null,
             ],
         ];
     }

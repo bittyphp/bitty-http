@@ -30,7 +30,7 @@ class Stream implements StreamInterface
             throw new \InvalidArgumentException(
                 sprintf(
                     '%s must be constructed with a resource or string; %s given.',
-                    __CLASS__,
+                    self::class,
                     gettype($stream)
                 )
             );
@@ -44,7 +44,7 @@ class Stream implements StreamInterface
      */
     public function __toString()
     {
-        if (null === $this->stream) {
+        if ($this->stream === null) {
             return '';
         }
 
@@ -61,7 +61,7 @@ class Stream implements StreamInterface
      */
     public function close(): void
     {
-        if (null === $this->stream) {
+        if ($this->stream === null) {
             return;
         }
 
@@ -86,13 +86,13 @@ class Stream implements StreamInterface
      */
     public function getSize(): ?int
     {
-        if (null === $this->stream) {
+        if ($this->stream === null) {
             return null;
         }
 
         $stats = fstat($this->stream);
 
-        return isset($stats['size']) ? $stats['size'] : null;
+        return $stats['size'] ?? null;
     }
 
     /**
@@ -100,12 +100,12 @@ class Stream implements StreamInterface
      */
     public function tell(): int
     {
-        if (null === $this->stream) {
+        if ($this->stream === null) {
             throw new \RuntimeException('Stream is not open.');
         }
 
         $position = ftell($this->stream);
-        if (false === $position) {
+        if ($position === false) {
             throw new \RuntimeException('Unable to get position of stream.');
         }
 
@@ -117,7 +117,7 @@ class Stream implements StreamInterface
      */
     public function eof(): bool
     {
-        return null === $this->stream ? true : feof($this->stream);
+        return $this->stream === null ? true : feof($this->stream);
     }
 
     /**
@@ -125,12 +125,12 @@ class Stream implements StreamInterface
      */
     public function isSeekable(): bool
     {
-        if (null === $this->stream) {
+        if ($this->stream === null) {
             return false;
         }
 
         $seekable = $this->getMetadata('seekable');
-        if (null === $seekable) {
+        if ($seekable === null) {
             return false;
         }
 
@@ -142,7 +142,7 @@ class Stream implements StreamInterface
      */
     public function seek($offset, $whence = SEEK_SET): void
     {
-        if (null === $this->stream) {
+        if ($this->stream === null) {
             throw new \RuntimeException('Stream is not open.');
         }
 
@@ -158,7 +158,7 @@ class Stream implements StreamInterface
      */
     public function rewind(): void
     {
-        if (null === $this->stream) {
+        if ($this->stream === null) {
             throw new \RuntimeException('Stream is not open.');
         }
 
@@ -172,12 +172,12 @@ class Stream implements StreamInterface
      */
     public function isWritable(): bool
     {
-        if (null === $this->stream) {
+        if ($this->stream === null) {
             return false;
         }
 
         $mode = $this->getMetadata('mode');
-        if (null === $mode) {
+        if ($mode === null) {
             return false;
         }
 
@@ -191,7 +191,7 @@ class Stream implements StreamInterface
      */
     public function write($string): int
     {
-        if (null === $this->stream) {
+        if ($this->stream === null) {
             throw new \RuntimeException('Stream is not open.');
         }
 
@@ -207,12 +207,12 @@ class Stream implements StreamInterface
      */
     public function isReadable(): bool
     {
-        if (null === $this->stream) {
+        if ($this->stream === null) {
             return false;
         }
 
         $mode = $this->getMetadata('mode');
-        if (null === $mode) {
+        if ($mode === null) {
             return false;
         }
 
@@ -226,7 +226,7 @@ class Stream implements StreamInterface
      */
     public function read($length): string
     {
-        if (null === $this->stream) {
+        if ($this->stream === null) {
             throw new \RuntimeException('Stream is not open.');
         }
 
@@ -242,12 +242,12 @@ class Stream implements StreamInterface
      */
     public function getContents(): string
     {
-        if (null === $this->stream) {
+        if ($this->stream === null) {
             throw new \RuntimeException('Stream is not open.');
         }
 
         $string = stream_get_contents($this->stream);
-        if (false === $string) {
+        if ($string === false) {
             throw new \RuntimeException('Failed to get contents of stream.');
         }
 
@@ -259,12 +259,12 @@ class Stream implements StreamInterface
      */
     public function getMetadata($key = null)
     {
-        if (null === $this->stream) {
+        if ($this->stream === null) {
             return null;
         }
 
         $metadata = stream_get_meta_data($this->stream);
-        if (null === $key) {
+        if ($key === null) {
             return $metadata;
         }
 

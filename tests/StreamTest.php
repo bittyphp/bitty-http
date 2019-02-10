@@ -48,7 +48,7 @@ class StreamTest extends TestCase
 
         try {
             $fixture->close();
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             self::fail($e->getMessage());
         }
 
@@ -203,7 +203,7 @@ class StreamTest extends TestCase
         $seek = rand(0, strlen($content));
         try {
             $fixture->seek($seek, SEEK_SET);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             self::fail($e->getMessage());
         }
 
@@ -512,7 +512,7 @@ class StreamTest extends TestCase
     private function createResource()
     {
         $resource = fopen('php://temp', 'w');
-        if (false === $resource) {
+        if ($resource === false) {
             self::fail('Unable to open temporary resource.');
         }
 

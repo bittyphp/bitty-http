@@ -78,7 +78,7 @@ abstract class AbstractMessage implements MessageInterface
     public function hasHeader($name): bool
     {
         foreach ($this->headers as $header => $values) {
-            if (0 === strcasecmp($name, $header)) {
+            if (strcasecmp($name, $header) === 0) {
                 return true;
             }
         }
@@ -92,7 +92,7 @@ abstract class AbstractMessage implements MessageInterface
     public function getHeader($name): array
     {
         foreach ($this->headers as $header => $values) {
-            if (0 === strcasecmp($name, $header)) {
+            if (strcasecmp($name, $header) === 0) {
                 return $values;
             }
         }
@@ -117,7 +117,7 @@ abstract class AbstractMessage implements MessageInterface
         $headers = [];
 
         foreach ($this->headers as $header => $values) {
-            if (0 === strcasecmp($name, $header)) {
+            if (strcasecmp($name, $header) === 0) {
                 $headers[$name] = $value;
 
                 continue;
@@ -142,7 +142,7 @@ abstract class AbstractMessage implements MessageInterface
         $found   = false;
 
         foreach ($this->headers as $header => $values) {
-            if (0 === strcasecmp($name, $header)) {
+            if (strcasecmp($name, $header) === 0) {
                 $found = true;
                 foreach ((array) $value as $newValue) {
                     $values[] = $newValue;
@@ -170,7 +170,7 @@ abstract class AbstractMessage implements MessageInterface
         $headers = [];
 
         foreach ($this->headers as $header => $values) {
-            if (0 === strcasecmp($name, $header)) {
+            if (strcasecmp($name, $header) === 0) {
                 continue;
             }
 
@@ -187,7 +187,7 @@ abstract class AbstractMessage implements MessageInterface
      */
     public function getBody(): StreamInterface
     {
-        if (null === $this->body) {
+        if ($this->body === null) {
             return new Stream('');
         }
 

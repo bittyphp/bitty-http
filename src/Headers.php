@@ -23,7 +23,7 @@ class Headers
 
         $headers = [];
         foreach ($server as $key => $value) {
-            if (0 === strpos($key, 'HTTP_')) {
+            if (strpos($key, 'HTTP_') === 0) {
                 $name = $this->normalizeHeader(substr($key, 5));
 
                 $headers[$name] = [$value];

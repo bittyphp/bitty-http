@@ -25,6 +25,7 @@
         "infection/infection": "^0.12.0",
         "jakub-onderka/php-parallel-lint": "^1.0",
         "localheinz/composer-normalize": "^1.1",
+        "mikey179/vfsstream": "^1.6",
         "phing/phing": "^2.16",
         "phpstan/phpstan": "^0.10.7",
         "phpstan/phpstan-deprecation-rules": "^0.10.2",

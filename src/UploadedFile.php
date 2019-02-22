@@ -51,18 +51,27 @@ class UploadedFile implements UploadedFileInterface
     private $error = null;
 
     /**
+     * SAPI environment.
+     *
+     * @var string
+     */
+    private $sapi = null;
+
+    /**
      * @param StreamInterface|string $streamOrPath
      * @param string|null $name
      * @param string|null $mediaType
      * @param int|null $size
      * @param int $error
+     * @param string $sapi
      */
     public function __construct(
         $streamOrPath,
-        $name = null,
-        $mediaType = null,
-        $size = null,
-        $error = UPLOAD_ERR_OK
+        ?string $name = null,
+        ?string $mediaType = null,
+        ?int $size = null,
+        int $error = UPLOAD_ERR_OK,
+        string $sapi = PHP_SAPI
     ) {
         if ($streamOrPath instanceof StreamInterface) {
             $this->stream = $streamOrPath;
@@ -75,6 +84,7 @@ class UploadedFile implements UploadedFileInterface
         $this->mediaType = $mediaType;
         $this->size      = $size;
         $this->error     = $error;
+        $this->sapi      = $sapi;
     }
 
     /**
@@ -208,11 +218,7 @@ class UploadedFile implements UploadedFileInterface
      */
     private function movePath(string $targetPath): void
     {
-        if ($this->path === null) {
-            throw new \RuntimeException('File has already been moved.');
-        }
-
-        if (PHP_SAPI === 'cli') {
+        if ($this->sapi === 'cli') {
             if (!rename($this->path, $targetPath)) {
                 throw new \RuntimeException(
                     sprintf('Failed to move file to "%s".', $targetPath)

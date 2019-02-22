@@ -25,7 +25,7 @@ class Stream implements StreamInterface
             rewind($this->stream);
         } elseif (is_string($stream)) {
             $handle = fopen('php://temp', 'w+');
-            if ($handle !== false) {
+            if ($handle) {
                 $this->stream = $handle;
                 fwrite($this->stream, $stream);
                 rewind($this->stream);

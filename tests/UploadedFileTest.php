@@ -94,7 +94,7 @@ class UploadedFileTest extends TestCase
 
         $fixture = new UploadedFile($fileA, null, null, null, rand(), 'cli');
         $fixture->moveTo($fileB);
-        $fixture->moveTo(uniqid());
+        $fixture->moveTo($this->root->url().'/'.uniqid());
     }
 
     public function testMoveToThrowsExceptionWhenSourceNotReadable(): void
@@ -144,8 +144,9 @@ class UploadedFileTest extends TestCase
     public function testMoveToFromStream(): void
     {
         $data   = uniqid();
-        $stream = new Stream($data);
+        $stream = new Stream('');
         $target = $this->root->url().'/'.uniqid();
+        $stream->write($data);
 
         $fixture = new UploadedFile($stream);
         $fixture->moveTo($target);
@@ -161,9 +162,8 @@ class UploadedFileTest extends TestCase
         error_reporting(0);
 
         $stream = new Stream(uniqid());
-        $path   = $this->root->url().'/'.uniqid();
-        $target = $path.'/'.uniqid();
-        mkdir($path);
+        $target = $this->root->url().'/'.uniqid().'/'.uniqid();
+        mkdir(dirname($target));
         touch($target);
         chmod($target, 0400);
 
@@ -210,6 +210,24 @@ class UploadedFileTest extends TestCase
         $fixture->moveTo($target);
 
         error_reporting($level);
+    }
+
+    public function testMoveToFromStreamClosesStream(): void
+    {
+        $handle = fopen('php://temp', 'w');
+        if (!$handle) {
+            self::fail('Failed to open temp stream.');
+        }
+        $target = $this->root->url().'/'.uniqid();
+        $stream = $this->createConfiguredMock(
+            StreamInterface::class,
+            ['detach' => $handle]
+        );
+
+        $stream->expects(self::once())->method('close');
+
+        $fixture = new UploadedFile($stream);
+        $fixture->moveTo($target);
     }
 
     public function testGetSize(): void

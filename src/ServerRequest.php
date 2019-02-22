@@ -457,6 +457,6 @@ class ServerRequest extends Request implements ServerRequestInterface
             return '';
         }
 
-        return trim(explode(';', $contentType, 2)[0]);
+        return trim(explode(';', $contentType)[0]);
     }
 }

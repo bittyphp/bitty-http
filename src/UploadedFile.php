@@ -202,7 +202,7 @@ class UploadedFile implements UploadedFileInterface
             throw new \RuntimeException('Failed to access uploaded file.');
         }
 
-        if (stream_copy_to_stream($resource, $fp, -1, 0) === false) {
+        if (stream_copy_to_stream($resource, $fp) === false) {
             throw new \RuntimeException(
                 sprintf('Failed to move file to "%s".', $targetPath)
             );

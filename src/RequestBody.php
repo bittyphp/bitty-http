@@ -13,7 +13,7 @@ class RequestBody extends Stream
     {
         $stream = fopen('php://temp', 'w+');
         $input  = fopen('php://input', 'r');
-        if ($stream !== false && $input !== false) {
+        if ($stream && $input) {
             stream_copy_to_stream($input, $stream);
         }
 

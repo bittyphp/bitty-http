@@ -22,11 +22,13 @@ class Stream implements StreamInterface
     {
         if (is_resource($stream)) {
             $this->stream = $stream;
+            rewind($this->stream);
         } elseif (is_string($stream)) {
             $handle = fopen('php://temp', 'w+');
             if ($handle !== false) {
-                fwrite($handle, $stream);
                 $this->stream = $handle;
+                fwrite($this->stream, $stream);
+                rewind($this->stream);
             }
         } else {
             throw new \InvalidArgumentException(
@@ -37,8 +39,6 @@ class Stream implements StreamInterface
                 )
             );
         }
-
-        rewind($this->stream);
     }
 
     /**

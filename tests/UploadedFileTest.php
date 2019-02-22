@@ -192,13 +192,16 @@ class UploadedFileTest extends TestCase
         $level = error_reporting();
         error_reporting(0);
 
-        $resource = fopen('php://temp', 'w');
-        $target  = $this->root->url().'/'.uniqid();
-        $stream  = $this->createConfiguredMock(
+        $handle = fopen('php://temp', 'w');
+        if (!$handle) {
+            self::fail('Failed to open temp stream.');
+        }
+        $target = $this->root->url().'/'.uniqid();
+        $stream = $this->createConfiguredMock(
             StreamInterface::class,
-            ['detach' => $resource]
+            ['detach' => $handle]
         );
-        fclose($resource);
+        fclose($handle);
 
         self::expectException(\RuntimeException::class);
         self::expectExceptionMessage('Failed to move file to "'.$target.'".');

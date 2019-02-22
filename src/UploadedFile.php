@@ -218,8 +218,10 @@ class UploadedFile implements UploadedFileInterface
      */
     private function movePath(string $targetPath): void
     {
+        $path = $this->path ?: '';
+
         if ($this->sapi === 'cli') {
-            if (!rename($this->path, $targetPath)) {
+            if (!rename($path, $targetPath)) {
                 throw new \RuntimeException(
                     sprintf('Failed to move file to "%s".', $targetPath)
                 );
@@ -228,11 +230,11 @@ class UploadedFile implements UploadedFileInterface
             return;
         }
 
-        if (!is_uploaded_file($this->path)) {
+        if (!is_uploaded_file($path)) {
             throw new \RuntimeException('File is not a valid uploaded file.');
         }
 
-        if (!move_uploaded_file($this->path, $targetPath)) {
+        if (!move_uploaded_file($path, $targetPath)) {
             throw new \RuntimeException(
                 sprintf('Failed to move file to "%s".', $targetPath)
             );

@@ -24,4 +24,9 @@ class RequestBodyTest extends TestCase
     {
         self::assertInstanceOf(StreamInterface::class, $this->fixture);
     }
+
+    public function testIsResource(): void
+    {
+        self::assertIsResource($this->fixture->detach());
+    }
 }

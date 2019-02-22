@@ -3,7 +3,6 @@
 namespace Bitty\Http;
 
 use Bitty\Http\Stream;
-use Bitty\Http\Util;
 
 class RequestBody extends Stream
 {
@@ -12,9 +11,11 @@ class RequestBody extends Stream
      */
     public function __construct()
     {
-        $stream = Util::fopen('php://temp', 'w+');
-        $input  = Util::fopen('php://input', 'r');
-        stream_copy_to_stream($input, $stream);
+        $stream = fopen('php://temp', 'w+');
+        $input  = fopen('php://input', 'r');
+        if ($stream && $input) {
+            stream_copy_to_stream($input, $stream);
+        }
 
         parent::__construct($stream);
     }

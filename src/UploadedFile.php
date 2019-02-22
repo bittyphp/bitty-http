@@ -51,18 +51,27 @@ class UploadedFile implements UploadedFileInterface
     private $error = null;
 
     /**
+     * SAPI environment.
+     *
+     * @var string
+     */
+    private $sapi = null;
+
+    /**
      * @param StreamInterface|string $streamOrPath
      * @param string|null $name
      * @param string|null $mediaType
      * @param int|null $size
      * @param int $error
+     * @param string $sapi
      */
     public function __construct(
         $streamOrPath,
-        $name = null,
-        $mediaType = null,
-        $size = null,
-        $error = UPLOAD_ERR_OK
+        ?string $name = null,
+        ?string $mediaType = null,
+        ?int $size = null,
+        int $error = UPLOAD_ERR_OK,
+        string $sapi = PHP_SAPI
     ) {
         if ($streamOrPath instanceof StreamInterface) {
             $this->stream = $streamOrPath;
@@ -75,6 +84,7 @@ class UploadedFile implements UploadedFileInterface
         $this->mediaType = $mediaType;
         $this->size      = $size;
         $this->error     = $error;
+        $this->sapi      = $sapi;
     }
 
     /**
@@ -192,7 +202,7 @@ class UploadedFile implements UploadedFileInterface
             throw new \RuntimeException('Failed to access uploaded file.');
         }
 
-        if (stream_copy_to_stream($resource, $fp, -1, 0) === false) {
+        if (stream_copy_to_stream($resource, $fp) === false) {
             throw new \RuntimeException(
                 sprintf('Failed to move file to "%s".', $targetPath)
             );
@@ -208,12 +218,10 @@ class UploadedFile implements UploadedFileInterface
      */
     private function movePath(string $targetPath): void
     {
-        if ($this->path === null) {
-            throw new \RuntimeException('File has already been moved.');
-        }
+        $path = $this->path ?: '';
 
-        if (PHP_SAPI === 'cli') {
-            if (!rename($this->path, $targetPath)) {
+        if ($this->sapi === 'cli') {
+            if (!rename($path, $targetPath)) {
                 throw new \RuntimeException(
                     sprintf('Failed to move file to "%s".', $targetPath)
                 );
@@ -222,11 +230,11 @@ class UploadedFile implements UploadedFileInterface
             return;
         }
 
-        if (!is_uploaded_file($this->path)) {
+        if (!is_uploaded_file($path)) {
             throw new \RuntimeException('File is not a valid uploaded file.');
         }
 
-        if (!move_uploaded_file($this->path, $targetPath)) {
+        if (!move_uploaded_file($path, $targetPath)) {
             throw new \RuntimeException(
                 sprintf('Failed to move file to "%s".', $targetPath)
             );

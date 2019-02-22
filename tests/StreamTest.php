@@ -312,10 +312,45 @@ class StreamTest extends TestCase
         error_reporting($level);
     }
 
-    public function testWrite(): void
+    /**
+     * @param int $bytes
+     * @param string $content
+     *
+     * @dataProvider sampleWriteData
+     */
+    public function testWrite(int $bytes, string $content): void
     {
-        $content = uniqid('content');
         $fixture = new Stream('');
+
+        $actual = $fixture->write($content);
+
+        self::assertEquals($bytes, $actual);
+        self::assertEquals($content, (string) $fixture);
+    }
+
+    public function sampleWriteData(): array
+    {
+        $data = uniqid();
+
+        return [
+            'empty string' => [
+                'bytes' => 0,
+                'content' => '',
+            ],
+            'non-empty string' => [
+                'bytes' => strlen($data),
+                'content' => $data,
+            ],
+        ];
+    }
+
+    public function testWriteFromStream(): void
+    {
+        $handle = $this->createResource();
+        fwrite($handle, uniqid());
+
+        $content = uniqid('data');
+        $fixture = new Stream($handle);
 
         $fixture->write($content);
 

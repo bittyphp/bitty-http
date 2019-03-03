@@ -26,16 +26,56 @@ class AbstractMessageTest extends TestCase
         self::assertInstanceOf(MessageInterface::class, $this->fixture);
     }
 
-    public function testWithProtocolVersion(): void
+    /**
+     * @param string $version
+     * @param string $expected
+     *
+     * @dataProvider sampleProtocolVersions
+     */
+    public function testWithProtocolVersion(string $version, string $expected): void
     {
-        $clone = $this->fixture->withProtocolVersion('1.0');
+        $clone = $this->fixture->withProtocolVersion($version);
 
         $new = $clone->getProtocolVersion();
         $old = $this->fixture->getProtocolVersion();
 
         self::assertNotSame($this->fixture, $clone);
-        self::assertEquals('1.0', $new);
+        self::assertEquals($expected, $new);
         self::assertEquals('1.1', $old);
+    }
+
+    public function sampleProtocolVersions(): array
+    {
+        return [
+            '1.0' => [
+                'version' => '1.0',
+                'expected' => '1.0',
+            ],
+            '1.1' => [
+                'version' => '1.1',
+                'expected' => '1.1',
+            ],
+            '2.0' => [
+                'version' => '2.0',
+                'expected' => '2.0',
+            ],
+            '2' => [
+                'version' => '2',
+                'expected' => '2',
+            ],
+            '3' => [
+                'version' => '3',
+                'expected' => '3',
+            ],
+            'HTTP prefix' => [
+                'version' => 'HTTP/1.1',
+                'expected' => '1.1',
+            ],
+            'HTTP prefix, mixed case' => [
+                'version' => 'HtTp/1.1',
+                'expected' => '1.1',
+            ],
+        ];
     }
 
     public function testWithProtocolVersionThrowsException(): void

@@ -252,7 +252,9 @@ abstract class AbstractMessage implements MessageInterface
      */
     protected function filterProtocolVersion(string $protocolVersion): string
     {
-        if (!in_array($protocolVersion, $this->validProtocolVersions, true)) {
+        $version = str_replace('HTTP/', '', strtoupper($protocolVersion));
+
+        if (!in_array($version, $this->validProtocolVersions, true)) {
             throw new \InvalidArgumentException(
                 sprintf(
                     'Invalid protocol version "%s". Valid versions are: ["%s"]',
@@ -262,7 +264,7 @@ abstract class AbstractMessage implements MessageInterface
             );
         }
 
-        return $protocolVersion;
+        return $version;
     }
 
     /**

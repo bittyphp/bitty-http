@@ -37,7 +37,7 @@ class StreamFactoryTest extends TestCase
 
     public function testCreateStreamFromFile(): void
     {
-        $filename = __DIR__.'/bootstrap.php';
+        $filename = __FILE__;
         $actual   = $this->fixture->createStreamFromFile($filename, 'r');
 
         self::assertInstanceOf(StreamInterface::class, $actual);
@@ -46,7 +46,7 @@ class StreamFactoryTest extends TestCase
 
     public function testCreateStreamFromResource(): void
     {
-        $filename = __DIR__.'/bootstrap.php';
+        $filename = __FILE__;
         $resource = fopen($filename, 'r');
         if ($resource === false) {
             self::fail('Unable to open resource.');

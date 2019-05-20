@@ -90,6 +90,19 @@ class ServerRequestTest extends TestCase
         self::assertEquals($params, $actual);
     }
 
+    public function testWithServerParams(): void
+    {
+        $params  = [uniqid() => uniqid()];
+
+        $clone = $this->fixture->withServerParams($params);
+        $old   = $this->fixture->getServerParams();
+        $new   = $clone->getServerParams();
+
+        self::assertNotSame($this->fixture, $clone);
+        self::assertEquals([], $old);
+        self::assertEquals($params, $new);
+    }
+
     /**
      * @param string $method
      * @param string $contentType

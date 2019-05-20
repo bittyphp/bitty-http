@@ -240,6 +240,20 @@ class ServerRequest extends Request implements ServerRequestInterface
     }
 
     /**
+     * @param array $serverParams
+     *
+     * @return ServerRequestInterface
+     */
+    public function withServerParams(array $serverParams): ServerRequestInterface
+    {
+        $request = clone $this;
+
+        $request->server = $this->filterServerParams($serverParams);
+
+        return $request;
+    }
+
+    /**
      * {@inheritDoc}
      */
     public function getParsedBody()

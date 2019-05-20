@@ -92,7 +92,7 @@ class ServerRequestTest extends TestCase
 
     public function testWithServerParams(): void
     {
-        $params  = [uniqid() => uniqid()];
+        $params = [uniqid() => uniqid()];
 
         $clone = $this->fixture->withServerParams($params);
         $old   = $this->fixture->getServerParams();

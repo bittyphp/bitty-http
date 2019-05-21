@@ -3,7 +3,6 @@
 namespace Bitty\Tests\Http;
 
 use Bitty\Http\Request;
-use Bitty\Http\Stream;
 use Bitty\Http\Uri;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
@@ -62,6 +61,19 @@ class RequestTest extends TestCase
     public function testWithMethod(): void
     {
         $method = $this->getValidMethod();
+
+        $clone = $this->fixture->withMethod($method);
+        $old   = $this->fixture->getMethod();
+        $new   = $clone->getMethod();
+
+        self::assertNotSame($this->fixture, $clone);
+        self::assertEquals('GET', $old);
+        self::assertEquals($method, $new);
+    }
+
+    public function testWithNonUppercaseMethod(): void
+    {
+        $method = strtolower($this->getValidMethod());
 
         $clone = $this->fixture->withMethod($method);
         $old   = $this->fixture->getMethod();

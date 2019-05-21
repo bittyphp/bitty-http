@@ -154,6 +154,13 @@ class ServerRequestTest extends TestCase
                 'body' => 'foo=bar&baz=bur',
                 'expected' => ['foo' => 'bar', 'baz' => 'bur'],
             ],
+            'content type with spaces' => [
+                'method' => 'POST',
+                'contentType' => '  application/x-www-form-urlencoded  ; charset=UTF-8',
+                'request' => $params,
+                'body' => '',
+                'expected' => $params,
+            ],
             'valid application/json' => [
                 'method' => 'POST',
                 'contentType' => 'application/json',

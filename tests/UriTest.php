@@ -549,6 +549,17 @@ class UriTest extends TestCase
                 ],
                 'expected' => 'http://'.$user.':'.$pass.'@'.$host.':'.$port.'/'.$path.'?'.$query,
             ],
+            'https off, mixed case' => [
+                'data' => [
+                    'HTTPS' => 'OfF',
+                    'PHP_AUTH_USER' => $user,
+                    'PHP_AUTH_PW' => $pass,
+                    'HTTP_HOST' => $host,
+                    'SERVER_PORT' => $port,
+                    'REQUEST_URI' => '/'.$path.'?'.$query,
+                ],
+                'expected' => 'http://'.$user.':'.$pass.'@'.$host.':'.$port.'/'.$path.'?'.$query,
+            ],
             'no password' => [
                 'data' => [
                     'PHP_AUTH_USER' => $user,

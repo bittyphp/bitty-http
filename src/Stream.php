@@ -7,6 +7,16 @@ use Psr\Http\Message\StreamInterface;
 class Stream implements StreamInterface
 {
     /**
+     * @var string[]
+     */
+    private const WRITABLE_MODES = ['r+', 'w', 'w+', 'a', 'a+', 'x', 'x+', 'c', 'c+'];
+
+    /**
+     * @var string[]
+     */
+    private const READABLE_MODES = ['r', 'r+', 'w+', 'a+', 'x+', 'c+'];
+
+    /**
      * Stream of data.
      *
      * @var resource|null
@@ -185,7 +195,7 @@ class Stream implements StreamInterface
 
         $mode = str_replace(['b', 'e'], '', $mode);
 
-        return in_array($mode, ['r+', 'w', 'w+', 'a', 'a+', 'x', 'x+', 'c', 'c+'], true);
+        return in_array($mode, self::WRITABLE_MODES, true);
     }
 
     /**
@@ -220,7 +230,7 @@ class Stream implements StreamInterface
 
         $mode = str_replace(['b', 'e'], '', $mode);
 
-        return in_array($mode, ['r', 'r+', 'w+', 'a+', 'x+', 'c+'], true);
+        return in_array($mode, self::READABLE_MODES, true);
     }
 
     /**

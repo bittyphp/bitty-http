@@ -3,9 +3,9 @@
 namespace Bitty\Tests\Http;
 
 use Bitty\Http\RequestBody;
-use PHPUnit\Framework\TestCase;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
+use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\StreamInterface;
 
 class RequestBodyTest extends TestCase

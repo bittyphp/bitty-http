@@ -208,6 +208,10 @@ In addition to all of the methods inherited from `Request`, the following method
 
 Gets the server parameters for the request. Typically this is the contents of the `$_SERVER` variable, but doesn't have to be.
 
+##### `withServerParams($params)`
+
+Returns a new instance of the request with the updated server parameters.
+
 ##### `getCookieParams()`
 
 Gets the cookie parameters for the request. The return structure matches the format of what `$_COOKIE` provides.

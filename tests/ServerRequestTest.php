@@ -92,7 +92,7 @@ class ServerRequestTest extends TestCase
 
     public function testWithServerParams(): void
     {
-        $params  = [uniqid() => uniqid()];
+        $params = [uniqid() => uniqid()];
 
         $clone = $this->fixture->withServerParams($params);
         $old   = $this->fixture->getServerParams();
@@ -153,6 +153,13 @@ class ServerRequestTest extends TestCase
                 'request' => $params,
                 'body' => 'foo=bar&baz=bur',
                 'expected' => ['foo' => 'bar', 'baz' => 'bur'],
+            ],
+            'content type with spaces' => [
+                'method' => 'POST',
+                'contentType' => '  application/x-www-form-urlencoded  ; charset=UTF-8',
+                'request' => $params,
+                'body' => '',
+                'expected' => $params,
             ],
             'valid application/json' => [
                 'method' => 'POST',
